@@ -98,7 +98,7 @@ const App = () => {
           </List>
           <Divider />
           <List>
-                <ListItem button onClick={()=>history.push('/mail')}>
+                <ListItem button onClick={()=>history.push('/myStory')}>
                     <ListItemIcon><MailIcon /></ListItemIcon>
                     <ListItemText primary={'Mail'} />
                 </ListItem>

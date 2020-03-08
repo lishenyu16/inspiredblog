@@ -1,16 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
-// import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-// import store from './store';
 // import {combineReducers} from 'redux';
 // import {createStore} from 'redux';
 // import counterReducer from './reducers/counterReducer';
 // import nameReducer from './reducers/nameReducer';
-// import {Provider} from 'react-redux';
-
+import {Provider} from 'react-redux';
+import store from './store';
 // const rootReducer = {
 //     counter_1: counterReducer,
 //     name_1: nameReducer
@@ -21,9 +19,11 @@ import * as serviceWorker from './serviceWorker';
 // ReactDOM.render(<Provider store={store}><App /></Provider>, document.getElementById('root'));
   
 ReactDOM.render(
-    <BrowserRouter>
-        <App />
-    </BrowserRouter>, 
+    <Provider store={store}> 
+        <BrowserRouter>
+            <App />
+        </BrowserRouter>
+    </Provider>, 
     document.getElementById("index")
 );
 

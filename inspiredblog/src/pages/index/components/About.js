@@ -1,7 +1,7 @@
 
-import React, { Component } from 'react';
-import { Switch, Route, Redirect, Link ,useHistory} from 'react-router-dom';
-// import {connect} from 'react-redux';
+import React, {useState,useEffect} from 'react';
+import { Switch, Route, Redirect, Link,useHistory} from 'react-router-dom';
+import {connect} from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles({
     list: {
@@ -41,18 +41,33 @@ const useStyles = makeStyles({
         alignItems: 'center'
     }
 });
-const About = () => {
+const About = (props) => {
     const classes = useStyles();
-    const [state, setState] = React.useState({
-        left: false,
-    });
-    let history = useHistory();
+    // let history = useHistory();
+
+    useEffect(()=>{
+    },[])
+
 
     return (
-        <div>
-            This is about
+        <div style={{display: 'flex', flexDirection: 'column', width: '50%', margin: '0 auto'}}>
+            <h1>Current counter is {props.about.counter}</h1>
+            <h3 onClick={()=>props.increment()}>+</h3>
+            <h3 onClick={()=>props.decrement()}>-</h3>
         </div>
     )
 }
 
-export default About;
+const mapStateToProps = (state)=>{
+    return {
+        about: state.about
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        increment: () => dispatch({type: 'INCREASE_ASYNC'}),
+        decrement: () => dispatch({type: 'DECREASE'}) 
+    }
+}
+export default connect(mapStateToProps,mapDispatchToProps)(About);
