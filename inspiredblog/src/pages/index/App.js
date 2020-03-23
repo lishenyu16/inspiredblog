@@ -1,8 +1,13 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import { Switch, Route, Redirect, Link ,useHistory} from 'react-router-dom';
 import About from './components/About';
 import Home from './components/Home';
 import Sites from './components/Sites';
+import SignIn from './components/auth/SignIn';
+import SignUp from './components/auth/SignUp';
+import Profile from './components/Profile';
+import {connect} from 'react-redux';
+import Blogs from './components/blogs/Blogs';
 import Category from './components/Category';
 import NotFound from './components/NotFound';
 import { makeStyles } from '@material-ui/core/styles';
@@ -19,13 +24,13 @@ import ClassIcon from '@material-ui/icons/Class';
 import HomeIcon from '@material-ui/icons/Home';
 import InfoIcon from '@material-ui/icons/Info';
 import MenuIcon from '@material-ui/icons/Menu';
+import profile from './img/profile.png';
+import DescriptionIcon from '@material-ui/icons/Description';
+
 
 const useStyles = makeStyles({
     list: {
         width: 180,
-    },
-    fullList: {
-        width: 'auto',
     },
     mobile: {
         '@media (min-width:601px)': {
@@ -33,9 +38,64 @@ const useStyles = makeStyles({
         },
     },
     desktop: {
+        display:'flex',
+        justifyContent:'center',
+        width:'100%',
+        backgroundColor:'#f5f7f9',
         '@media (max-width: 600px)': {
             display: 'none'
         },
+
+    },
+    desktopHeader: {
+        width:'100%', 
+        backgroundColor:'black',
+        color:'white',
+        height:'100px',
+        fontFamily:'cursive',
+        display:'flex',
+        justifyContent:'center',
+        alignItems:'center'
+    },
+    desktopLinks:{
+        width:'100%',
+        height:'200px',
+        backgroundColor:'white',
+        margin:'10px 0',
+        display:'flex',
+        flexDirection:'column',
+    },
+    desktopProfile: {
+        width:'100%',
+        height:'200px',
+        backgroundColor:'white',
+        display:'flex',
+        flexDirection:'column',
+        alignItems:'center',
+        justifyContent:'center',
+
+    },
+    link: {
+        height:'25%',
+        width:'100%',
+        paddingLeft:'20px',
+        display:'flex',
+        justifyContent:'flex-start',
+        alignItems:'center'
+    },
+    leftSectionDiv: {
+        width:'20%',
+        display:'flex',
+        flexDirection:'column',
+        alignItems:'center',
+        marginRight:'2%'
+    },
+    rightSectionDiv: {
+        width:'70%',
+        height: '-webkit-fill-available',
+        display:'flex',
+        justifyContent:'center',
+        backgroundColor:'white'
     },
     mobileHeader: {
         width: '100%',
@@ -51,7 +111,7 @@ const useStyles = makeStyles({
         color: 'white',
         fontFamily: 'cursive'
     },
-    mobileBody: {
+    body: {
         display: 'flex',
         flexDirection: 'column',
         minHeight: '200px',
@@ -59,11 +119,15 @@ const useStyles = makeStyles({
     }
 });
 
-const App = () => {
+const App = (props) => {
 	const classes = useStyles();
     const [state, setState] = React.useState({
         left: false,
     });
+    useEffect(()=>{
+        props.checkAuthState()
+    },[])
+
     let history = useHistory();
     const toggleDrawer = (side, open) => event => {
         if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -95,6 +159,18 @@ const App = () => {
                     <ListItemIcon><ClassIcon /></ListItemIcon>
                     <ListItemText primary={'Categories'} />
                 </ListItem>
+                <ListItem button onClick={()=>history.push('/login')} style={{display: props.auth.isLoggedIn?'none':''}}>
+                    <ListItemIcon>
+                        <i class="fas fa-sign-in-alt" style={{fontSize:'24px'}}></i>
+                    </ListItemIcon>
+                    <ListItemText primary={'Sign In'} />
+                </ListItem>
+                <ListItem button onClick={()=>props.onLogout(history)} style={{display: props.auth.isLoggedIn?'':'none'}}>
+                    <ListItemIcon>
+                        <i class="fas fa-sign-out-alt" style={{fontSize:'24px'}}></i>
+                    </ListItemIcon>
+                    <ListItemText primary={'Logout'} />
+                </ListItem>
           </List>
           <Divider />
           <List>
@@ -107,35 +183,112 @@ const App = () => {
 	);
 	return (
 		<React.Fragment>
-			<div className={classes.desktop}>This is home!</div>
+			<div className={classes.desktop}>
+                <div className={classes.leftSectionDiv}>
+                    <div className={classes.desktopHeader}>
+                        Inspired Blogs
+                    </div>
+                    <div className={classes.desktopLinks}>
+                        <div className={classes.link}>
+                            <i class="material-icons" style={{marginRight:'5px',fontSize:'15px'}}>home</i>
+                            <Link to='/' style={{textDecoration:'none'}}>Home</Link>
+                        </div>
+                        <div className={classes.link}>
+                            <DescriptionIcon style={{marginRight:'5px', fontSize:'15px'}} />
+                            <Link to='/blogs' style={{textDecoration:'none'}}>Blogs</Link>
+                        </div>
+                        <div className={classes.link}>
+                            <i class="material-icons" style={{marginRight:'5px',fontSize:'15px'}}>person</i>
+                            <Link to='/about' style={{textDecoration:'none'}}>About Me</Link>
+                        </div>
+                        <div className={classes.link}>
+                            <i class="material-icons" style={{marginRight:'5px',fontSize:'15px'}}>class</i>
+                            <Link to='/categories' style={{textDecoration:'none'}}>Categories</Link>
+                        </div>
+                        <div className={classes.link} style={{display: props.auth.isLoggedIn?'':'none'}}>
+                            <span class="material-icons" style={{marginRight:'5px',fontSize:'15px'}}>
+                                account_box
+                            </span>
+                            <Link to='/profile' style={{textDecoration:'none'}}>Your Profile</Link>
+                        </div>
+                        <div className={classes.link} style={{display: props.auth.isLoggedIn?'none':'', }}>
+                            <i class="fas fa-sign-in-alt" style={{marginRight:'5px', fontSize:'15px'}}></i>
+                            <Link to='/login' style={{textDecoration:'none'}}>Sign In</Link>
+                        </div>
+                        <div className={classes.link} style={{display: props.auth.isLoggedIn?'':'none'}}>
+                            <i class="fas fa-sign-out-alt" style={{marginRight:'5px',fontSize:'15px'}}></i>
+                            <Link to={null} onClick={()=>props.onLogout(history)} style={{textDecoration:'none'}}>Logout</Link>
+                        </div>
+                    </div>
+                    <div className={classes.desktopProfile}>
+                        <div style={{width:'100%',textAlign:'center'}}>
+                            <img src={profile} style={{width:'50%'}} alt='profile' />
+                        </div>
+                        <div>
+                            <a href='https://lishenyu16.github.io/aboutMe/' target='_blank' style={{textDecoration:'none'}}>霜之哀伤</a>
+                        </div>
+                    </div>
+                </div>
+                <div className={classes.rightSectionDiv}>
+                    <Switch>
+                        <Route path='/about' component = {About}></Route>
+                        <Route path='/blogs' component = {Blogs}></Route>
+                        <Route path='/categories' component = {Category}></Route>
+                        <Route path='/sites' component = {Sites}></Route>
+                        <Route path='/profile' component = {Profile}></Route>
+                        <Route path='/home' component = {Home}></Route>
+                        <Route path='/login' component = {SignIn}></Route>
+                        <Route path='/signup' component = {SignUp}></Route>
+                        <Route exact path='/' component = {Home}></Route>
+                        <Route path='*' component = {NotFound}></Route>
+                    </Switch>
+                </div>
+            </div>
 			<div className={classes.mobile}>
 				<Drawer open={state.left} onClose={toggleDrawer('left', false)}>
 					{sideList('left')}
 				</Drawer>
 				<div className={classes.mobileHeader}>
-					<div style={{position: 'absolute', top: '30%', left: '20px'}}>
+					<div style={{position: 'absolute', top: '20px', left: '20px'}}>
 						<Button onClick={toggleDrawer('left', true)} style={{color:'white'}}>
-							<MenuIcon />
+                            {/* <MenuIcon /> */}
+                            <i class="material-icons" style={{fontSize:'38px'}}>menu</i>
 						</Button>
 					</div>
 					<div className={classes.mobileSiteTitle}>
 						Inspired Blogs
 					</div>
 				</div>
-				<div className={classes.mobileBody}>
-					<Switch>
-						<Route path='/about' component = {About}></Route>
-						<Route path='/categories' component = {Category}></Route>
-						<Route path='/sites' component = {Sites}></Route>
-						<Route path='/home' component = {Home}></Route>
-						<Route exact path='/' component = {Home}></Route>
-						<Route path='*' component = {NotFound}></Route>
-					</Switch>
-				</div>
+                <div className={classes.mobileBody}>
+                    <Switch>
+                        <Route path='/about' component = {About}></Route>
+                        <Route path='/blogs' component = {Blogs}></Route>
+                        <Route path='/categories' component = {Category}></Route>
+                        <Route path='/sites' component = {Sites}></Route>
+                        <Route path='/home' component = {Home}></Route>
+                        <Route path='/login' component = {SignIn}></Route>
+                        <Route path='/signup' component = {SignUp}></Route>
+                        <Route exact path='/' component = {Home}></Route>
+                        <Route path='*' component = {NotFound}></Route>
+                    </Switch>
+                </div>
 			</div>
 		</React.Fragment>
 	)
 }
 
+const mapStateToProps = (state) => {
+    return {
+        auth: state.auth,
+    }
+}
+const mapDispatchToProps = (dispatch)=>{
+    return {
+        onSignIn: (email,password)=> dispatch({type: 'SIGN_IN', data: {email, password}}),
+        onLogout: (history) => dispatch({type: 'logout', data: history}),
+        checkAuthState: () => dispatch({type: 'checkAuthState'}),
+        // onSignUp :()=> dispatch({type: 'SIGN_UP'}),
+    }
+}
 
-export default App;
+export default connect(mapStateToProps,mapDispatchToProps)(App)

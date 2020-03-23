@@ -52,8 +52,15 @@ const About = (props) => {
     return (
         <div style={{display: 'flex', flexDirection: 'column', width: '50%', margin: '0 auto'}}>
             <h1>Current counter is {props.about.counter}</h1>
-            <h3 onClick={()=>props.increment()}>+</h3>
-            <h3 onClick={()=>props.decrement()}>-</h3>
+            <button onClick={()=>props.increment()}>
+                <span style={{fontSize:'20px', cursor:'pointer'}}>+1</span>
+            </button>
+            <button onClick={()=>props.increment2()}>
+                <span style={{fontSize:'20px', cursor:'pointer'}}>+2</span>
+            </button>
+            <button onClick={()=>props.decrement()}>
+                <span style={{fontSize:'20px', cursor:'pointer'}}>-1</span>
+            </button>
         </div>
     )
 }
@@ -66,7 +73,8 @@ const mapStateToProps = (state)=>{
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        increment: () => dispatch({type: 'INCREASE_ASYNC'}),
+        increment: () => dispatch({type: 'INCREASE_ASYNC', payload: 1}),
+        increment2: () => dispatch({type: 'INCREASE_ASYNC2'}),
         decrement: () => dispatch({type: 'DECREASE'}) 
     }
 }

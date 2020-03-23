@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import App from './App';
+import './styles/App.css';
 import * as serviceWorker from './serviceWorker';
 // import {combineReducers} from 'redux';
 // import {createStore} from 'redux';

@@ -1,0 +1,49 @@
+@font-face {
+    font-family: 'BellotaLight';
+    font-style: normal;
+    font-weight: normal;
+    src: url('../../../public/fonts/Bellota-Light.ttf')
+      format('truetype');
+}
+@font-face {
+    font-family: 'BellotaRegular';
+    font-style: normal;
+    font-weight: normal;
+    src: url('../../../public/fonts/Bellota-Regular.ttf')
+      format('truetype');
+}
+@font-face {
+    font-family: 'BellotaBold';
+    font-style: normal;
+    font-weight: normal;
+    src: url('../../../public/fonts/Bellota-Bold.ttf')
+      format('truetype');
+}
+@font-face {
+    font-family: 'BellotaItalic';
+    font-style: normal;
+    font-weight: normal;
+    src: url('../../../public/fonts/Bellota-Italic.ttf')
+      format('truetype');
+}
+@font-face {
+    font-family: 'BellotaLightItalic';
+    font-style: normal;
+    font-weight: normal;
+    src: url('../../../public/fonts/Bellota-LightItalic.ttf')
+      format('truetype');
+}
+
+body {
+    background-color: #f5f7f9;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+}
+
+span,
+a,
+button,
+input,
+div {
+    font-family: 'BellotaRegular';
+}

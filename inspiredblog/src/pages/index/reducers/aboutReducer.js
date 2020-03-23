@@ -7,7 +7,12 @@ const aboutReducer = (state=initialState, action) => {
         case 'INCREASE':    
             return {
                 ...state,
-                counter: state.counter+1
+                counter: state.counter+action.payload
+            }
+        case 'INCREASE2':    
+            return {
+                ...state,
+                counter: state.counter+2
             }
         case 'DECREASE': 
             return {

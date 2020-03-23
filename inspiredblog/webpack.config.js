@@ -18,7 +18,12 @@ module.exports = {
     filename: '[name].bundle.js',
     publicPath: '/'
   },
-  devServer: {historyApiFallback: true,},
+  devServer: {
+    historyApiFallback: true,
+    proxy: {
+      '/api':'http://localhost:5000',
+    }
+  },
   // devtool: 'cheap-module-eval-source-map',
   module: {
     rules: [
@@ -48,14 +53,17 @@ module.exports = {
           limit: 8192,
         },
       },
-      {
-        test: /\.(png|jpe?g|gif)$/i,
-        use: [
-          {
-            loader: 'file-loader',
-          },
-        ],
-      },
+      // {
+      //   test: /\.(png|jpe?g|gif)$/i,
+      //   use: [
+      //     {
+      //       loader: 'file-loader',
+      //       options: {
+      //         name: '[path][name].[ext]'
+      //       },
+      //     },
+      //   ],
+      // },
     ]
   },
   resolve:{
