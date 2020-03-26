@@ -75,7 +75,7 @@ const AddBlog = (props) => {
     }
     const save = ()=>{
         props.saveEditorValue(title,editorValue); // save to reducer tempr
-        props.saveBlog(title,editorValue); // send to server
+        props.saveBlog(title,editorValue,history); // send to server
     }
     return (
         <div className={classes.outerDiv}>
@@ -121,7 +121,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         saveEditorValue: (title,value) => dispatch({type: 'save_editor_value', payload: [title,value]}),
-        saveBlog: (title,value) => dispatch({type: 'SAVE_BLOG', payload: [title,value]})
+        saveBlog: (title,value,history) => dispatch({type: 'SAVE_BLOG', payload: [title,value,history]})
     }
 }
 

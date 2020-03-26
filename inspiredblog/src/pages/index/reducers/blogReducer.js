@@ -1,7 +1,7 @@
 const initialState = {
-    blogs: [],
+    publicBlogs: [],
     editorValue: '',
-    imageUrls: []
+    imageUrls: [],
 }
 
 const blogReducer = (state=initialState, action) => {
@@ -11,17 +11,14 @@ const blogReducer = (state=initialState, action) => {
                 ...state,
                 editorValue: action.payload
             }
-        case ('create_blog_success'):
-            return {
-                ...state,
-                editorValue: action.payload
-            }
         case ('fetch_blogs_success'):
+            console.log('getting here')
             return {
                 ...state,
-                blogs: action.payload
+                publicBlogs: action.payload
             }
         default: 
+            console.log('coming to default reducer.')
             return state
     }
 }

@@ -35,6 +35,7 @@ const useStyles = makeStyles({
         width: 180,
     },
     mobile: {
+        height:'100%',
         '@media (min-width:601px)': {
             display: 'none'
         },
@@ -47,7 +48,7 @@ const useStyles = makeStyles({
         '@media (max-width: 600px)': {
             display: 'none'
         },
-
+        height:'100%',
     },
     desktopHeader: {
         width:'100%', 
@@ -94,7 +95,7 @@ const useStyles = makeStyles({
     },
     rightSectionDiv: {
         width:'70%',
-        height: '-webkit-fill-available',
+        height: '100%',
         display:'flex',
         justifyContent:'center',
         backgroundColor:'white'
