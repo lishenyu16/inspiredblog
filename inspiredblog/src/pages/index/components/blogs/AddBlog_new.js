@@ -4,9 +4,9 @@ import {connect} from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import Delta from 'quill-delta';
-import ReactQuill from 'react-quill'; 
-import 'react-quill/dist/quill.snow.css'; // ES6
+// import ReactMarkdown from 'react-markdown';
+import Editor from 'for-editor';
+import axios from 'axios';
 
 const useStyles = makeStyles(theme => ({
     outerDiv: {
@@ -40,50 +40,43 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const delta = new Delta([
-    { insert: 'Gandalf', attributes: { bold: true } },
-    { insert: ' the ' },
-    { insert: 'Grey', attributes: { color: '#ccc' } }
-]);
-
 const AddBlog = (props) => {
     const classes = useStyles();
     let history = useHistory();
 
-    const [text, setText] = useState(null);
+    const [editorValue, setEditorValue] = useState('');
     const [title, setTitle] = useState('');
-    const handleChange = (value) => {
-        setText(value);
+    const [imageUrl, setImageUrl] = useState('');
+    const vm = React.createRef();
+    const handleChange = (value)=>{
+        setEditorValue(value);
+    }
+    const uploadHandler = (file) => {
+        vm.current.$img2Url(file.name, 'file_url');
+        console.log('file name: ' + file.name);
+        let formData = new FormData();
+        formData.append('file', file);
+
+        let header = {
+            headers: {
+                Authorization: 'Bearer ' + localStorage.getItem('token'),
+                'Content-Type': 'multipart/form-data'
+            }
+        } 
+        axios.post('http://localhost:5000/api/s3/uploadImage', formData, header)
+        .then( async (res)=>{
+            await setImageUrl(res.data.imageUrl);
+            let str = editorValue + '![alt]('+imageUrl+')';
+            setEditorValue(str);
+        })
+        .catch(err=>{
+            console.log(err);
+        })
     }
     const save = ()=>{
-        console.log(text);
+        props.saveEditorValue(title,editorValue); // save to reducer tempr
+        props.saveBlog(title,editorValue); // send to server
     }
-    const getContents = (value) => {
-        console.log(value);
-    }
-    const modules = {
-        toolbar: [
-            [{ 'header': [1, 2, 3, 4, 5, false] }],
-            ['bold', 'italic', 'underline'],  //,'strike', 'blockquote'
-            [{ 'color': [] }, { 'background': [] }], 
-            [{'list': 'ordered'}, {'list': 'bullet'}, {'indent': '-1'}, {'indent': '+1'}],
-            ['link', 'image'],
-            // [{ 'font': [] }],
-            [{ 'align': [] }],
-            ['clean']
-        ],
-    }
-    const  formats = [
-        'header',
-        'bold', 'italic', 'underline', 'strike', 'blockquote', 
-        'color','background',
-        'list', 'bullet', 'indent',
-        'link', 'image',
-        // 'font',
-        'align',
-        'clean'
-    ]
-
     return (
         <div className={classes.outerDiv}>
             <TextField 
@@ -99,15 +92,19 @@ const AddBlog = (props) => {
                     }
                 }}
             />
-            <ReactQuill 
-                value={text} 
-                onChange={(content, delta, source, editor)=>handleChange(editor.getContents())} 
-                getContents={getContents}
-                theme="snow" 
-                modules={modules}
-                formats={formats}
-                className={classes.quill}
+            <Editor 
+                ref={vm}
+                style={{width:'80%'}}
+                className="my-editor"
+                subfield = {true}
+                preview = {true}
+                addImg = {(file) => uploadHandler(file)}
+                value={editorValue} 
+                onChange={(value) => handleChange(value)} 
+                placeholder={'Start editing...'}
+                language={'en'}
             />
+
             <Button className={classes.saveButton} variant="contained" onClick={()=>save()}>
                 Save
             </Button>
@@ -123,7 +120,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-
+        saveEditorValue: (title,value) => dispatch({type: 'save_editor_value', payload: [title,value]}),
+        saveBlog: (title,value) => dispatch({type: 'SAVE_BLOG', payload: [title,value]})
     }
 }
 

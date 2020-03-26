@@ -10,7 +10,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Blogs = (props) => {
-
+    const classes = useStyles();
     let history = useHistory();
     return (
         <div>
@@ -21,7 +21,7 @@ const Blogs = (props) => {
                 <li>mint Blog</li>
             </ul>
 
-            <div style={{cursor:'pointer'}} onClick={()=>history.push('/addBlog')}>Add a blog</div>
+            <div style={{cursor:'pointer', display: props.auth.isLoggedIn?'':'none'}} onClick={()=>history.push('/addBlog')}>Add a blog</div>
         </div>
     )
 }

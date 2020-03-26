@@ -8,6 +8,8 @@ import SignUp from './components/auth/SignUp';
 import Profile from './components/Profile';
 import {connect} from 'react-redux';
 import Blogs from './components/blogs/Blogs';
+import AddBlog from './components/blogs/AddBlog_new';
+// import AddBlog from './components/blogs/AddBlog';
 import Category from './components/Category';
 import NotFound from './components/NotFound';
 import { makeStyles } from '@material-ui/core/styles';
@@ -233,6 +235,7 @@ const App = (props) => {
                     <Switch>
                         <Route path='/about' component = {About}></Route>
                         <Route path='/blogs' component = {Blogs}></Route>
+                        <Route path='/addBlog' component = {AddBlog}></Route>
                         <Route path='/categories' component = {Category}></Route>
                         <Route path='/sites' component = {Sites}></Route>
                         <Route path='/profile' component = {Profile}></Route>
@@ -263,6 +266,7 @@ const App = (props) => {
                     <Switch>
                         <Route path='/about' component = {About}></Route>
                         <Route path='/blogs' component = {Blogs}></Route>
+                        <Route path='/addBlog' component = {AddBlog}></Route>
                         <Route path='/categories' component = {Category}></Route>
                         <Route path='/sites' component = {Sites}></Route>
                         <Route path='/home' component = {Home}></Route>
