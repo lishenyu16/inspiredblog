@@ -28,27 +28,27 @@ function* createBlog(action){
 
 function* fetchBlogs(action){
     try {
-        const result = yield axios.post('http://localhost:5000/api/blogs/fetchBlogs');
+        const result = yield axios.get('http://localhost:5000/api/blogs/fetchBlogs');
         yield put({
             type: 'fetch_blogs_success',
             payload: result.data.blogs
         })
     }
     catch(err){
-        alert('Failed to create blog, please try again later.');
+        alert('Failed to fetch blogs, please try again later.');
         console.log(err);
     }
 }
 function* fetchBlogDetail(action){
     try {
-        const result = yield axios.post('http://localhost:5000/api/blogs/fetchBlogs');
+        const result = yield axios.get(`http://localhost:5000/api/blogs/blogDetail/${action.payload}`);
         yield put({
-            type: 'fetch_blogs_success',
-            payload: result.data.blogs
+            type: 'fetch_blogDetail_success',
+            payload: result.data.blog || null
         })
     }
     catch(err){
-        alert('Failed to create blog, please try again later.');
+        alert('Failed to fetch blog detail, please try again later.');
         console.log(err);
     }
 }

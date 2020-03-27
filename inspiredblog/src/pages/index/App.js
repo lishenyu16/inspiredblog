@@ -8,6 +8,7 @@ import SignUp from './components/auth/SignUp';
 import Profile from './components/Profile';
 import {connect} from 'react-redux';
 import Blogs from './components/blogs/Blogs';
+import BlogDetail from './components/blogs/BlogDetail';
 import AddBlog from './components/blogs/AddBlog_new';
 // import AddBlog from './components/blogs/AddBlog';
 import Category from './components/Category';
@@ -70,7 +71,8 @@ const useStyles = makeStyles({
     },
     desktopProfile: {
         width:'100%',
-        height:'200px',
+        padding:'20px 0',
+        height:'max-content',
         backgroundColor:'white',
         display:'flex',
         flexDirection:'column',
@@ -87,14 +89,14 @@ const useStyles = makeStyles({
         alignItems:'center'
     },
     leftSectionDiv: {
-        width:'20%',
+        width:'15%',
         display:'flex',
         flexDirection:'column',
         alignItems:'center',
         marginRight:'2%'
     },
     rightSectionDiv: {
-        width:'70%',
+        width:'50%',
         height: '100%',
         display:'flex',
         justifyContent:'center',
@@ -236,6 +238,7 @@ const App = (props) => {
                     <Switch>
                         <Route path='/about' component = {About}></Route>
                         <Route path='/blogs' component = {Blogs}></Route>
+                        <Route path='/blogDetail/:blog_id' component = {BlogDetail}></Route>
                         <Route path='/addBlog' component = {AddBlog}></Route>
                         <Route path='/categories' component = {Category}></Route>
                         <Route path='/sites' component = {Sites}></Route>
