@@ -6,6 +6,8 @@ import {connect} from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import format from 'date-fns/format';
+import { checkAuthState } from '../../selectors/authSelector';
+
 const useStyles = makeStyles(theme => ({
     blogsDiv: {
         padding:'20% 0',
@@ -24,7 +26,7 @@ const useStyles = makeStyles(theme => ({
     },
     addBlog: {
         position:'absolute',
-        right:'3%',
+        left:'3%',
         top:'5%',
         border:'1px solid black',
         borderRadius:'5px',
@@ -35,13 +37,17 @@ const useStyles = makeStyles(theme => ({
             border: '1px solid lightgray',
             background: 'cadetblue',
             color: 'white',
-         },
+        },
+        '@media(max-width:500px)':{
+            fontSize:'12px',
+            padding:'4px 12px'
+        }
     },
     divider: {
         width:'50%',
         height:'1px',
         borderTop:'1px solid lightgray',
-        marginBottom:'20px'
+        marginBottom:'50px'
     },
     title: {
         textTransform: 'capitalize', 
@@ -73,13 +79,14 @@ const Blogs = (props) => {
     const classes = useStyles();
     let history = useHistory();
     useEffect(()=>{
-        props.fetchBlogs()
+        props.fetchBlogs();
     },[]);
     const clickAdd = () => {
-        if (props.auth.isLoggedIn){
+        if (props.isLoggedIn){
             history.push('/addBlog');
         }
         else {
+            props.redirect(); //save previous path into store
             history.push('/login');
         }
     }
@@ -89,7 +96,9 @@ const Blogs = (props) => {
             {props.blogs.publicBlogs.length>0?props.blogs.publicBlogs.map(ele=>
                 <div className={classes.item}>
                     <div className={classes.title} onClick={()=>history.push(`/blogDetail/${ele.blog_id}`)}>{ele.blog_title}</div>
-                    <div className={classes.publishedDate}>Published on {format(new Date(ele.created_on), 'MM-dd-yyyy')}</div>
+                    <div className={classes.publishedDate}>
+                        Published on {format(new Date(ele.created_on), 'MM-dd-yyyy')} By {ele.username}
+                    </div>
                     <div>
                         <Button className={classes.readEntire} onClick={()=>history.push(`/blogDetail/${ele.blog_id}`)}>
                             Read the entire article..
@@ -105,12 +114,14 @@ const Blogs = (props) => {
 const mapStateToProps = (state) => {
     return {
         auth: state.auth,
-        blogs: state.blog
+        blogs: state.blog,
+        isLoggedIn: checkAuthState(),
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
+        redirect: ()=>dispatch({type: 'redirect', url: '/addBlog'}),
         fetchBlogs: ()=>dispatch({type:'FETCH_BLOGS'})
     }
 }

@@ -1,11 +1,9 @@
 const initialState = {
     userId: null,
     username: null,
-    email: 'temp',
-    token: null,
-    expirationTime: null,
+    email: null,
     isAdmin: false,
-    isLoggedIn: false,
+    redirectPath: null,
 }
 
 const authReducer = (state=initialState, action) => {
@@ -15,19 +13,11 @@ const authReducer = (state=initialState, action) => {
                 ...state,
                 userId: action.payload.userId,
                 email: action.payload.email,
-                token: action.payload.token,
                 username: action.payload.username,
-                isLoggedIn: true,
-                expirationTime: action.payload.expirationTime,
                 isAdmin: action.payload.isAdmin,
             }
         case ('signin_fail'):
-            return {
-                ...state,
-                isLoggedIn: false,
-                expirationTime: null,
-                isAdmin: false,
-            }
+            return state;
         case ('signup_fail'):
             return state;
         case ('logout'):
@@ -43,46 +33,12 @@ const authReducer = (state=initialState, action) => {
                 userId: null,
                 username: null,
                 email: null,
-                token: null,
-                expirationTime: null,
                 isAdmin: false,
-                isLoggedIn: false,
             }
-        case('checkAuthState'):
-            const expirationTime = localStorage.getItem('expirationTime');
-            const currentDate = new Date();
-            if(localStorage.getItem('token')){
-                if (currentDate >= expirationTime){
-                    localStorage.removeItem('username')
-                    localStorage.removeItem('email')
-                    localStorage.removeItem('isAdmin')
-                    localStorage.removeItem('token')
-                    localStorage.removeItem('expirationTime')
-                    return { //expired: 
-                        ...state,
-                        userId: null,
-                        username: null,
-                        email: null,
-                        token: null,
-                        expirationTime: null,
-                        isAdmin: false,
-                        isLoggedIn: false
-                    }
-                } else{
-                    return {
-                        ...state,
-                        // userId: localStorage.getItem('userId'),
-                        token: localStorage.getItem('token'),
-                        username: localStorage.getItem('username'),
-                        email: localStorage.getItem('email'),
-                        expirationTime: localStorage.getItem('expirationTime'),
-                        isAdmin: localStorage.getItem('isAdmin'),
-                        isLoggedIn: true
-                    }
-                }
-            }
-            else{
-                return state
+        case ('redirect'):
+            return {
+                ...state,
+                redirectPath: action.url
             }
         case ('updateProfile'):
             return {

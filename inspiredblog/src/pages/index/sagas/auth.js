@@ -20,7 +20,7 @@ export function* signupSaga(action) {
         }
     } 
     catch ( error ) {
-        console.log(error);
+        console.log(err.response);
         yield put({type: 'signup_fail'});
     }
 }
@@ -44,10 +44,7 @@ export function* signinSaga(action){
                 payload: {
                     userId: res.data.userId,
                     email: res.data.email,
-                    token: res.data.token,
                     username: res.data.username,
-                    isLoggedIn: true,
-                    expirationTime: new Date(res.data.expirationTime),
                     isAdmin: res.data.isAdmin,
                 }
             })
@@ -57,7 +54,7 @@ export function* signinSaga(action){
         }
     }
     catch(error){
-        console.log(error)
+        console.log(err.response);
         alert('Something wrong happened to the server, please try again later.')
     }
 }
@@ -78,8 +75,8 @@ function* updateProfileSaga(action){
             }
         })
     }
-    catch(e){
-        console.log(e);
+    catch(err){
+        console.log(err.response);
         alert('Something wrong happenend!')
     }
 }

@@ -1,16 +1,22 @@
 const initialState = {
     publicBlogs: [],
-    editorValue: '',
+    blogTempSave: null,
     imageUrls: [],
     blogDetail: null,
+    isEditing: false,
 }
 
 const blogReducer = (state=initialState, action) => {
     switch(action.type){
-        case ('save_editor_value'):
+        case ('set_isEditing'):
             return {
                 ...state,
-                editorValue: action.payload
+                isEditing: !state.isEditing
+            }
+        case ('save_temp_blog'):
+            return {
+                ...state,
+                blogTempSave: action.payload
             }
         case ('fetch_blogs_success'):
             return {

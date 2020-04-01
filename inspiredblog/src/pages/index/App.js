@@ -1,8 +1,8 @@
 import React, { Component, useEffect, useState } from 'react';
 import { Switch, Route, Redirect, Link ,useHistory} from 'react-router-dom';
-import About from './components/About';
+// import About from './components/About';
 import Home from './components/Home';
-import Sites from './components/Sites';
+// import Sites from './components/Sites';
 import SignIn from './components/auth/SignIn';
 import SignUp from './components/auth/SignUp';
 import Profile from './components/Profile';
@@ -25,11 +25,11 @@ import ListItemText from '@material-ui/core/ListItemText';
 import MailIcon from '@material-ui/icons/Mail';
 import ClassIcon from '@material-ui/icons/Class';
 import HomeIcon from '@material-ui/icons/Home';
-import InfoIcon from '@material-ui/icons/Info';
-import MenuIcon from '@material-ui/icons/Menu';
+import BookIcon from '@material-ui/icons/Book';
 import profile from './img/profile.png';
 import DescriptionIcon from '@material-ui/icons/Description';
-
+import Particles from 'react-particles-js';
+import { checkAuthState } from './selectors/authSelector';
 
 const useStyles = makeStyles({
     list: {
@@ -45,11 +45,12 @@ const useStyles = makeStyles({
         display:'flex',
         justifyContent:'center',
         width:'100%',
-        backgroundColor:'#f5f7f9',
+        // backgroundColor:'#f5f7f9',
         '@media (max-width: 600px)': {
             display: 'none'
         },
         height:'100%',
+        position:'relative'
     },
     desktopHeader: {
         width:'100%', 
@@ -121,6 +122,13 @@ const useStyles = makeStyles({
         flexDirection: 'column',
         minHeight: '200px',
         alignItems: 'center'
+    },
+    particles:{
+        position:'absolute',
+        zIndex:'-1',
+        width:'100%',
+        height:'100%',
+        backgroundColor:'rgb(66,78,106)',
     }
 });
 
@@ -152,25 +160,25 @@ const App = (props) => {
                     <ListItemIcon><HomeIcon /></ListItemIcon>
                     <ListItemText primary={'Home'} />
                 </ListItem>
-                <ListItem button onClick={()=>history.push('/about')}>
-                    <ListItemIcon><InfoIcon /></ListItemIcon>
-                    <ListItemText primary={'About'} />
+                <ListItem button onClick={()=>history.push('/blogs')}>
+                    <ListItemIcon><BookIcon /></ListItemIcon>
+                    <ListItemText primary={'Blogs'} />
                 </ListItem>
-                <ListItem button onClick={()=>history.push('/sites')}>
+                {/* <ListItem button onClick={()=>history.push('/sites')}>
                     <ListItemIcon><ClassIcon /></ListItemIcon>
                     <ListItemText primary={'Sites'} />
-                </ListItem>
+                </ListItem> */}
                 <ListItem button onClick={()=>history.push('/categories')}>
                     <ListItemIcon><ClassIcon /></ListItemIcon>
                     <ListItemText primary={'Categories'} />
                 </ListItem>
-                <ListItem button onClick={()=>history.push('/login')} style={{display: props.auth.isLoggedIn?'none':''}}>
+                <ListItem button onClick={()=>history.push('/login')} style={{display: props.isLoggedIn?'none':''}}>
                     <ListItemIcon>
                         <i class="fas fa-sign-in-alt" style={{fontSize:'24px'}}></i>
                     </ListItemIcon>
                     <ListItemText primary={'Sign In'} />
                 </ListItem>
-                <ListItem button onClick={()=>props.onLogout(history)} style={{display: props.auth.isLoggedIn?'':'none'}}>
+                <ListItem button onClick={()=>props.onLogout(history)} style={{display: props.isLoggedIn?'':'none'}}>
                     <ListItemIcon>
                         <i class="fas fa-sign-out-alt" style={{fontSize:'24px'}}></i>
                     </ListItemIcon>
@@ -189,6 +197,43 @@ const App = (props) => {
 	return (
 		<React.Fragment>
 			<div className={classes.desktop}>
+                <Particles 
+                    className={classes.particles}
+                    params={{
+                        "particles": {
+                            "number": {
+                                "value": 160,
+                                "density": {
+                                    "enable": false
+                                }
+                            },
+                            "size": {
+                                "value": 10,
+                                "random": true
+                            },
+                            "move": {
+                                "direction": "bottom",
+                                "out_mode": "out"
+                            },
+                            "line_linked": {
+                                "enable": false
+                            }
+                        },
+                        "interactivity": {
+                            "events": {
+                                "onclick": {
+                                    "enable": true,
+                                    "mode": "remove"
+                                }
+                            },
+                            "modes": {
+                                "remove": {
+                                    "particles_nb": 10
+                                }
+                            }
+                        }
+                    }}
+                />
                 <div className={classes.leftSectionDiv}>
                     <div className={classes.desktopHeader}>
                         Inspired Blogs
@@ -202,25 +247,25 @@ const App = (props) => {
                             <DescriptionIcon style={{marginRight:'5px', fontSize:'15px'}} />
                             <Link to='/blogs' style={{textDecoration:'none'}}>Blogs</Link>
                         </div>
-                        <div className={classes.link}>
+                        {/* <div className={classes.link}>
                             <i class="material-icons" style={{marginRight:'5px',fontSize:'15px'}}>person</i>
                             <Link to='/about' style={{textDecoration:'none'}}>About Me</Link>
-                        </div>
+                        </div> */}
                         <div className={classes.link}>
                             <i class="material-icons" style={{marginRight:'5px',fontSize:'15px'}}>class</i>
                             <Link to='/categories' style={{textDecoration:'none'}}>Categories</Link>
                         </div>
-                        <div className={classes.link} style={{display: props.auth.isLoggedIn?'':'none'}}>
+                        <div className={classes.link} style={{display: props.isLoggedIn?'':'none'}}>
                             <span class="material-icons" style={{marginRight:'5px',fontSize:'15px'}}>
                                 account_box
                             </span>
                             <Link to='/profile' style={{textDecoration:'none'}}>Your Profile</Link>
                         </div>
-                        <div className={classes.link} style={{display: props.auth.isLoggedIn?'none':'', }}>
+                        <div className={classes.link} style={{display: props.isLoggedIn?'none':'', }}>
                             <i class="fas fa-sign-in-alt" style={{marginRight:'5px', fontSize:'15px'}}></i>
                             <Link to='/login' style={{textDecoration:'none'}}>Sign In</Link>
                         </div>
-                        <div className={classes.link} style={{display: props.auth.isLoggedIn?'':'none'}}>
+                        <div className={classes.link} style={{display: props.isLoggedIn?'':'none'}}>
                             <i class="fas fa-sign-out-alt" style={{marginRight:'5px',fontSize:'15px'}}></i>
                             <Link to={null} onClick={()=>props.onLogout(history)} style={{textDecoration:'none'}}>Logout</Link>
                         </div>
@@ -236,12 +281,11 @@ const App = (props) => {
                 </div>
                 <div className={classes.rightSectionDiv}>
                     <Switch>
-                        <Route path='/about' component = {About}></Route>
                         <Route path='/blogs' component = {Blogs}></Route>
                         <Route path='/blogDetail/:blog_id' component = {BlogDetail}></Route>
                         <Route path='/addBlog' component = {AddBlog}></Route>
                         <Route path='/categories' component = {Category}></Route>
-                        <Route path='/sites' component = {Sites}></Route>
+                        {/* <Route path='/sites' component = {Sites}></Route> */}
                         <Route path='/profile' component = {Profile}></Route>
                         <Route path='/home' component = {Home}></Route>
                         <Route path='/login' component = {SignIn}></Route>
@@ -268,11 +312,12 @@ const App = (props) => {
 				</div>
                 <div className={classes.mobileBody}>
                     <Switch>
-                        <Route path='/about' component = {About}></Route>
                         <Route path='/blogs' component = {Blogs}></Route>
+                        <Route path='/blogDetail/:blog_id' component = {BlogDetail}></Route>
                         <Route path='/addBlog' component = {AddBlog}></Route>
                         <Route path='/categories' component = {Category}></Route>
-                        <Route path='/sites' component = {Sites}></Route>
+                        {/* <Route path='/sites' component = {Sites}></Route> */}
+                        <Route path='/profile' component = {Profile}></Route>
                         <Route path='/home' component = {Home}></Route>
                         <Route path='/login' component = {SignIn}></Route>
                         <Route path='/signup' component = {SignUp}></Route>
@@ -288,6 +333,7 @@ const App = (props) => {
 const mapStateToProps = (state) => {
     return {
         auth: state.auth,
+        isLoggedIn: checkAuthState()
     }
 }
 const mapDispatchToProps = (dispatch)=>{

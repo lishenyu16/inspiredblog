@@ -1,4 +1,4 @@
-import { delay, takeEvery, takeLatest, put } from 'redux-saga/effects';
+import { takeLatest, call, put, select } from 'redux-saga/effects';
 import axios from 'axios';
 
 
@@ -22,7 +22,7 @@ function* createBlog(action){
     })
     .catch(err=>{
         alert('Failed to create blog, please try again later.');
-        console.log(err);
+        console.log(err.response);
     })
 }
 
@@ -36,7 +36,7 @@ function* fetchBlogs(action){
     }
     catch(err){
         alert('Failed to fetch blogs, please try again later.');
-        console.log(err);
+        console.log(err.response);
     }
 }
 function* fetchBlogDetail(action){
@@ -49,7 +49,34 @@ function* fetchBlogDetail(action){
     }
     catch(err){
         alert('Failed to fetch blog detail, please try again later.');
-        console.log(err);
+        console.log(err.response);
+    }
+}
+function* saveEdit(action){
+    let header = {
+        headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('token')
+        }
+    } 
+    try {
+        let blog = yield select(state => state.blog.blogDetail);
+        const data = {
+            blogId: blog.blog_id,
+            blogTitle: action.payload.blogTitle,
+            blogContent: action.payload.blogContent,
+        }
+        const result = yield axios.post(`http://localhost:5000/api/blogs/editBlog`, data, header);
+        yield put({
+            type: 'fetch_blogDetail_success',
+            payload: result.data.blog,
+        })
+        yield put({
+            type: 'set_isEditing',
+        })
+    }
+    catch(err){
+        console.log(err.response);
+        alert(err.response.data.message);
     }
 }
 
@@ -57,4 +84,5 @@ export function* watchBlogs(){
     yield takeLatest('SAVE_BLOG', createBlog);
     yield takeLatest('FETCH_BLOGS', fetchBlogs);
     yield takeLatest('FETCH_BLOG_DETAIL', fetchBlogDetail);
+    yield takeLatest('SAVE_EDIT', saveEdit);
 }

@@ -7,6 +7,7 @@ import Button from '@material-ui/core/Button';
 // import ReactMarkdown from 'react-markdown';
 import Editor from 'for-editor';
 import axios from 'axios';
+import { checkAuthState } from '../../selectors/authSelector';
 
 const useStyles = makeStyles(theme => ({
     outerDiv: {
@@ -26,17 +27,19 @@ const useStyles = makeStyles(theme => ({
     muiInput: {
         padding: '6px'
     },
+    buttons:{
+        width:'50%', 
+        display:'flex',
+        justifyContent:'space-around', 
+        marginTop:'20px',
+        '@media(max-width:500px)':{
+            width:'70%'
+        }
+    },
     saveButton:{
         padding: '6px 30px',
         fontSize:'15px',
-        marginTop:'45px',
         textTransform:'none',
-        '@media(max-width:1188px)': {
-            marginTop: '70px'
-        },
-        '@media(max-width:683px)': {
-            marginTop: '95px'
-        },
     }
 }));
 
@@ -47,6 +50,11 @@ const AddBlog = (props) => {
     const [editorValue, setEditorValue] = useState('');
     const [title, setTitle] = useState('');
     const [imageUrl, setImageUrl] = useState('');
+    useEffect(()=>{
+        if (props.auth.redirectPath){
+            props.clearRedirectPath();
+        }
+    }, [])
     const vm = React.createRef();
     const handleChange = (value)=>{
         setEditorValue(value);
@@ -64,9 +72,9 @@ const AddBlog = (props) => {
             }
         } 
         axios.post('http://localhost:5000/api/s3/uploadImage', formData, header)
-        .then( async (res)=>{
-            await setImageUrl(res.data.imageUrl);
-            let str = editorValue + '![alt]('+imageUrl+')';
+        .then((res)=>{
+            // let str = editorValue + '![alt]('+imageUrl+')';
+            let str = editorValue + '<div style="text-align: center"><img style="max-width:50%" src="'+res.data.imageUrl+'"/></div>';
             setEditorValue(str);
         })
         .catch(err=>{
@@ -74,8 +82,21 @@ const AddBlog = (props) => {
         })
     }
     const save = ()=>{
-        props.saveEditorValue(title,editorValue); // save to reducer tempr
+        props.saveTemp(title,editorValue); // save to reducer tempr
         props.saveBlog(title,editorValue,history); // send to server
+    }
+    const toolbar =  {
+        h1: true, // h1
+        h2: true, // h2
+        img: true, // 图片
+        link: true, // 链接
+        code: true, // 代码块
+        preview: true, // 预览
+        expand: true, // 全屏
+        undo: true, // 撤销
+        // redo: true, // 重做
+        // save: true, // 保存
+        subfield: true, // 单双栏模式
     }
     return (
         <div className={classes.outerDiv}>
@@ -84,8 +105,8 @@ const AddBlog = (props) => {
                 variant='outlined'
                 value={title}
                 onChange={(e)=>setTitle(e.target.value)}
-                style={{width:'80%'}}
-                placeholder='Enter titler here'
+                style={{width:'90%'}}
+                placeholder='Enter title here'
                 InputProps={{
                     classes:{
                         input: classes.muiInput
@@ -94,8 +115,8 @@ const AddBlog = (props) => {
             />
             <Editor 
                 ref={vm}
-                style={{width:'80%'}}
-                className="my-editor"
+                style={{width:'90%'}}
+                height={'500px'}
                 subfield = {true}
                 preview = {true}
                 addImg = {(file) => uploadHandler(file)}
@@ -103,11 +124,16 @@ const AddBlog = (props) => {
                 onChange={(value) => handleChange(value)} 
                 placeholder={'Start editing...'}
                 language={'en'}
+                toolbar={toolbar}
             />
-
-            <Button className={classes.saveButton} variant="contained" onClick={()=>save()}>
-                Save
-            </Button>
+            <div className={classes.buttons}>
+                <Button className={classes.saveButton} variant="contained" onClick={()=>save()}>
+                    Save
+                </Button>
+                <Button className={classes.saveButton} variant="contained" onClick={()=>history.push('/blogs')}>
+                    Cancel
+                </Button>
+            </div>
         </div>
     )
 }
@@ -115,13 +141,18 @@ const AddBlog = (props) => {
 const mapStateToProps = (state) => {
     return {
         auth: state.auth,
+        isLoggedIn: checkAuthState()
     }
 }
+// const mapStateToProps = state => ({
+//     products: getCartProducts(state)
+// })
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        saveEditorValue: (title,value) => dispatch({type: 'save_editor_value', payload: [title,value]}),
-        saveBlog: (title,value,history) => dispatch({type: 'SAVE_BLOG', payload: [title,value,history]})
+        saveTemp: (title,value) => dispatch({type: 'save_temp_blog', payload: [title,value]}),
+        saveBlog: (title,value,history) => dispatch({type: 'SAVE_BLOG', payload: [title,value,history]}),
+        clearRedirectPath: () => dispatch({type:'redirect', url: null})
     }
 }
 

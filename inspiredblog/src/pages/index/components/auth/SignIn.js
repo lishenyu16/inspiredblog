@@ -14,6 +14,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import {checkAuthState} from '../../selectors/authSelector';
 
 function Copyright() {
     return (
@@ -57,8 +58,13 @@ const SignIn = (props) => {
     const [password, setPassword] = useState(null);
 
     let redirect = null;
-    if(props.auth.isLoggedIn){
-        redirect = <Redirect to="/" />
+    if(props.isLoggedIn){
+        if (props.auth.redirectPath){
+            redirect = <Redirect to={props.auth.redirectPath} />
+        }
+        else {
+            redirect = <Redirect to="/" />;   
+        }
     }
     return (
         <Container component="main" maxWidth="xs">
@@ -134,6 +140,7 @@ const SignIn = (props) => {
 const mapStateToProps = (state)=>{
     return {
         auth: state.auth,
+        isLoggedIn: checkAuthState(),
     }
 }
 const mapDispatchToProps = (dispatch)=>{
