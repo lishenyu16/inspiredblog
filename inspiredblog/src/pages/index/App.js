@@ -37,7 +37,7 @@ const useStyles = makeStyles({
         width: 180,
     },
     mobile: {
-        height:'100%',
+        position:'relative',
         '@media (min-width:601px)': {
             display: 'none'
         },
@@ -114,6 +114,12 @@ const useStyles = makeStyles({
         alignItems: 'center',
         position: 'relative',
         backgroundColor: 'black'
+    },
+    mobileBody: {
+        width: '100%',
+        minHeight: '646px',
+        paddingBottom:'40px',
+        position:'relative',
     },
     mobileSiteTitle: {
         fontSize: '20px',
@@ -328,6 +334,7 @@ const App = (props) => {
                         <Route exact path='/' component = {Home}></Route>
                         <Route path='*' component = {NotFound}></Route>
                     </Switch>
+                    <Footer />
                 </div>
 			</div>
 		</React.Fragment>
