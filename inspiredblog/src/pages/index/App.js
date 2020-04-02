@@ -30,6 +30,7 @@ import profile from './img/profile.png';
 import DescriptionIcon from '@material-ui/icons/Description';
 import Particles from 'react-particles-js';
 import { checkAuthState } from './selectors/authSelector';
+import Footer from './Footer';
 
 const useStyles = makeStyles({
     list: {
@@ -49,7 +50,7 @@ const useStyles = makeStyles({
         '@media (max-width: 600px)': {
             display: 'none'
         },
-        height:'100%',
+        // height:'100%',
         position:'relative'
     },
     desktopHeader: {
@@ -98,10 +99,12 @@ const useStyles = makeStyles({
     },
     rightSectionDiv: {
         width:'50%',
-        height: '100%',
+        minHeight: '100vh',
         display:'flex',
         justifyContent:'center',
-        backgroundColor:'white'
+        backgroundColor:'white',
+        position:'relative',
+        paddingBottom:'2.5rem'
     },
     mobileHeader: {
         width: '100%',
@@ -172,13 +175,13 @@ const App = (props) => {
                     <ListItemIcon><ClassIcon /></ListItemIcon>
                     <ListItemText primary={'Categories'} />
                 </ListItem>
-                <ListItem button onClick={()=>history.push('/login')} style={{display: props.isLoggedIn?'none':''}}>
+                <ListItem button onClick={()=>history.push('/login')} style={{display: checkAuthState()?'none':''}}>
                     <ListItemIcon>
                         <i class="fas fa-sign-in-alt" style={{fontSize:'24px'}}></i>
                     </ListItemIcon>
                     <ListItemText primary={'Sign In'} />
                 </ListItem>
-                <ListItem button onClick={()=>props.onLogout(history)} style={{display: props.isLoggedIn?'':'none'}}>
+                <ListItem button onClick={()=>props.onLogout(history)} style={{display: checkAuthState()?'':'none'}}>
                     <ListItemIcon>
                         <i class="fas fa-sign-out-alt" style={{fontSize:'24px'}}></i>
                     </ListItemIcon>
@@ -255,17 +258,17 @@ const App = (props) => {
                             <i class="material-icons" style={{marginRight:'5px',fontSize:'15px'}}>class</i>
                             <Link to='/categories' style={{textDecoration:'none'}}>Categories</Link>
                         </div>
-                        <div className={classes.link} style={{display: props.isLoggedIn?'':'none'}}>
+                        <div className={classes.link} style={{display: checkAuthState()?'':'none'}}>
                             <span class="material-icons" style={{marginRight:'5px',fontSize:'15px'}}>
                                 account_box
                             </span>
                             <Link to='/profile' style={{textDecoration:'none'}}>Your Profile</Link>
                         </div>
-                        <div className={classes.link} style={{display: props.isLoggedIn?'none':'', }}>
+                        <div className={classes.link} style={{display: checkAuthState()?'none':'', }}>
                             <i class="fas fa-sign-in-alt" style={{marginRight:'5px', fontSize:'15px'}}></i>
                             <Link to='/login' style={{textDecoration:'none'}}>Sign In</Link>
                         </div>
-                        <div className={classes.link} style={{display: props.isLoggedIn?'':'none'}}>
+                        <div className={classes.link} style={{display: checkAuthState()?'':'none'}}>
                             <i class="fas fa-sign-out-alt" style={{marginRight:'5px',fontSize:'15px'}}></i>
                             <Link to={null} onClick={()=>props.onLogout(history)} style={{textDecoration:'none'}}>Logout</Link>
                         </div>
@@ -293,6 +296,7 @@ const App = (props) => {
                         <Route exact path='/' component = {Home}></Route>
                         <Route path='*' component = {NotFound}></Route>
                     </Switch>
+                    <Footer />
                 </div>
             </div>
 			<div className={classes.mobile}>
@@ -333,7 +337,7 @@ const App = (props) => {
 const mapStateToProps = (state) => {
     return {
         auth: state.auth,
-        isLoggedIn: checkAuthState()
+        // isLoggedIn: checkAuthState()
     }
 }
 const mapDispatchToProps = (dispatch)=>{

@@ -1,9 +1,9 @@
+
+// this is not a pure selector as it doesn't take state as arguement
 export const checkAuthState = () =>{
-    console.log('inside authSelector');
     const expirationTime = localStorage.getItem('expirationTime');
     const currentDate = new Date();
     if(localStorage.getItem('token')){
-        console.log('has token.')
         if (currentDate >= expirationTime){
             localStorage.removeItem('username');
             localStorage.removeItem('email');
@@ -14,6 +14,5 @@ export const checkAuthState = () =>{
         } 
         return true;
     }
-    console.log('auth false')
     return false;
 }

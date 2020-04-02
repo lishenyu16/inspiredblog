@@ -141,7 +141,7 @@ const AddBlog = (props) => {
 const mapStateToProps = (state) => {
     return {
         auth: state.auth,
-        isLoggedIn: checkAuthState()
+        // isLoggedIn: checkAuthState()
     }
 }
 // const mapStateToProps = state => ({

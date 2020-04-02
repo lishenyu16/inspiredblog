@@ -10,9 +10,9 @@ import { checkAuthState } from '../../selectors/authSelector';
 
 const useStyles = makeStyles(theme => ({
     blogsDiv: {
-        padding:'20% 0',
+        paddingTop:'20%',
         width:'100%',
-        height:'100%',
+        height:'min-content',
         display:'flex',
         flexDirection:'column',
         alignItems:'center',
@@ -82,7 +82,7 @@ const Blogs = (props) => {
         props.fetchBlogs();
     },[]);
     const clickAdd = () => {
-        if (props.isLoggedIn){
+        if (checkAuthState()){
             history.push('/addBlog');
         }
         else {
@@ -94,7 +94,7 @@ const Blogs = (props) => {
         <div className={classes.blogsDiv}>
             <div className={classes.addBlog} style={{cursor:'pointer'}} onClick={clickAdd}>Post a blog</div>
             {props.blogs.publicBlogs.length>0?props.blogs.publicBlogs.map(ele=>
-                <div className={classes.item}>
+                <div className={classes.item} key={ele.blog_id}>
                     <div className={classes.title} onClick={()=>history.push(`/blogDetail/${ele.blog_id}`)}>{ele.blog_title}</div>
                     <div className={classes.publishedDate}>
                         Published on {format(new Date(ele.created_on), 'MM-dd-yyyy')} By {ele.username}
@@ -115,7 +115,7 @@ const mapStateToProps = (state) => {
     return {
         auth: state.auth,
         blogs: state.blog,
-        isLoggedIn: checkAuthState(),
+        // isLoggedIn: checkAuthState(),
     }
 }
 

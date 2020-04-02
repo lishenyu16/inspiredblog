@@ -35,12 +35,13 @@
 }
 
 html, body {
-  height: 100%;
+    height: 100%;
 }
-
+* {
+    box-sizing: border-box;
+}
 body {
     background-color: #f5f7f9;
-    box-sizing: border-box !important;
     margin: 0 !important;
 }
 

@@ -103,8 +103,8 @@ const BlogDetail = (props) => {
     },[]);
     useEffect(()=>{
         if (props.blog.isEditing && props.auth.redirectPath){
-            setTitle(props.blog.blogTempSave.blog_title);
-            setEditorValue(props.blog.blogTempSave.blog_content);
+            setTitle(props.blog.blogTempSave[0]);
+            setEditorValue(props.blog.blogTempSave[1]);
             props.saveRedirectPath(null);
         }
     }, [])
@@ -135,25 +135,19 @@ const BlogDetail = (props) => {
             console.log(err);
         })
     }
-    const save = async ()=>{
-        await props.saveTemp(title,editorValue); // save to reducer tempr
-        console.log('0:', props.isLoggedIn);
-        if (props.isLoggedIn) {
-            console.log('1:', props.isLoggedIn);
-            console.log('2:', props.isLoggedIn);
-            console.log('3:', props.isLoggedIn);
+    const save = ()=>{
+        props.saveTemp(title,editorValue); // save to reducer tempr
+        if (checkAuthState()) {
             props.saveEdit(title,editorValue); // send to server
         }
         else {
-            console.log('redirecting.')
-            //redirect to login then come back.
-            await props.saveRedirectPath('/blogDetail/'+props.blog.blogDetail.blog_id);
+            props.saveRedirectPath('/blogDetail/'+props.blog.blogDetail.blog_id);
             history.push('/login');
         }
     }
 
     const clickEdit = () => {
-        if (props.isLoggedIn) {
+        if (checkAuthState()) {
             props.setIsEditing();
             setTitle(props.blog.blogDetail.blog_title);
             setEditorValue(props.blog.blogDetail.blog_content);
@@ -223,7 +217,7 @@ const BlogDetail = (props) => {
                         arrow_back_ios
                     </span>
                 </div>
-                <div className={classes.editBlog} style={{cursor:'pointer', display:props.isLoggedIn?'':'none'}} onClick={clickEdit}>
+                <div className={classes.editBlog} style={{cursor:'pointer', display:checkAuthState()?'':'none'}} onClick={clickEdit}>
                     Edit
                 </div>
                 <div className={classes.title}>{props.blog.blogDetail.blog_title}</div>
@@ -246,7 +240,7 @@ const mapStateToProps = (state) => {
     return {
         auth: state.auth,
         blog: state.blog,
-        isLoggedIn: checkAuthState()
+        // isLoggedIn: checkAuthState()
     }
 }
 const mapDispatchToProps = (dispatch) => {
