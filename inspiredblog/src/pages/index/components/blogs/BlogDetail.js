@@ -15,7 +15,7 @@ const useStyles = makeStyles(theme => ({
     detail: {
         // paddingTop:'20%',
         width:'100%',
-        height:'100%',
+        minHeight:'100vh',
         display:'flex',
         flexDirection:'column',
         alignItems:'center',
