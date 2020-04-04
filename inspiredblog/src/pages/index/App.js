@@ -7,6 +7,7 @@ import SignIn from './components/auth/SignIn';
 import SignUp from './components/auth/SignUp';
 import Verification from './components/auth/Verification';
 import EmailConfirmed from './components/auth/EmailConfirmed';
+import ForgotPassword from './components/auth/ForgotPassword';
 import Profile from './components/Profile';
 import {connect} from 'react-redux';
 import Blogs from './components/blogs/Blogs';
@@ -33,6 +34,7 @@ import DescriptionIcon from '@material-ui/icons/Description';
 import Particles from 'react-particles-js';
 import { checkAuthState } from './selectors/authSelector';
 import Footer from './Footer';
+import ResetPassword from './components/auth/ResetPassword';
 
 const useStyles = makeStyles({
     list: {
@@ -302,7 +304,9 @@ const App = (props) => {
                         <Route path='/login' component = {SignIn}></Route>
                         <Route path='/signup' component = {SignUp}></Route>
                         <Route path='/verification' component = {Verification}></Route>
+                        <Route path='/forgotPassword' component = {ForgotPassword}></Route>
                         <Route path='/confirmEmail/:code/:userId' component = {EmailConfirmed}></Route>
+                        <Route path='/resetPassword/:code/:userId' component = {ResetPassword}></Route>
                         <Route exact path='/' component = {Home}></Route>
                         <Route path='*' component = {NotFound}></Route>
                     </Switch>
@@ -336,7 +340,9 @@ const App = (props) => {
                         <Route path='/login' component = {SignIn}></Route>
                         <Route path='/signup' component = {SignUp}></Route>
                         <Route path='/verification' component = {Verification}></Route>
+                        <Route path='/forgotPassword' component = {ForgotPassword}></Route>
                         <Route path='/confirmEmail/:code/:userId' component = {EmailConfirmed}></Route>
+                        <Route path='/resetPassword/:code/:userId' component = {ResetPassword}></Route>
                         <Route exact path='/' component = {Home}></Route>
                         <Route path='*' component = {NotFound}></Route>
                     </Switch>

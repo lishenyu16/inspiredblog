@@ -1,4 +1,5 @@
 const initialState = {
+    // login:
     userId: null,
     username: null,
     email: null,
@@ -9,7 +10,7 @@ const initialState = {
     passwordMessage: null,
     wrongEmail: false,
     emailMessage: null,
-
+    // register;
     wrongUsername: false,
     usernameMessage: null,
     wrongRegisterEmail: false,
@@ -18,6 +19,14 @@ const initialState = {
     registerPwMessage: null,
     wrongConfirmPw: false,
     confirmPwMessage: null,
+    // forgot password:
+    wrongFindEmail: false,
+    findEmailMessage: null,
+    // reset password:
+    wrongResetPassword: false,
+    resetPasswordMessage: null,
+    wrongResetConfirmPassword: false,
+    resetConfirmPasswordMessage: null,
 }
 
 const authReducer = (state=initialState, action) => {
@@ -50,6 +59,20 @@ const authReducer = (state=initialState, action) => {
                 wrongConfirmPw: action.value.wrongConfirmPw || false,
                 confirmPwMessage: action.value.confirmPwMessage || null,
             };
+        case ('find_password_invalid'):
+            return {
+                ...state,
+                wrongFindEmail: action.value.wrongFindEmail || false,
+                findEmailMessage: action.value.findEmailMessage || null,
+            };
+        case ('reset_password_invalid'):
+            return {
+                ...state,
+                wrongResetPassword: action.value.wrongResetPassword || false,
+                resetPasswordMessage: action.value.resetPasswordMessage || null,
+                wrongResetConfirmPassword: action.value.wrongResetConfirmPassword || false,
+                resetConfirmPasswordMessage: action.value.resetConfirmPasswordMessage || null,
+            };
         case ('clear_errors'):
             return {
                 ...state,
@@ -58,7 +81,10 @@ const authReducer = (state=initialState, action) => {
                 wrongRegisterEmail: false,
                 wrongUsername: false,
                 wrongRegisterPw: false,
-                wrongConfirmPw: false
+                wrongConfirmPw: false,
+                wrongFindEmail: false,
+                wrongResetPassword: false,
+                wrongResetConfirmPassword: false,
             }
         case ('emailConfirmed'):
             return {

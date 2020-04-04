@@ -134,9 +134,39 @@ function* confirmEmailSaga(action){
         alert(err.response.data.message);
     }
 }
+function* findPasswordSaga(action){
+    try {
+        let history = action.data.history;
+        const res = yield axios.post('http://localhost:5000/api/auth/forgotPassword', {email: action.data.email});
+        if (res.data.success){
+            yield history.push('/verification');
+        }
+        else {
+            if (res.data.message=='Email not found.'){
+                yield put(
+                    {
+                        type: 'find_password_invalid', 
+                        value: { 
+                            wrongFindEmail: true,
+                            findEmailMessage: 'User is not found.'
+                        } 
+                    }
+                );
+            }
+            else {
+                alert('Something wrong happened to our server, please try again later.');
+            }
+        }
+    }
+    catch(err){
+        console.log(err.response);
+        alert(err.response.data.message);
+    }
+}
 export function* watchAuth(){
     yield takeLatest('SIGN_IN', signinSaga);
     yield takeLatest('SIGN_UP', signupSaga);
     yield takeLatest('UPDATE_PROFILE', updateProfileSaga);
     yield takeLatest('CONFIRM_EMAIL', confirmEmailSaga);
+    yield takeLatest('FIND_PASSWORD', findPasswordSaga);
 }
