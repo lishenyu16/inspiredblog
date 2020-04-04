@@ -27,7 +27,7 @@ const useStyles = makeStyles(theme => ({
     title: {
         textTransform: 'capitalize', 
         fontSize:'25px',
-        marginTop:'10%',
+        marginTop:'20%',
         // '&:hover': {
         //     textDecoration:'underline'
         //  },

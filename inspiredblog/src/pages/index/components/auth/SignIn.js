@@ -15,19 +15,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import {checkAuthState} from '../../selectors/authSelector';
-
-function Copyright() {
-    return (
-        <Typography variant="body2" color="textSecondary" align="center">
-            {'Copyright © '}
-            <Link color="inherit" href="shenyu16.com">
-                shenyu16.com
-            </Link>{' '}
-            {new Date().getFullYear()}
-            {'.'}
-        </Typography>
-    );
-}
+import isEmail from 'validator/lib/isEmail';
   
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -48,12 +36,6 @@ const useStyles = makeStyles(theme => ({
 const SignIn = (props) => {
     const classes = useStyles();
     let history = useHistory();
-    // useEffect(()=>{
-    //     props.checkAuthState()
-    // },[props.isAuthenticated])
-    // useEffect(()=>{
-    //     props.initTrade()
-    // },[])
     const [email, setEmail] = useState(null);
     const [password, setPassword] = useState(null);
 
@@ -64,6 +46,20 @@ const SignIn = (props) => {
         }
         else {
             redirect = <Redirect to="/" />;   
+        }
+    }
+    const clickOnSignIn = () => {
+        if (email==null || email.trim().length==0){
+            props.showErrors(true,false,null,'Please enter your email');
+        }
+        else if (!isEmail(email)){
+            props.showErrors(true,false,null,'Email is invalid');
+        }
+        else if (password==null || password.trim().length < 6){
+            props.showErrors(false,true,'Password must contain at least 6 characters',null);
+        }
+        else {
+            props.onSignIn(email, password);
         }
     }
     return (
@@ -79,6 +75,7 @@ const SignIn = (props) => {
                 </Typography>
                 <div style={{width:'100%', margin: '30px 0'}}>
                     <TextField
+                        error={props.auth.wrongEmail}
                         variant="outlined"
                         margin="normal"
                         required
@@ -86,11 +83,16 @@ const SignIn = (props) => {
                         id="email"
                         label="Email Address"
                         name="email"
+                        helperText={props.auth.emailMessage}
                         autoComplete="email"
                         autoFocus
-                        onChange={(e)=>setEmail(e.target.value)}
+                        onChange={(e)=>{
+                            setEmail(e.target.value);
+                            props.clearErrors();
+                        }}
                     />
                     <TextField
+                        error={props.auth.wrongPassword}
                         variant="outlined"
                         margin="normal"
                         required
@@ -99,8 +101,12 @@ const SignIn = (props) => {
                         label="Password"
                         type="password"
                         id="password"
+                        helperText={props.auth.passwordMessage}
                         autoComplete="current-password"
-                        onChange={(e)=>setPassword(e.target.value)}
+                        onChange={(e)=>{
+                            setPassword(e.target.value);
+                            props.clearErrors();
+                        }}
                     />
                     <FormControlLabel
                         control={<Checkbox value="remember" color="primary" />}
@@ -112,7 +118,8 @@ const SignIn = (props) => {
                         variant="contained"
                         color="primary"
                         className={classes.submit}
-                        onClick={()=>props.onSignIn(email, password)}
+                        // onClick={()=>props.onSignIn(email, password)}
+                        onClick={()=>clickOnSignIn()}
                     >
                         Sign In
                     </Button>
@@ -130,9 +137,6 @@ const SignIn = (props) => {
                     </Grid>
                 </div>
             </div>
-            <Box mt={8}>
-                <Copyright />
-            </Box>
         </Container>
     )
 }
@@ -145,7 +149,9 @@ const mapStateToProps = (state)=>{
 }
 const mapDispatchToProps = (dispatch)=>{
     return {
-        onSignIn :(email,password)=> dispatch({type: 'SIGN_IN', data: {email, password}}),
+        onSignIn : (email,password)=> dispatch({type: 'SIGN_IN', data: {email, password}}),
+        showErrors: (wrongEmail,wrongPassword,passwordMessage,emailMessage) => dispatch({type: 'signin_fail', value: {wrongEmail,wrongPassword,passwordMessage,emailMessage}}),
+        clearErrors: ()=> dispatch({type: 'clear_errors'}),
         // onSignUp :()=> dispatch({type: 'SIGN_UP'}),
     }
 }

@@ -4,6 +4,20 @@ const initialState = {
     email: null,
     isAdmin: false,
     redirectPath: null,
+    emailConfirmed: false,
+    wrongPassword: false,
+    passwordMessage: null,
+    wrongEmail: false,
+    emailMessage: null,
+
+    wrongUsername: false,
+    usernameMessage: null,
+    wrongRegisterEmail: false,
+    registerEmailMessage: null,
+    wrongRegisterPw: false,
+    registerPwMessage: null,
+    wrongConfirmPw: false,
+    confirmPwMessage: null,
 }
 
 const authReducer = (state=initialState, action) => {
@@ -17,9 +31,40 @@ const authReducer = (state=initialState, action) => {
                 isAdmin: action.payload.isAdmin,
             }
         case ('signin_fail'):
-            return state;
+            return {
+                ...state,
+                wrongEmail: action.value.wrongEmail,
+                wrongPassword: action.value.wrongPassword,
+                emailMessage: action.value.emailMessage,
+                passwordMessage: action.value.passwordMessage,
+            }
         case ('signup_fail'):
-            return state;
+            return {
+                ...state,
+                wrongUsername: action.value.wrongUsername || false,
+                usernameMessage: action.value.usernameMessage || null,
+                wrongRegisterEmail: action.value.wrongRegisterEmail || false,
+                registerEmailMessage: action.value.registerEmailMessage || null,
+                wrongRegisterPw: action.value.wrongRegisterPw || false,
+                registerPwMessage:action.value.registerPwMessage || null,
+                wrongConfirmPw: action.value.wrongConfirmPw || false,
+                confirmPwMessage: action.value.confirmPwMessage || null,
+            };
+        case ('clear_errors'):
+            return {
+                ...state,
+                wrongEmail: false,
+                wrongPassword: false,
+                wrongRegisterEmail: false,
+                wrongUsername: false,
+                wrongRegisterPw: false,
+                wrongConfirmPw: false
+            }
+        case ('emailConfirmed'):
+            return {
+                ...state,
+                emailConfirmed: true
+            };
         case ('logout'):
             localStorage.removeItem('username');
             localStorage.removeItem('email');

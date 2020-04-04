@@ -5,6 +5,8 @@ import Home from './components/Home';
 // import Sites from './components/Sites';
 import SignIn from './components/auth/SignIn';
 import SignUp from './components/auth/SignUp';
+import Verification from './components/auth/Verification';
+import EmailConfirmed from './components/auth/EmailConfirmed';
 import Profile from './components/Profile';
 import {connect} from 'react-redux';
 import Blogs from './components/blogs/Blogs';
@@ -299,6 +301,8 @@ const App = (props) => {
                         <Route path='/home' component = {Home}></Route>
                         <Route path='/login' component = {SignIn}></Route>
                         <Route path='/signup' component = {SignUp}></Route>
+                        <Route path='/verification' component = {Verification}></Route>
+                        <Route path='/confirmEmail/:code/:userId' component = {EmailConfirmed}></Route>
                         <Route exact path='/' component = {Home}></Route>
                         <Route path='*' component = {NotFound}></Route>
                     </Switch>
@@ -331,6 +335,8 @@ const App = (props) => {
                         <Route path='/home' component = {Home}></Route>
                         <Route path='/login' component = {SignIn}></Route>
                         <Route path='/signup' component = {SignUp}></Route>
+                        <Route path='/verification' component = {Verification}></Route>
+                        <Route path='/confirmEmail/:code/:userId' component = {EmailConfirmed}></Route>
                         <Route exact path='/' component = {Home}></Route>
                         <Route path='*' component = {NotFound}></Route>
                     </Switch>

@@ -14,19 +14,7 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-
-function Copyright() {
-    return (
-        <Typography variant="body2" color="textSecondary" align="center">
-            {'Copyright © '}
-            <Link color="inherit" href="shenyu16.com">
-                shenyu16.com
-            </Link>{' '}
-            {new Date().getFullYear()}
-            {'.'}
-        </Typography>
-    );
-}
+import isEmail from 'validator/lib/isEmail';
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -49,15 +37,31 @@ const SignUp = (props) => {
     let history = useHistory();
     const [email, setEmail] = useState(null);
     const [password, setPassword] = useState(null);
+    const [confirmPassword, setConfirmPassword] = useState(null);
     const [username, setUsername] = useState(null);
 
-    let redirect = null;
-    if (props.auth.registeredSuccess){
-        redirect = <Redirect to="/signIn" />
+    const clickOnSignup = () => {     
+        if (username == null || username.trim().length==0){
+            props.showErrors(true,'Please enter username',false,null,false,null,false,null);
+        }   
+        else if (email==null || email.trim().length==0){
+            props.showErrors(false,null,true,'Please enter your email',false,null,false,null);
+        }
+        else if (!isEmail(email)){
+            props.showErrors(false,null,true,'Email is invalid',false,null,false,null);
+        }
+        else if (password==null || password.trim().length < 6){
+            props.showErrors(false,null,false,null,true,'Password must have at least 6 characters',false,null);
+        }
+        else if (password != confirmPassword){
+            props.showErrors(false,null,false,null,false,null,true,'Passwords do not match');
+        }
+        else {
+            props.onSignUp(email, password, username, history);
+        }
     }
     return (
         <Container component="main" maxWidth="xs">
-            {redirect}
             <CssBaseline />
             <div className={classes.paper}>
                 <Avatar className={classes.avatar}>
@@ -70,6 +74,8 @@ const SignUp = (props) => {
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
                             <TextField
+                                error={props.auth.wrongUsername}
+                                helperText={props.auth.usernameMessage}
                                 variant="outlined"
                                 required
                                 fullWidth
@@ -82,6 +88,8 @@ const SignUp = (props) => {
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
+                                error={props.auth.wrongRegisterEmail}
+                                helperText={props.auth.registerEmailMessage}
                                 variant="outlined"
                                 required
                                 fullWidth
@@ -94,6 +102,8 @@ const SignUp = (props) => {
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
+                                error={props.auth.wrongRegisterPw}
+                                helperText={props.auth.registerPwMessage}                           
                                 variant="outlined"
                                 required
                                 fullWidth
@@ -103,6 +113,20 @@ const SignUp = (props) => {
                                 id="password"
                                 autoComplete="current-password"
                                 onChange={(e)=>setPassword(e.target.value)}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                error={props.auth.wrongConfirmPw}
+                                helperText={props.auth.confirmPwMessage}                           
+                                variant="outlined"
+                                required
+                                fullWidth
+                                name="confirm password"
+                                label="Confirm Password"
+                                type="password"
+                                id="confirm_password"
+                                onChange={(e)=>setConfirmPassword(e.target.value)}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -118,7 +142,7 @@ const SignUp = (props) => {
                         variant="contained"
                         color="primary"
                         className={classes.submit}
-                        onClick={()=>props.onSignUp(email, password,username, history)}
+                        onClick={()=>clickOnSignup()}
                     >
                         Sign Up
                     </Button>
@@ -131,9 +155,6 @@ const SignUp = (props) => {
                     </Grid>
                 </div>
             </div>
-            <Box mt={5}>
-                <Copyright />
-            </Box>
         </Container>
     );
 }
@@ -146,6 +167,25 @@ const mapStateToProps = (state)=>{
 const mapDispatchToProps = (dispatch)=>{
     return {
         onSignUp :(email, password, username, history)=> dispatch({type: 'SIGN_UP', data: {email, password, username, history}}),
+        showErrors: (    
+            wrongUsername,
+            usernameMessage,
+            wrongRegisterEmail,
+            registerEmailMessage,
+            wrongRegisterPw,
+            registerPwMessage,
+            wrongConfirmPw,
+            confirmPwMessage) => dispatch({type: 'signup_fail', value: {
+                wrongUsername,
+                usernameMessage,
+                wrongRegisterEmail,
+                registerEmailMessage,
+                wrongRegisterPw,
+                registerPwMessage,
+                wrongConfirmPw,
+                confirmPwMessage
+            }}),
+        clearErrors: ()=> dispatch({type: 'clear_errors'}),
     }
 }
 export default connect(mapStateToProps,mapDispatchToProps)(SignUp)

@@ -10,18 +10,30 @@ export function* signupSaga(action) {
     }
     let history = action.data.history;
     try{
-        console.log('getting inside sign up')
         const res = yield axios.post('http://localhost:5000/api/auth/signUp', authData);
         if (res.data.success){
-            yield history.push('/login');
+            yield history.push('/verification');
         }
         else {
-            yield put({type: 'signup_fail'});
+            if (res.data.message=='Email already exists.'){
+                yield put(
+                    {
+                        type: 'signup_fail', 
+                        value: { 
+                            wrongRegisterEmail: true,
+                            registerEmailMessage: 'Email already in use'
+                        } 
+                    }
+                );
+            }
+            else {
+                alert('Something wrong happened to our server, please try again later.');
+            }
         }
     } 
     catch ( error ) {
-        console.log(err.response);
-        yield put({type: 'signup_fail'});
+        console.log(error.response);
+        alert('Something wrong happened to our server, please try again later.');
     }
 }
 
@@ -50,12 +62,40 @@ export function* signinSaga(action){
             })
         }
         else {
-            yield put({type: 'signin_fail'});
+            if (res.data.message=='Incorrect password.'){
+                yield put(
+                    {
+                        type: 'signin_fail', 
+                        value: { 
+                            wrongPassword: true, 
+                            wrongEmail: false, 
+                            passwordMessage: 'Password does not match our records', 
+                            emailMessage: null
+                        } 
+                    }
+                );
+            }
+            else if (res.data.message=='Email not found.'){
+                yield put(
+                    {
+                        type: 'signin_fail', 
+                        value: { 
+                            wrongEmail: true, 
+                            wrongPassword: false,
+                            passwordMessage: null, 
+                            emailMessage: 'User not found'
+                        } 
+                    }
+                );
+            }
+            else {
+                alert('Something wrong happened to our server, please try again later.');
+            }
         }
     }
     catch(error){
-        console.log(err.response);
-        alert('Something wrong happened to the server, please try again later.')
+        console.log(error.response);
+        alert(error.response.data.message);
     }
 }
 
@@ -80,8 +120,23 @@ function* updateProfileSaga(action){
         alert('Something wrong happenend!')
     }
 }
+
+function* confirmEmailSaga(action){
+    try {
+        const res = yield axios.post('http://localhost:5000/api/auth/confirmEmail', 
+        {userId: action.value.userId,verificationCode: action.value.code});
+        yield put({
+            type: 'emailConfirmed',
+        })
+    }
+    catch(err){
+        console.log(err.response);
+        alert(err.response.data.message);
+    }
+}
 export function* watchAuth(){
     yield takeLatest('SIGN_IN', signinSaga);
     yield takeLatest('SIGN_UP', signupSaga);
     yield takeLatest('UPDATE_PROFILE', updateProfileSaga);
+    yield takeLatest('CONFIRM_EMAIL', confirmEmailSaga);
 }
