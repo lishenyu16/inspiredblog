@@ -1,7 +1,7 @@
 import { takeLatest, call, put, select } from 'redux-saga/effects';
 import axios from 'axios';
 
-
+const host = process.env.NODE_ENV === "production"?'':'http://localhost:5000';
 function* createBlog(action){
     let header = {
         headers: {
@@ -13,7 +13,7 @@ function* createBlog(action){
         blogContent: action.payload[1]
     }
     let history = action.payload[2];
-    axios.post('http://localhost:5000/api/blogs/addBlog', data, header)
+    axios.post(host + '/api/blogs/addBlog', data, header)
     .then(async (res)=>{
         // await put({
         //     type: 'create_blog_success'
@@ -28,7 +28,7 @@ function* createBlog(action){
 
 function* fetchBlogs(action){
     try {
-        const result = yield axios.get('http://localhost:5000/api/blogs/fetchBlogs');
+        const result = yield axios.get(host + '/api/blogs/fetchBlogs');
         yield put({
             type: 'fetch_blogs_success',
             payload: result.data.blogs
@@ -41,7 +41,7 @@ function* fetchBlogs(action){
 }
 function* fetchBlogDetail(action){
     try {
-        const result = yield axios.get(`http://localhost:5000/api/blogs/blogDetail/${action.payload}`);
+        const result = yield axios.get(host + `/api/blogs/blogDetail/${action.payload}`);
         yield put({
             type: 'fetch_blogDetail_success',
             payload: result.data.blog || null
@@ -65,7 +65,7 @@ function* saveEdit(action){
             blogTitle: action.payload.blogTitle,
             blogContent: action.payload.blogContent,
         }
-        const result = yield axios.post(`http://localhost:5000/api/blogs/editBlog`, data, header);
+        const result = yield axios.post(host + `/api/blogs/editBlog`, data, header);
         yield put({
             type: 'fetch_blogDetail_success',
             payload: result.data.blog,

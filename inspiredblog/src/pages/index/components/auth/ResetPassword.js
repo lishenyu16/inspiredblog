@@ -1,20 +1,16 @@
-import React, { Component, userEffect, useState } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import {Redirect, useHistory} from 'react-router-dom';
 import {connect} from 'react-redux';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
-import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
-import isEmail from 'validator/lib/isEmail';
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -37,29 +33,23 @@ const ResetPassword = (props) => {
     let history = useHistory();
     const [password, setPassword] = useState(null);
     const [confirmPassword, setConfirmPassword] = useState(null);
+    const [code, setCode] = useState(null);
+    const [userId, setUserId] = useState(null);
     useEffect(()=>{
         let {code, userId} = props.match.params;
-        props.confirmEmail(code,userId);
+        setCode(code);
+        setUserId(userId);
     },[])
 
-    const clickOnSignup = () => {     
-        if (username == null || username.trim().length==0){
-            props.showErrors(true,'Please enter username',false,null,false,null,false,null);
-        }   
-        else if (email==null || email.trim().length==0){
-            props.showErrors(false,null,true,'Please enter your email',false,null,false,null);
+    const clickOnReset = () => {     
+        if (password==null || password.trim().length < 6){
+            props.showErrors(true,'Password must have at least 6 characters',false,null);
         }
-        else if (!isEmail(email)){
-            props.showErrors(false,null,true,'Email is invalid',false,null,false,null);
-        }
-        else if (password==null || password.trim().length < 6){
-            props.showErrors(false,null,false,null,true,'Password must have at least 6 characters',false,null);
-        }
-        else if (password != confirmPassword){
-            props.showErrors(false,null,false,null,false,null,true,'Passwords do not match');
+        else if (password !== confirmPassword){
+            props.showErrors(false,null,true,'Passwords do not match');
         }
         else {
-            props.onSignUp(email, password, username, history);
+            props.onResetPw(code, userId, password, history);
         }
     }
     return (
@@ -110,14 +100,14 @@ const ResetPassword = (props) => {
                         variant="contained"
                         color="primary"
                         className={classes.submit}
-                        onClick={()=>clickOnSignup()}
+                        onClick={()=>clickOnReset()}
                     >
                         Reset Password
                     </Button>
                     <Grid container justify="flex-end">
                         <Grid item>
                             <Link onClick={()=>history.push('/login')} variant="body2">
-                                Sign in
+                                Go To Sign in
                             </Link>
                         </Grid>
                     </Grid>
@@ -134,24 +124,16 @@ const mapStateToProps = (state)=>{
 }
 const mapDispatchToProps = (dispatch)=>{
     return {
-        onSignUp :(email, password, username, history)=> dispatch({type: 'SIGN_UP', data: {email, password, username, history}}),
+        onResetPw :(code, userId,password, history)=> dispatch({type: 'RESET_PASSWORD', data: {code, userId, password, history}}),
         showErrors: (    
-            wrongUsername,
-            usernameMessage,
-            wrongRegisterEmail,
-            registerEmailMessage,
-            wrongRegisterPw,
-            registerPwMessage,
-            wrongConfirmPw,
-            confirmPwMessage) => dispatch({type: 'signup_fail', value: {
-                wrongUsername,
-                usernameMessage,
-                wrongRegisterEmail,
-                registerEmailMessage,
-                wrongRegisterPw,
-                registerPwMessage,
-                wrongConfirmPw,
-                confirmPwMessage
+            wrongResetPassword,
+            resetPasswordMessage,
+            wrongResetConfirmPassword,
+            resetConfirmPasswordMessage) => dispatch({type: 'reset_password_invalid', value: {
+                wrongResetPassword,
+                resetPasswordMessage,
+                wrongResetConfirmPassword,
+                resetConfirmPasswordMessage,
             }}),
         clearErrors: ()=> dispatch({type: 'clear_errors'}),
     }

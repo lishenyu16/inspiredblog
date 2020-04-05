@@ -2,6 +2,7 @@ import { delay, takeEvery, takeLatest, put } from 'redux-saga/effects';
 import axios from 'axios';
 //https://github.com/redux-saga/redux-saga/issues/996#issuecomment-302857705
 
+const host = process.env.NODE_ENV === "production"?'':'http://localhost:5000';
 export function* signupSaga(action) {
     const authData = {
         username: action.data.username,
@@ -10,7 +11,7 @@ export function* signupSaga(action) {
     }
     let history = action.data.history;
     try{
-        const res = yield axios.post('http://localhost:5000/api/auth/signUp', authData);
+        const res = yield axios.post(host + '/api/auth/signUp', authData);
         if (res.data.success){
             yield history.push('/verification');
         }
@@ -43,7 +44,7 @@ export function* signinSaga(action){
         password: action.data.password
     }
     try{
-        const res = yield axios.post('http://localhost:5000/api/auth/signIn', authData);
+        const res = yield axios.post(host + '/api/auth/signIn', authData);
         if (res.data.success) {
             // yield localStorage.setItem('userId',res.data.userId);
             yield localStorage.setItem('username',res.data.username);
@@ -106,7 +107,7 @@ function* updateProfileSaga(action){
         }
     } 
     try {
-        const res = yield axios.post('http://localhost:5000/api/auth/updateProfile', {username: action.payload}, header);
+        const res = yield axios.post(host + '/api/auth/updateProfile', {username: action.payload}, header);
         yield localStorage.setItem('username',res.data.username);
         yield put({
             type: 'updateProfile',
@@ -123,7 +124,7 @@ function* updateProfileSaga(action){
 
 function* confirmEmailSaga(action){
     try {
-        const res = yield axios.post('http://localhost:5000/api/auth/confirmEmail', 
+        const res = yield axios.post(host + '/api/auth/confirmEmail', 
         {userId: action.value.userId,verificationCode: action.value.code});
         yield put({
             type: 'emailConfirmed',
@@ -137,9 +138,41 @@ function* confirmEmailSaga(action){
 function* findPasswordSaga(action){
     try {
         let history = action.data.history;
-        const res = yield axios.post('http://localhost:5000/api/auth/forgotPassword', {email: action.data.email});
+        const res = yield axios.post(host + '/api/auth/forgotPassword', {email: action.data.email});
         if (res.data.success){
             yield history.push('/verification');
+        }
+        else {
+            if (res.data.message=='Email not found.'){
+                yield put(
+                    {
+                        type: 'find_password_invalid', 
+                        value: { 
+                            wrongFindEmail: true,
+                            findEmailMessage: 'User is not found.'
+                        } 
+                    }
+                );
+            }
+            else {
+                alert('Something wrong happened to our server, please try again later.');
+            }
+        }
+    }
+    catch(err){
+        console.log(err.response);
+        alert(err.response.data.message);
+    }
+}
+function* resetPasswordSaga(action){
+    try {
+        let history = action.data.history;
+        let code = action.data.code;
+        let userId = action.data.userId;
+        let password = action.data.password;
+        const res = yield axios.post(host + '/api/auth/resetPassword', {code, userId, password});
+        if (res.data.success){
+            yield history.push('/login');
         }
         else {
             if (res.data.message=='Email not found.'){
@@ -169,4 +202,5 @@ export function* watchAuth(){
     yield takeLatest('UPDATE_PROFILE', updateProfileSaga);
     yield takeLatest('CONFIRM_EMAIL', confirmEmailSaga);
     yield takeLatest('FIND_PASSWORD', findPasswordSaga);
+    yield takeLatest('RESET_PASSWORD', resetPasswordSaga);
 }
