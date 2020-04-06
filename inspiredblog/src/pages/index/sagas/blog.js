@@ -40,8 +40,13 @@ function* fetchBlogs(action){
     }
 }
 function* fetchBlogDetail(action){
+    let header = {
+        headers: localStorage.getItem('token')? {
+            Authorization: 'Bearer ' + localStorage.getItem('token')
+        } :null
+    } 
     try {
-        const result = yield axios.get(host + `/api/blogs/blogDetail/${action.payload}`);
+        const result = yield axios.get(host + `/api/blogs/blogDetail/${action.payload}`, header);
         yield put({
             type: 'fetch_blogDetail_success',
             payload: result.data.blog || null

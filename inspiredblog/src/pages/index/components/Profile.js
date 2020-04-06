@@ -16,7 +16,7 @@ const Profile = (props) => {
     let history = useHistory();
     const [username, setUsername] = useState('');
     useEffect(()=>{
-        setUsername(props.auth.username)
+        setUsername(localStorage.getItem('username'));
     },[props.auth.username])
     
     return (
