@@ -83,11 +83,11 @@ const Blogs = (props) => {
     },[]);
     const clickAdd = () => {
         if (checkAuthState()){
-            history.push('/addBlog');
+            history.push('/blogs/addBlog');
         }
         else {
             props.redirect(); //save previous path into store
-            history.push('/login');
+            history.push('/blogs/login');
         }
     }
     return (
@@ -95,12 +95,12 @@ const Blogs = (props) => {
             <div className={classes.addBlog} style={{cursor:'pointer'}} onClick={clickAdd}>Post a blog</div>
             {props.blogs.publicBlogs.length>0?props.blogs.publicBlogs.map(ele=>
                 <div className={classes.item} key={ele.blog_id}>
-                    <div className={classes.title} onClick={()=>history.push(`/blogDetail/${ele.blog_id}`)}>{ele.blog_title}</div>
+                    <div className={classes.title} onClick={()=>history.push(`/blogs/blog-detail/${ele.blog_id}`)}>{ele.blog_title}</div>
                     <div className={classes.publishedDate}>
                         Published on {format(new Date(ele.created_on), 'MM-dd-yyyy')} By {ele.username}
                     </div>
                     <div>
-                        <Button className={classes.readEntire} onClick={()=>history.push(`/blogDetail/${ele.blog_id}`)}>
+                        <Button className={classes.readEntire} onClick={()=>history.push(`/blogs/blog-detail/${ele.blog_id}`)}>
                             Read the entire article..
                         </Button>
                     </div>
@@ -121,7 +121,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        redirect: ()=>dispatch({type: 'redirect', url: '/addBlog'}),
+        redirect: ()=>dispatch({type: 'redirect', url: '/blogs/add-blog'}),
         fetchBlogs: ()=>dispatch({type:'FETCH_BLOGS'})
     }
 }

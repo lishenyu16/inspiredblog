@@ -173,7 +173,7 @@ const App = (props) => {
                     <ListItemIcon><HomeIcon /></ListItemIcon>
                     <ListItemText primary={'Home'} />
                 </ListItem>
-                <ListItem button onClick={()=>history.push('/blogs')}>
+                <ListItem button onClick={()=>history.push('/blogs/public-blogs')}>
                     <ListItemIcon><BookIcon /></ListItemIcon>
                     <ListItemText primary={'Blogs'} />
                 </ListItem>
@@ -181,11 +181,11 @@ const App = (props) => {
                     <ListItemIcon><ClassIcon /></ListItemIcon>
                     <ListItemText primary={'Sites'} />
                 </ListItem> */}
-                <ListItem button onClick={()=>history.push('/categories')}>
+                <ListItem button onClick={()=>history.push('/blogs/categories')}>
                     <ListItemIcon><ClassIcon /></ListItemIcon>
                     <ListItemText primary={'Categories'} />
                 </ListItem>
-                <ListItem button onClick={()=>history.push('/login')} style={{display: checkAuthState()?'none':''}}>
+                <ListItem button onClick={()=>history.push('/blogs/login')} style={{display: checkAuthState()?'none':''}}>
                     <ListItemIcon>
                         <i class="fas fa-sign-in-alt" style={{fontSize:'24px'}}></i>
                     </ListItemIcon>
@@ -206,7 +206,30 @@ const App = (props) => {
                 </ListItem>
           </List>
         </div>
-	);
+    );
+    const router = (                    
+    <Switch>         
+        <Route path='/home' component = {Home}></Route>
+        <Route path='/blogs/add-blog' component = {AddBlog}></Route>
+        <Route path='/blogs/categories' component = {Category}></Route>
+        <Route path='/blogs/login' component = {SignIn}></Route>
+        <Route path='/blogs/signup' component = {SignUp}></Route>
+        <Route path='/blogs/forgot-password' component = {ForgotPassword}></Route>
+
+        {/* below are protected(page can't be refreshed) routes */}
+        <Route path='/blogs/verification' component = {Verification}></Route>
+        <Route path='/blogs/confirm-email/:code/:userId' component = {EmailConfirmed}></Route>
+        <Route path='/blogs/reset-password/:code/:userId' component = {ResetPassword}></Route>
+        {/* End of protected */}
+
+        <Route path='/blogs/profile' component = {Profile}></Route>
+        <Route path='/blogs/blog-detail/:blog_id' component = {BlogDetail}></Route>
+        <Route path='/blogs/public-blogs' component = {Blogs}></Route>
+        <Route path='/blogs' component = {Blogs}></Route>
+        <Route exact path='/' component = {Home}></Route>
+        <Route path='*' component = {NotFound}></Route>
+    </Switch>)
+
 	return (
 		<React.Fragment>
 			<div className={classes.desktop}>
@@ -258,7 +281,7 @@ const App = (props) => {
                         </div>
                         <div className={classes.link}>
                             <DescriptionIcon style={{marginRight:'5px', fontSize:'15px'}} />
-                            <Link to='/blogs' style={{textDecoration:'none'}}>Blogs</Link>
+                            <Link to='/blogs/public-blogs' style={{textDecoration:'none'}}>Blogs</Link>
                         </div>
                         {/* <div className={classes.link}>
                             <i class="material-icons" style={{marginRight:'5px',fontSize:'15px'}}>person</i>
@@ -266,17 +289,17 @@ const App = (props) => {
                         </div> */}
                         <div className={classes.link}>
                             <i class="material-icons" style={{marginRight:'5px',fontSize:'15px'}}>class</i>
-                            <Link to='/categories' style={{textDecoration:'none'}}>Categories</Link>
+                            <Link to='/blogs/categories' style={{textDecoration:'none'}}>Categories</Link>
                         </div>
                         <div className={classes.link} style={{display: checkAuthState()?'':'none'}}>
                             <span class="material-icons" style={{marginRight:'5px',fontSize:'15px'}}>
                                 account_box
                             </span>
-                            <Link to='/profile' style={{textDecoration:'none'}}>Your Profile</Link>
+                            <Link to='/blogs/profile' style={{textDecoration:'none'}}>Your Profile</Link>
                         </div>
                         <div className={classes.link} style={{display: checkAuthState()?'none':'', }}>
                             <i class="fas fa-sign-in-alt" style={{marginRight:'5px', fontSize:'15px'}}></i>
-                            <Link to='/login' style={{textDecoration:'none'}}>Sign In</Link>
+                            <Link to='/blogs/login' style={{textDecoration:'none'}}>Sign In</Link>
                         </div>
                         <div className={classes.link} style={{display: checkAuthState()?'':'none'}}>
                             <i class="fas fa-sign-out-alt" style={{marginRight:'5px',fontSize:'15px'}}></i>
@@ -293,23 +316,7 @@ const App = (props) => {
                     </div>
                 </div>
                 <div className={classes.rightSectionDiv}>
-                    <Switch>
-                        <Route path='/blogs' component = {Blogs}></Route>
-                        <Route path='/blogDetail/:blog_id' component = {BlogDetail}></Route>
-                        <Route path='/addBlog' component = {AddBlog}></Route>
-                        <Route path='/categories' component = {Category}></Route>
-                        {/* <Route path='/sites' component = {Sites}></Route> */}
-                        <Route path='/profile' component = {Profile}></Route>
-                        <Route path='/home' component = {Home}></Route>
-                        <Route path='/login' component = {SignIn}></Route>
-                        <Route path='/signup' component = {SignUp}></Route>
-                        <Route path='/verification' component = {Verification}></Route>
-                        <Route path='/forgotPassword' component = {ForgotPassword}></Route>
-                        <Route path='/confirmEmail/:code/:userId' component = {EmailConfirmed}></Route>
-                        <Route path='/resetPassword/:code/:userId' component = {ResetPassword}></Route>
-                        <Route exact path='/' component = {Home}></Route>
-                        <Route path='*' component = {NotFound}></Route>
-                    </Switch>
+                    {router}
                     <Footer />
                 </div>
             </div>
@@ -329,23 +336,7 @@ const App = (props) => {
 					</div>
 				</div>
                 <div className={classes.mobileBody}>
-                    <Switch>
-                        <Route path='/blogs' component = {Blogs}></Route>
-                        <Route path='/blogDetail/:blog_id' component = {BlogDetail}></Route>
-                        <Route path='/addBlog' component = {AddBlog}></Route>
-                        <Route path='/categories' component = {Category}></Route>
-                        {/* <Route path='/sites' component = {Sites}></Route> */}
-                        <Route path='/profile' component = {Profile}></Route>
-                        <Route path='/home' component = {Home}></Route>
-                        <Route path='/login' component = {SignIn}></Route>
-                        <Route path='/signup' component = {SignUp}></Route>
-                        <Route path='/verification' component = {Verification}></Route>
-                        <Route path='/forgotPassword' component = {ForgotPassword}></Route>
-                        <Route path='/confirmEmail/:code/:userId' component = {EmailConfirmed}></Route>
-                        <Route path='/resetPassword/:code/:userId' component = {ResetPassword}></Route>
-                        <Route exact path='/' component = {Home}></Route>
-                        <Route path='*' component = {NotFound}></Route>
-                    </Switch>
+                    {router}
                     <Footer />
                 </div>
 			</div>

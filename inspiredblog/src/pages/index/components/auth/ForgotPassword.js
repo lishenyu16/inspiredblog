@@ -89,7 +89,7 @@ const ForgotPassword = (props) => {
                         variant="outlined"
                         color="primary"
                         className={classes.submit}
-                        onClick={()=>history.push('/login')}
+                        onClick={()=>history.push('/blogs/login')}
                     >
                         Back To Sign In
                     </Button>

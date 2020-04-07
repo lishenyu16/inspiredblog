@@ -18,7 +18,7 @@ function* createBlog(action){
         // await put({
         //     type: 'create_blog_success'
         // })
-        await history.push('/blogs');
+        await history.push('/blogs/public-blogs');
     })
     .catch(err=>{
         alert('Failed to create blog, please try again later.');

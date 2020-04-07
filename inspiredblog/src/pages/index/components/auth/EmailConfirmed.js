@@ -32,7 +32,7 @@ const EmailConfirmed = (props) => {
                     </div>
                     <div style={{width:'100%', textAlign:'center',}}>
                         <button 
-                            onClick={()=>history.push('/login')} 
+                            onClick={()=>history.push('/blogs/login')} 
                             style={{padding:'5px 20px', fontSize:'inherit', backgroundColor:'lightcyan', borderRadius:'5px'}}
                         >
                             Login

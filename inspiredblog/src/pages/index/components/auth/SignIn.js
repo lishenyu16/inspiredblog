@@ -124,12 +124,12 @@ const SignIn = (props) => {
                     </Button>
                     <Grid container>
                         <Grid item xs>
-                            <Link variant="body2" onClick={()=>history.push('/forgotPassword')}>
+                            <Link variant="body2" onClick={()=>history.push('/blogs/forgot-password')}>
                                 Forgot password?
                             </Link>
                         </Grid>
                         <Grid item>
-                            <Link  variant="body2" onClick={()=>history.push('/signup')}>
+                            <Link  variant="body2" onClick={()=>history.push('/blogs/signup')}>
                                 {"Don't have an account? Sign Up"}
                             </Link>
                         </Grid>

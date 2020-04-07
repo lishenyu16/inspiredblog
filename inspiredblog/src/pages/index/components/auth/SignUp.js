@@ -148,7 +148,7 @@ const SignUp = (props) => {
                     </Button>
                     <Grid container justify="flex-end">
                         <Grid item>
-                            <Link onClick={()=>history.push('/login')} variant="body2">
+                            <Link onClick={()=>history.push('/blogs/login')} variant="body2">
                                 Already have an account? Sign in
                             </Link>
                         </Grid>

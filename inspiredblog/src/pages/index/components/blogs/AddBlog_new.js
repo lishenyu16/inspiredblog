@@ -130,7 +130,7 @@ const AddBlog = (props) => {
                 <Button className={classes.saveButton} variant="contained" onClick={()=>save()}>
                     Save
                 </Button>
-                <Button className={classes.saveButton} variant="contained" onClick={()=>history.push('/blogs')}>
+                <Button className={classes.saveButton} variant="contained" onClick={()=>history.push('/blogs/public-blogs')}>
                     Cancel
                 </Button>
             </div>

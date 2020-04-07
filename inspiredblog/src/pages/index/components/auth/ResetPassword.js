@@ -106,7 +106,7 @@ const ResetPassword = (props) => {
                     </Button>
                     <Grid container justify="flex-end">
                         <Grid item>
-                            <Link onClick={()=>history.push('/login')} variant="body2">
+                            <Link onClick={()=>history.push('/blogs/login')} variant="body2">
                                 Go To Sign in
                             </Link>
                         </Grid>

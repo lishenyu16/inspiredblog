@@ -142,7 +142,7 @@ const BlogDetail = (props) => {
         }
         else {
             props.saveRedirectPath('/blogDetail/'+props.blog.blogDetail.blog_id);
-            history.push('/login');
+            history.push('/blogs/login');
         }
     }
 
@@ -154,7 +154,7 @@ const BlogDetail = (props) => {
         }
         else {
             props.saveRedirectPath('/blogDetail/'+props.blog.blogDetail.blog_id);
-            history.push('/login');
+            history.push('/blogs/login');
         }
     }
     const toolbar =  {
@@ -212,7 +212,7 @@ const BlogDetail = (props) => {
             // detail block ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             props.blog.blogDetail?
             <React.Fragment>
-                <div className={classes.arrowBack} style={{cursor:'pointer'}} onClick={()=>history.push('/blogs')}>
+                <div className={classes.arrowBack} style={{cursor:'pointer'}} onClick={()=>history.push('/blogs/public-blogs')}>
                     <span class="material-icons">
                         arrow_back_ios
                     </span>

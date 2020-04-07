@@ -13,7 +13,7 @@ export function* signupSaga(action) {
     try{
         const res = yield axios.post(host + '/api/auth/signUp', authData);
         if (res.data.success){
-            yield history.push('/verification');
+            yield history.push('/blogs/verification');
         }
         else {
             if (res.data.message=='Email already exists.'){
@@ -140,7 +140,7 @@ function* findPasswordSaga(action){
         let history = action.data.history;
         const res = yield axios.post(host + '/api/auth/forgotPassword', {email: action.data.email});
         if (res.data.success){
-            yield history.push('/verification');
+            yield history.push('/blogs/verification');
         }
         else {
             if (res.data.message=='Email not found.'){
@@ -172,7 +172,7 @@ function* resetPasswordSaga(action){
         let password = action.data.password;
         const res = yield axios.post(host + '/api/auth/resetPassword', {code, userId, password});
         if (res.data.success){
-            yield history.push('/login');
+            yield history.push('/blogs/login');
         }
         else {
             if (res.data.message=='Email not found.'){
