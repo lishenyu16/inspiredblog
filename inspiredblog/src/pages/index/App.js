@@ -217,10 +217,8 @@ const App = (props) => {
         <Route path='/blogs/forgot-password' component = {ForgotPassword}></Route>
 
         <Route path='/blogs/confirm-email/:code/:userId' component = {EmailConfirmed}></Route>
-        {/* below are protected(page can't be refreshed) routes */}
         <Route path='/blogs/verification' component = {Verification}></Route>
         <Route path='/blogs/reset-password/:code/:userId' component = {ResetPassword}></Route>
-        {/* End of protected */}
 
         <Route path='/blogs/profile' component = {Profile}></Route>
         <Route path='/blogs/blog-detail/:blog_id' component = {BlogDetail}></Route>
