@@ -216,9 +216,9 @@ const App = (props) => {
         <Route path='/blogs/signup' component = {SignUp}></Route>
         <Route path='/blogs/forgot-password' component = {ForgotPassword}></Route>
 
+        <Route path='/blogs/confirm-email/:code/:userId' component = {EmailConfirmed}></Route>
         {/* below are protected(page can't be refreshed) routes */}
         <Route path='/blogs/verification' component = {Verification}></Route>
-        <Route path='/blogs/confirm-email/:code/:userId' component = {EmailConfirmed}></Route>
         <Route path='/blogs/reset-password/:code/:userId' component = {ResetPassword}></Route>
         {/* End of protected */}
 

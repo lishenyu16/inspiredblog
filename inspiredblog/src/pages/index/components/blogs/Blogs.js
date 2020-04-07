@@ -83,7 +83,7 @@ const Blogs = (props) => {
     },[]);
     const clickAdd = () => {
         if (checkAuthState()){
-            history.push('/blogs/addBlog');
+            history.push('/blogs/add-blog');
         }
         else {
             props.redirect(); //save previous path into store
