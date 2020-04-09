@@ -217,7 +217,7 @@ const BlogDetail = (props) => {
                         arrow_back_ios
                     </span>
                 </div>
-                <div className={classes.editBlog} style={{cursor:'pointer', display:!checkAuthState()?'none':localStorage.getItem('user_id')==props.blog.blogDetail.user_id?'':'none'}} onClick={clickEdit}>
+                <div className={classes.editBlog} style={{cursor:'pointer', display:!checkAuthState()?'none':localStorage.getItem('userId')==props.blog.blogDetail.user_id?'':'none'}} onClick={clickEdit}>
                     Edit
                 </div>
                 <div className={classes.title}>{props.blog.blogDetail.blog_title}</div>

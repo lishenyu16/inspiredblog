@@ -29,6 +29,7 @@ import MailIcon from '@material-ui/icons/Mail';
 import ClassIcon from '@material-ui/icons/Class';
 import HomeIcon from '@material-ui/icons/Home';
 import BookIcon from '@material-ui/icons/Book';
+import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import profile from './img/profile.png';
 import DescriptionIcon from '@material-ui/icons/Description';
 import Particles from 'react-particles-js';
@@ -185,6 +186,10 @@ const App = (props) => {
                     <ListItemIcon><ClassIcon /></ListItemIcon>
                     <ListItemText primary={'Categories'} />
                 </ListItem>
+                <ListItem button onClick={()=>history.push(`/blogs/profile/${localStorage.getItem('userId')}`)}>
+                    <ListItemIcon><AccountBoxIcon /></ListItemIcon>
+                    <ListItemText primary={'Your Profile'} />
+                </ListItem>
                 <ListItem button onClick={()=>history.push('/blogs/login')} style={{display: checkAuthState()?'none':''}}>
                     <ListItemIcon>
                         <i class="fas fa-sign-in-alt" style={{fontSize:'24px'}}></i>
@@ -220,7 +225,7 @@ const App = (props) => {
         <Route path='/blogs/verification' component = {Verification}></Route>
         <Route path='/blogs/reset-password/:code/:userId' component = {ResetPassword}></Route>
 
-        <Route path='/blogs/profile' component = {Profile}></Route>
+        <Route path='/blogs/profile/:targetId' component = {Profile}></Route>
         <Route path='/blogs/blog-detail/:blog_id' component = {BlogDetail}></Route>
         <Route path='/blogs/public-blogs' component = {Blogs}></Route>
         <Route path='/blogs' component = {Blogs}></Route>
@@ -293,7 +298,7 @@ const App = (props) => {
                             <span class="material-icons" style={{marginRight:'5px',fontSize:'15px'}}>
                                 account_box
                             </span>
-                            <Link to='/blogs/profile' style={{textDecoration:'none'}}>Your Profile</Link>
+                            <Link to={`/blogs/profile/${localStorage.getItem('userId')}`} style={{textDecoration:'none'}}>Your Profile</Link>
                         </div>
                         <div className={classes.link} style={{display: checkAuthState()?'none':'', }}>
                             <i class="fas fa-sign-in-alt" style={{marginRight:'5px', fontSize:'15px'}}></i>

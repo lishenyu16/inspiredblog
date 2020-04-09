@@ -51,6 +51,7 @@ export function* signinSaga(action){
             yield localStorage.setItem('email',res.data.email);
             yield localStorage.setItem('token',res.data.token);
             yield localStorage.setItem('isAdmin',res.data.isAdmin);
+            yield localStorage.setItem('userId',res.data.userId);
             yield localStorage.setItem('expirationTime', new Date(res.data.expirationTime));
             yield put({
                 type: 'signin_success',
