@@ -95,7 +95,7 @@ const Blogs = (props) => {
             <div className={classes.addBlog} style={{cursor:'pointer'}} onClick={clickAdd}>Post a blog</div>
             {props.blogs.publicBlogs.length>0?props.blogs.publicBlogs.map(ele=>
                 <div className={classes.item} key={ele.blog_id}>
-                    <div className={classes.title} onClick={()=>history.push(`/blogs/blog-detail/${ele.blog_id}`)}>{ele.blog_title}</div>
+                    <div className={`${classes.title} belloBold`} onClick={()=>history.push(`/blogs/blog-detail/${ele.blog_id}`)}>{ele.blog_title}</div>
                     <div className={classes.publishedDate}>
                         Published on {format(new Date(ele.created_on), 'MM-dd-yyyy')} By  
                         <Link to={`/blogs/profile/${ele.user_id}`} style={{textDecoration:'none'}}>{' '+ele.username}</Link>

@@ -212,7 +212,7 @@ const BlogDetail = (props) => {
             // detail block ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             props.blog.blogDetail?
             <React.Fragment>
-                <div className={classes.arrowBack} style={{cursor:'pointer'}} onClick={()=>history.push('/blogs/public-blogs')}>
+                <div className={classes.arrowBack} style={{cursor:'pointer'}} onClick={()=>history.goBack()}>
                     <span class="material-icons" style={{color: 'rgba(29,161,242,1.00)'}}>
                         arrow_back_ios
                     </span>

@@ -1,14 +1,19 @@
 import React, { Component , useEffect, useState } from 'react'
 import {Redirect, useHistory} from 'react-router-dom';
 import {connect} from 'react-redux';
-// import TextField from '@material-ui/core/TextField';
+import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import profile from '../img/profile.png';
 import format from 'date-fns/format';
 import {checkAuthState} from '../selectors/authSelector';
-// import DateRangeIcon from '@material-ui/icons/DateRange';
-// import calendarImg from '../img/calendar.jpg';
+import { withStyles } from '@material-ui/core/styles';
+import Dialog from '@material-ui/core/Dialog';
+import MuiDialogTitle from '@material-ui/core/DialogTitle';
+import MuiDialogContent from '@material-ui/core/DialogContent';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles(theme => ({
     outerDiv:{
@@ -128,14 +133,85 @@ const useStyles = makeStyles(theme => ({
         '&:hover': {
             background: 'lightblue',
         },
+    },
+    blogEntry: {
+        margin: '10px 0', 
+        cursor: 'pointer',
+        transitionDuration: '0.5s',
+        '&:hover':{
+            backgroundColor: 'lightgray'
+        }
     }
 }));
 
-
+const styles = theme => ({
+    root: {
+        margin: 0,
+        padding: theme.spacing(2),
+    },
+    closeButton: {
+        color: 'rgba(29,161,242,1.00)',
+    },
+    dialogTitleRoot: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        padding: '8px'
+    },
+    filledPrimary: {
+        color: 'white',
+        backgroundColor: 'rgba(29,161,242,1.00)',
+        '&:hover': {
+            backgroundColor: 'rgb(29,161,242,0.5)'
+        },
+    },
+    buttonRoot: {
+        borderRadius:'20px',
+        textTransform:'none',
+    },
+});
+  
+const DialogTitle = withStyles(styles)(props => {
+    const { children, classes, onClose, onSave, ...other } = props;
+    return (
+        <MuiDialogTitle disableTypography className={classes.root} {...other} classes={{root: classes.dialogTitleRoot}}>
+            <div style={{width: 'fit-content', display: 'flex', alignItems:'center'}}>
+                {onClose ? (
+                    <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
+                        <CloseIcon />
+                    </IconButton>
+                ) : null}
+                <div style={{fontSize:'25px'}} className='belloBold'>{children}</div>
+            </div>
+            <div style={{width: 'fit-content', display: 'flex', alignItems:'center'}}>
+                <Button variant="filled" color='primary' fullWidth onClick={onSave}
+                    classes={{root:classes.buttonRoot, filledPrimary: classes.filledPrimary}}>
+                    <span className='belloBold'>Save</span>
+                </Button>
+            </div>
+        </MuiDialogTitle>
+    );
+});
+  
+const DialogContent = withStyles(theme => ({
+    root: {
+        padding: theme.spacing(2),
+    },
+}))(MuiDialogContent);
+  
 const Profile = (props) => {
     const classes = useStyles();
     let history = useHistory();
-    // const [username, setUsername] = useState('');
+    const [username, setUsername] = useState('');
+    const [bio, setBio] = useState('');
+    const [open, setOpen] = useState(false);
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+    const handleClose = () => {
+        setUsername(props.profile.username);
+        setBio(props.profile.publicInfo);
+        setOpen(false);
+    };
     useEffect(()=>{
         if (!checkAuthState()){
             history.push('/blogs/login');
@@ -143,13 +219,65 @@ const Profile = (props) => {
         }
         props.getProfile(props.match.params.targetId);
     },[props.match.params.targetId])
+    useEffect(()=>{
+        setUsername(props.profile.username);
+    }, [props.profile.username])
+    useEffect(()=>{
+        setBio(props.profile.publicInfo);
+    }, [props.profile.publicInfo])
     
     return (
         <div className={classes.outerDiv}>
+            <Dialog onClose={handleClose} maxWidth='sm' fullWidth  open={open}>
+                <DialogTitle id="customized-dialog-title" onClose={handleClose} onSave={()=>console.log('clicked on save')}>
+                    <span className='belloBold'>Edit profile</span>
+                </DialogTitle>
+                <DialogContent dividers>
+                    <Typography gutterBottom>
+                        <div className={classes.header}>
+                        </div>
+                        <div className={classes.secondBanner}>
+                            <a style={{marginLeft:'20px'}} href="https://lishenyu16.github.io/aboutMe/" className={classes.imgHref} target='__blank'>
+                                <img src={profile} alt='profile' className={classes.photo}/>
+                            </a>  
+                        </div>
+                        <TextField
+                            id="filled-full-width"
+                            label="Username"
+                            style={{ marginTop: 46 }}
+                            placeholder="Add your username"
+                            value={username}
+                            onChange={(e)=>setUsername(e.target.value)}
+                            fullWidth
+                            margin="normal"
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                            variant="filled"
+                        />
+                        <TextField
+                            id="filled-full-width"
+                            label="Bio"
+                            multiline
+                            rowsMax="4"
+                            style={{ marginTop: 10 }}
+                            placeholder="Add your bio"
+                            value={bio}
+                            onChange={(e)=>setBio(e.target.value)}
+                            fullWidth
+                            margin="normal"
+                            InputLabelProps={{
+                                shrink: true,
+                            }}
+                            variant="filled"
+                        />
+                    </Typography>
+                </DialogContent>
+            </Dialog>
             <div className={classes.topNav}>
                 <span class="material-icons" style={{color: 'rgb(29,161,242)', margin: '0 15px', cursor:'pointer'}} onClick={()=>history.goBack()}>
                     keyboard_backspace
-                </span><span className='bolloBold'>{props.profile.username}</span> 
+                </span><span className='belloBold'>{props.profile.username}</span> 
             </div>
             <div className={classes.header}>
             </div>
@@ -159,15 +287,15 @@ const Profile = (props) => {
                 </a>
                 {props.profile.isSelf?
                     <div className={classes.edit}>
-                        <Button variant="outlined" color="primary" fullWidth 
+                        <Button variant="outlined" color="primary" fullWidth onClick={handleClickOpen}
                             classes={{root:classes.buttonRoot, outlinedPrimary: classes.outlinedPrimary}}>
-                            Edit profile
+                            <span className='belloBold'>Edit profile</span>
                         </Button>
                     </div>:
                     <div className={classes.edit}>
                         <Button variant="outlined" color="primary" fullWidth 
                             classes={{root:classes.buttonRoot, outlinedPrimary: classes.outlinedPrimary}}>
-                            Follow
+                            <span className='belloBold'>Follow</span>
                         </Button>
                     </div>
                 }   
@@ -190,7 +318,7 @@ const Profile = (props) => {
             {props.profile.showing=='posts'?
             <div style={{width:'100%', padding: '5% 10% 0'}}>
                 {props.profile.myBlogs.map(b=>
-                    <div style={{margin: '10px 0', cursor: 'pointer'}} key={b.blog_id}>
+                    <div className={classes.blogEntry} key={b.blog_id} onClick={()=>history.push(`/blogs/blog-detail/${b.blog_id}`)}>
                         <span className='belloBold' style={{fontSize:'20px'}}>{b.blog_title}</span> - published on <span style={{color: 'rgb(101,119,134)'}}>{format(new Date(b.created_on), 'MM/dd/yyyy')}</span>
                     </div>)
                 }
