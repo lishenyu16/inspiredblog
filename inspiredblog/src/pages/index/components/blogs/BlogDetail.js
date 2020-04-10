@@ -1,5 +1,5 @@
 import React, { Component, useEffect, useState  } from 'react';
-import {Redirect, useHistory} from 'react-router-dom';
+import {Redirect, useHistory, Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import ReactMarkdown from 'react-markdown'
@@ -213,7 +213,7 @@ const BlogDetail = (props) => {
             props.blog.blogDetail?
             <React.Fragment>
                 <div className={classes.arrowBack} style={{cursor:'pointer'}} onClick={()=>history.push('/blogs/public-blogs')}>
-                    <span class="material-icons">
+                    <span class="material-icons" style={{color: 'rgba(29,161,242,1.00)'}}>
                         arrow_back_ios
                     </span>
                 </div>
@@ -222,7 +222,8 @@ const BlogDetail = (props) => {
                 </div>
                 <div className={classes.title}>{props.blog.blogDetail.blog_title}</div>
                 <div className={classes.publishedDate}>
-                    Published on {format(new Date(props.blog.blogDetail.created_on), 'MM-dd-yyyy')} By {props.blog.blogDetail.username}
+                    Published on {format(new Date(props.blog.blogDetail.created_on), 'MM-dd-yyyy')} By 
+                    <Link to={`/blogs/profile/${props.blog.blogDetail.user_id}`} style={{textDecoration:'none'}}>{' '+props.blog.blogDetail.username}</Link>
                 </div>
                 <div style={{width:'85%'}}>
                     <ReactMarkdown 

@@ -9,6 +9,7 @@ function* getProfile(action){
             Authorization: 'Bearer ' + localStorage.getItem('token')
         }
     } 
+    console.log('get profile saga');
     try {
         const result = yield axios.get(host + `/api/profile/getProfile/${action.value}`, header);
         yield put({
@@ -17,6 +18,7 @@ function* getProfile(action){
         })
     }
     catch(err){
+        console.log(err);
         console.log(err.response);
         alert(err.response.data.message);
     }

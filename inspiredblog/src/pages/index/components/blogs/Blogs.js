@@ -1,5 +1,5 @@
 import React, { Component, useEffect, useState } from 'react';
-import {Redirect, useHistory} from 'react-router-dom';
+import {Redirect, useHistory, Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 // import TextField from '@material-ui/core/TextField';
 // import Button from '@material-ui/core/Button';
@@ -97,7 +97,8 @@ const Blogs = (props) => {
                 <div className={classes.item} key={ele.blog_id}>
                     <div className={classes.title} onClick={()=>history.push(`/blogs/blog-detail/${ele.blog_id}`)}>{ele.blog_title}</div>
                     <div className={classes.publishedDate}>
-                        Published on {format(new Date(ele.created_on), 'MM-dd-yyyy')} By {ele.username}
+                        Published on {format(new Date(ele.created_on), 'MM-dd-yyyy')} By  
+                        <Link to={`/blogs/profile/${ele.user_id}`} style={{textDecoration:'none'}}>{' '+ele.username}</Link>
                     </div>
                     <div>
                         <Button className={classes.readEntire} onClick={()=>history.push(`/blogs/blog-detail/${ele.blog_id}`)}>

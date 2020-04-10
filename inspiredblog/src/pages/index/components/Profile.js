@@ -6,6 +6,7 @@ import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
 import profile from '../img/profile.png';
 import format from 'date-fns/format';
+import {checkAuthState} from '../selectors/authSelector';
 // import DateRangeIcon from '@material-ui/icons/DateRange';
 // import calendarImg from '../img/calendar.jpg';
 
@@ -15,6 +16,13 @@ const useStyles = makeStyles(theme => ({
         flexDirection:'column', 
         width: '100%',
         alignItems:'center'
+    },
+    topNav:{
+        width:'100%',
+        padding: '5px 0',
+        fontSize: '25px',
+        display: 'flex',
+        alignItems: 'center',
     },
     header: {
         width:'100%',
@@ -129,27 +137,43 @@ const Profile = (props) => {
     let history = useHistory();
     // const [username, setUsername] = useState('');
     useEffect(()=>{
+        if (!checkAuthState()){
+            history.push('/blogs/login');
+            return;
+        }
         props.getProfile(props.match.params.targetId);
-    },[])
+    },[props.match.params.targetId])
     
     return (
         <div className={classes.outerDiv}>
+            <div className={classes.topNav}>
+                <span class="material-icons" style={{color: 'rgb(29,161,242)', margin: '0 15px', cursor:'pointer'}} onClick={()=>history.goBack()}>
+                    keyboard_backspace
+                </span><span className='bolloBold'>{props.profile.username}</span> 
+            </div>
             <div className={classes.header}>
-
             </div>
             <div className={classes.secondBanner}>
                 <a href="https://lishenyu16.github.io/aboutMe/" className={classes.imgHref}>
                     <img src={profile} alt='profile' className={classes.photo}/>
                 </a>
-                <div className={classes.edit}>
-                    <Button variant="outlined" color="primary" fullWidth 
-                        classes={{root:classes.buttonRoot,outlinedPrimary: classes.outlinedPrimary}}>
-                        Edit profile
-                    </Button>
-                </div>
+                {props.profile.isSelf?
+                    <div className={classes.edit}>
+                        <Button variant="outlined" color="primary" fullWidth 
+                            classes={{root:classes.buttonRoot, outlinedPrimary: classes.outlinedPrimary}}>
+                            Edit profile
+                        </Button>
+                    </div>:
+                    <div className={classes.edit}>
+                        <Button variant="outlined" color="primary" fullWidth 
+                            classes={{root:classes.buttonRoot, outlinedPrimary: classes.outlinedPrimary}}>
+                            Follow
+                        </Button>
+                    </div>
+                }   
             </div>
             <div className={classes.thirdBanner}>
-                <div style={{fontSize: '25px'}}>{props.profile.username}</div>
+                <div style={{fontSize: '25px'}} className='belloBold'>{props.profile.username}</div>
                 {props.profile.email?<div className={classes.email}>{props.profile.email}</div>:''}
                 {props.profile.publicInfo?<div className={classes.publicInfo}>{props.profile.publicInfo}</div>:''}
                 <div className={classes.dateJoined}>
@@ -164,9 +188,12 @@ const Profile = (props) => {
                 <div className={props.profile.showing=='likes'?classes.activeSwitchButton:classes.switchButton} onClick={()=>props.switchShowing('likes')}>Likes</div>
             </div>
             {props.profile.showing=='posts'?
-            <div style={{width:'100%'}}>
+            <div style={{width:'100%', padding: '5% 10% 0'}}>
                 {props.profile.myBlogs.map(b=>
-                    <div style={{margin: '10px 0', cursor: 'pointer'}}>{b.blog_title} - published on {format(new Date(b.created_on), 'MM/dd/yyyy')}</div>)}
+                    <div style={{margin: '10px 0', cursor: 'pointer'}} key={b.blog_id}>
+                        <span className='belloBold' style={{fontSize:'20px'}}>{b.blog_title}</span> - published on <span style={{color: 'rgb(101,119,134)'}}>{format(new Date(b.created_on), 'MM/dd/yyyy')}</span>
+                    </div>)
+                }
             </div>:''}
             {props.profile.showing=='likes'?
             <div>
@@ -187,7 +214,7 @@ const mapDispatchToProps = (dispatch)=>{
     return {
         getProfile: (targetId)=> dispatch({type: 'GET_PROFILE', value: targetId}),
         switchShowing: (type)=> dispatch({type: 'switch_showing', value: type}),
-        updateProfile: (username) => dispatch({type: 'UPDATE_PROFILE', payload: username})
+        updateProfile: (username) => dispatch({type: 'UPDATE_PROFILE', payload: username}),
     }
 }
 export default connect(mapStateToProps,mapDispatchToProps)(Profile)
