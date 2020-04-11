@@ -197,6 +197,34 @@ function* resetPasswordSaga(action){
         alert(err.response.data.message);
     }
 }
+function* trackUserSaga(action){
+    try {
+        const url = 'http://geolocation-db.com/json/';
+        axios.get(url)
+          .then(result => {
+            const ip = result.data.IPv4;
+            const city = result.data.city || null;
+            const state = result.data.state || null;
+            const postal = result.data.postal || null;
+            const country = result.data.country_name || null;
+            const latitude = result.data.latitude || null;
+            const longitude = result.data.longitude || null;
+            const time = new Date();
+            // const region = result.data.region || null;
+            // const loc = result.data.loc || null;
+            // const timezone = result.data.timezone || null;
+            const visitor = {ip,city,state,postal,country, latitude, longitude,time}
+  
+            axios.post(host + '/api/auth/visitors',visitor);
+          })
+          .catch(err=>{
+            console.log(err)
+          })
+    }
+    catch(err){
+        console.log(err);
+    }
+}
 export function* watchAuth(){
     yield takeLatest('SIGN_IN', signinSaga);
     yield takeLatest('SIGN_UP', signupSaga);
@@ -204,4 +232,5 @@ export function* watchAuth(){
     yield takeLatest('CONFIRM_EMAIL', confirmEmailSaga);
     yield takeLatest('FIND_PASSWORD', findPasswordSaga);
     yield takeLatest('RESET_PASSWORD', resetPasswordSaga);
+    yield takeLatest('TRACK_USER', trackUserSaga);
 }

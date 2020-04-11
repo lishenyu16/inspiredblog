@@ -1,5 +1,7 @@
 import { takeLatest, call, put, select } from 'redux-saga/effects';
 import axios from 'axios';
+import { push, replace } from 'react-router-redux';
+import { Redirect } from 'react-router-dom';
 
 const host = process.env.NODE_ENV === "production"?'':'http://localhost:5000';
 function* createBlog(action){
@@ -53,8 +55,15 @@ function* fetchBlogDetail(action){
         })
     }
     catch(err){
+        if (err.response.data.message =='jwt expired.'){
+            alert('Authentication expired, please relogin.');
+            yield put(replace('/blogs/login'));
+            // Redirect('/blogs/login');
+            return;
+        }
         alert('Failed to fetch blog detail, please try again later.');
         console.log(err.response);
+        yield put(replace('/blogs/login'));
     }
 }
 function* saveEdit(action){

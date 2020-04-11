@@ -152,7 +152,10 @@ const App = (props) => {
         left: false,
     });
     useEffect(()=>{
-        props.checkAuthState()
+        props.checkAuthState();
+    },[])
+    useEffect(()=>{
+        props.trackUser();
     },[])
 
     let history = useHistory();
@@ -358,6 +361,7 @@ const mapDispatchToProps = (dispatch)=>{
         onSignIn: (email,password)=> dispatch({type: 'SIGN_IN', data: {email, password}}),
         onLogout: (history) => dispatch({type: 'logout', data: history}),
         checkAuthState: () => dispatch({type: 'checkAuthState'}),
+        trackUser: () => dispatch({type: 'TRACK_USER'}),
         // onSignUp :()=> dispatch({type: 'SIGN_UP'}),
     }
 }
