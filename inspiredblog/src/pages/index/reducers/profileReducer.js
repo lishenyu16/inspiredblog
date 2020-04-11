@@ -30,6 +30,12 @@ const profileReducer = (state=initialState, action) => {
                 ...state,
                 showing: action.value,
             }
+        case 'update_profile_success':
+            return {
+                ...state,
+                username: action.value.username,
+                publicInfo: action.value.publicInfo,
+            }
         default:
             return state
     }

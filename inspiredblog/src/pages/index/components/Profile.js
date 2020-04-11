@@ -183,8 +183,8 @@ const DialogTitle = withStyles(styles)(props => {
                 <div style={{fontSize:'25px'}} className='belloBold'>{children}</div>
             </div>
             <div style={{width: 'fit-content', display: 'flex', alignItems:'center'}}>
-                <Button variant="filled" color='primary' fullWidth onClick={onSave}
-                    classes={{root:classes.buttonRoot, filledPrimary: classes.filledPrimary}}>
+                <Button variant="contained" color='primary' fullWidth onClick={onSave}
+                    classes={{root:classes.buttonRoot, containedPrimary: classes.containedPrimary}}>
                     <span className='belloBold'>Save</span>
                 </Button>
             </div>
@@ -221,15 +221,17 @@ const Profile = (props) => {
     },[props.match.params.targetId])
     useEffect(()=>{
         setUsername(props.profile.username);
-    }, [props.profile.username])
-    useEffect(()=>{
         setBio(props.profile.publicInfo);
-    }, [props.profile.publicInfo])
+        setOpen(false);
+    }, [props.profile.username,props.profile.publicInfo])
+    // useEffect(()=>{
+    //     setBio(props.profile.publicInfo);
+    // }, [props.profile.publicInfo])
     
     return (
         <div className={classes.outerDiv}>
             <Dialog onClose={handleClose} maxWidth='sm' fullWidth  open={open}>
-                <DialogTitle id="customized-dialog-title" onClose={handleClose} onSave={()=>console.log('clicked on save')}>
+                <DialogTitle id="customized-dialog-title" onClose={handleClose} onSave={()=>props.updateProfile(username,bio)}>
                     <span className='belloBold'>Edit profile</span>
                 </DialogTitle>
                 <DialogContent dividers>
@@ -342,7 +344,7 @@ const mapDispatchToProps = (dispatch)=>{
     return {
         getProfile: (targetId)=> dispatch({type: 'GET_PROFILE', value: targetId}),
         switchShowing: (type)=> dispatch({type: 'switch_showing', value: type}),
-        updateProfile: (username) => dispatch({type: 'UPDATE_PROFILE', payload: username}),
+        updateProfile: (username,publicInfo) => dispatch({type: 'UPDATE_PROFILE', value: {username, publicInfo}}),
     }
 }
 export default connect(mapStateToProps,mapDispatchToProps)(Profile)

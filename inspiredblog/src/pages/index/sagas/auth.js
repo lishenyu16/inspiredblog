@@ -101,28 +101,6 @@ export function* signinSaga(action){
     }
 }
 
-function* updateProfileSaga(action){
-    let header = {
-        headers: {
-            Authorization: 'Bearer ' + localStorage.getItem('token')
-        }
-    } 
-    try {
-        const res = yield axios.post(host + '/api/auth/updateProfile', {username: action.payload}, header);
-        yield localStorage.setItem('username',res.data.username);
-        yield put({
-            type: 'updateProfile',
-            payload: {
-                username: res.data.username,
-            }
-        })
-    }
-    catch(err){
-        console.log(err.response);
-        alert('Something wrong happenend!')
-    }
-}
-
 function* confirmEmailSaga(action){
     try {
         const res = yield axios.post(host + '/api/auth/confirmEmail', 
@@ -228,7 +206,6 @@ function* trackUserSaga(action){
 export function* watchAuth(){
     yield takeLatest('SIGN_IN', signinSaga);
     yield takeLatest('SIGN_UP', signupSaga);
-    yield takeLatest('UPDATE_PROFILE', updateProfileSaga);
     yield takeLatest('CONFIRM_EMAIL', confirmEmailSaga);
     yield takeLatest('FIND_PASSWORD', findPasswordSaga);
     yield takeLatest('RESET_PASSWORD', resetPasswordSaga);
