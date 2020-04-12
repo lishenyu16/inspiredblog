@@ -7,8 +7,12 @@ import Button from '@material-ui/core/Button';
 import format from 'date-fns/format';
 import CodeBlock from './CodeBlock';
 import TextField from '@material-ui/core/TextField';
-import Editor from 'for-editor';
+// import Editor from 'for-editor';
+import Editor from 'for-editor-herb';
 import axios from 'axios';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import Fade from '@material-ui/core/Fade';
 import { checkAuthState } from '../../selectors/authSelector';
 
 const useStyles = makeStyles(theme => ({
@@ -41,20 +45,6 @@ const useStyles = makeStyles(theme => ({
         position:'absolute',
         right:'3%',
         top:'5%',
-        border:'1px solid black',
-        borderRadius:'5px',
-        padding:'5px 15px',
-        transition: 'transform 0.5s',
-        '&:hover': {
-            transform: 'scale(1.3)',
-            border: '1px solid lightgray',
-            background: 'cadetblue',
-            color: 'white',
-        },
-        '@media(max-width:500px)':{
-            fontSize:'12px',
-            padding:'4px 12px'
-        }
     },
     arrowBack: {
         position:'absolute',
@@ -90,16 +80,30 @@ const useStyles = makeStyles(theme => ({
         padding: '6px 30px',
         fontSize:'15px',
         textTransform:'none',
-    }
+    },
+    outlinedPrimary: {
+        color: 'rgb(26,151,240)',
+        border: '1px solid rgb(26,151,240)',
+        '&:hover': {
+            backgroundColor: 'rgba(26,151,240,0.2)'
+        },
+    },
+    buttonRoot: {
+        borderRadius:'50%',
+        textTransform:'none',
+        padding: '16px 11px',
+        minWidth: '0'
+    },
 }));
 
 const BlogDetail = (props) => {
     const classes = useStyles();
     let history = useHistory();
     const [editorValue, setEditorValue] = useState('');
+    const [anchorEl, setAnchorEl] = useState(null);
     const [title, setTitle] = useState('');
     useEffect(()=>{
-        props.fetchBlogDetail(props.match.params.blog_id);
+        props.fetchBlogDetail(props.match.params.blog_id, history);
     },[]);
     useEffect(()=>{
         if (props.blog.isEditing && props.auth.redirectPath){
@@ -108,12 +112,18 @@ const BlogDetail = (props) => {
             props.saveRedirectPath(null);
         }
     }, [])
-    const vm = React.createRef();
     const handleChange = (value)=>{
         setEditorValue(value);
     }
+    const handleClick = event => {
+        setAnchorEl(event.currentTarget);
+    };
+    
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+    
     const uploadHandler = (file) => {
-        vm.current.$img2Url(file.name, 'file_url');
         console.log('file name: ' + file.name);
         let formData = new FormData();
         formData.append('file', file);
@@ -147,31 +157,73 @@ const BlogDetail = (props) => {
     }
 
     const clickEdit = () => {
+        setAnchorEl(null);
         if (checkAuthState()) {
             props.setIsEditing();
             setTitle(props.blog.blogDetail.blog_title);
             setEditorValue(props.blog.blogDetail.blog_content);
         }
         else {
-            props.saveRedirectPath('/blogDetail/'+props.blog.blogDetail.blog_id);
+            props.saveRedirectPath('/blogs/blogDetail/'+props.blog.blogDetail.blog_id);
             history.push('/blogs/login');
         }
     }
-    const toolbar =  {
-        h1: true, // h1
-        h2: true, // h2
-        img: true, // 图片
-        link: true, // 链接
-        code: true, // 代码块
-        preview: true, // 预览
-        expand: true, // 全屏
-        undo: true, // 撤销
-        // redo: true, // 重做
-        // save: true, // 保存
-        subfield: true, // 单双栏模式
+    const clickDelete = () => {
+        setAnchorEl(null);
+        if (checkAuthState()) {
+            if (confirm('Are you sure to delete this post?')){
+                return props.deleteBlog(history);
+            }
+            return;
+        }
+        else {
+            props.saveRedirectPath('/blogs/blogDetail/'+props.blog.blogDetail.blog_id);
+            history.push('/blogs/login');
+        }
+    }
+    const toolbar = {
+        h1: true,
+        h2: true,
+        h3: true,
+        h4: true,
+        img: true,
+        list: true,
+        para: true,       // parapraph
+        table: true,
+        quote: true,
+        link: true,
+        inlinecode: true,
+        // code: true,
+        collapse: true,
+        // katex: true,
+        preview: false,
+        expand: true,
+        // undo: true,
+        // redo: true,
+        // save: true,
+        subfield: true,
+        // toc: true   
     }
     return(
         <div className={classes.detail}>
+            <Menu
+                id="simple-menu"
+                anchorEl={anchorEl}
+                keepMounted
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+                TransitionComponent={Fade}
+            >
+                <MenuItem onClick={clickEdit}>
+                    <i class="fas fa-edit" style={{marginRight: '10px'}}></i> Edit
+                </MenuItem>
+                <MenuItem onClick={clickDelete}>
+                    <i class="fas fa-trash-alt" style={{marginRight: '10px'}}></i> Delete
+                </MenuItem>
+                <MenuItem onClick={handleClose}>
+                    <i class="fas fa-lock" style={{marginRight: '10px'}}></i> Mark as private
+                </MenuItem>
+            </Menu>
             {props.blog.isEditing?
             // Editing block``````````````````````````````````
             <React.Fragment>
@@ -189,11 +241,8 @@ const BlogDetail = (props) => {
                     }}
                 />
                 <Editor 
-                    ref={vm}
                     style={{width:'90%'}}
                     height={'500px'}
-                    subfield = {true}
-                    preview = {false}
                     addImg = {(file) => uploadHandler(file)}
                     value={editorValue} 
                     onChange={(value) => handleChange(value)} 
@@ -217,8 +266,14 @@ const BlogDetail = (props) => {
                         arrow_back_ios
                     </span>
                 </div>
-                <div className={classes.editBlog} style={{cursor:'pointer', display:!checkAuthState()?'none':localStorage.getItem('userId')==props.blog.blogDetail.user_id?'':'none'}} onClick={clickEdit}>
-                    Edit
+                <div className={classes.editBlog} style={{cursor:'pointer', display:!checkAuthState()?'none':localStorage.getItem('userId')==props.blog.blogDetail.user_id?'':'none'}} onClick={handleClick}>
+                    <Button variant="outlined" color="primary" fullWidth
+                        classes={{root:classes.buttonRoot, outlinedPrimary: classes.outlinedPrimary}}
+                    >
+                        <i class="fa fa-circle-o" aria-hidden="true" style={{fontSize:'5px', color: 'rgb(29,161,242)'}}></i>
+                        <i class="fa fa-circle-o" aria-hidden="true" style={{fontSize:'5px', color: 'rgb(29,161,242)'}}></i>
+                        <i class="fa fa-circle-o" aria-hidden="true" style={{fontSize:'5px', color: 'rgb(29,161,242)'}}></i>
+                    </Button>
                 </div>
                 <div className={classes.title}>{props.blog.blogDetail.blog_title}</div>
                 <div className={classes.publishedDate}>
@@ -247,10 +302,11 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         setIsEditing: () => dispatch({type: 'set_isEditing'}),
-        fetchBlogDetail: (id)=>dispatch({type:'FETCH_BLOG_DETAIL', payload:id}),
+        fetchBlogDetail: (id, history)=>dispatch({type:'FETCH_BLOG_DETAIL', payload:{id, history}}),
         saveEdit: (title, editorValue) => dispatch({type:'SAVE_EDIT', payload: {blogTitle: title, blogContent: editorValue}}),
         saveTemp: (title,value) => dispatch({type: 'save_temp_blog', payload: [title,value]}),
         saveRedirectPath: (url) => dispatch({type: 'redirect', url: url}),
+        deleteBlog: (history) => dispatch({type: 'DELETE_BLOG', value: history})
     }
 }
 

@@ -5,7 +5,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 // import ReactMarkdown from 'react-markdown';
-import Editor from 'for-editor';
+// import Editor from 'for-editor';
+import Editor from 'for-editor-herb'
 import axios from 'axios';
 import { checkAuthState } from '../../selectors/authSelector';
 
@@ -55,7 +56,6 @@ const AddBlog = (props) => {
             props.clearRedirectPath();
         }
     }, [])
-    const vm = React.createRef();
     const handleChange = (value)=>{
         setEditorValue(value);
     }
@@ -85,18 +85,29 @@ const AddBlog = (props) => {
         props.saveTemp(title,editorValue); // save to reducer tempr
         props.saveBlog(title,editorValue,history); // send to server
     }
-    const toolbar =  {
-        h1: true, // h1
-        h2: true, // h2
-        img: true, // 图片
-        link: true, // 链接
-        code: true, // 代码块
-        preview: true, // 预览
-        expand: true, // 全屏
-        undo: true, // 撤销
-        // redo: true, // 重做
-        // save: true, // 保存
-        subfield: true, // 单双栏模式
+
+    const toolbar = {
+        h1: true,
+        h2: true,
+        h3: true,
+        h4: true,
+        img: true,
+        list: true,
+        para: true,       // parapraph
+        table: true,
+        quote: true,
+        link: true,
+        inlinecode: true,
+        // code: true,
+        collapse: true,
+        // katex: true,
+        preview: false,
+        expand: true,
+        // undo: true,
+        // redo: true,
+        // save: true,
+        subfield: true,
+        // toc: true   
     }
     return (
         <div className={classes.outerDiv}>
@@ -114,11 +125,8 @@ const AddBlog = (props) => {
                 }}
             />
             <Editor 
-                ref={vm}
                 style={{width:'90%'}}
                 height={'500px'}
-                subfield = {true}
-                preview = {true}
                 addImg = {(file) => uploadHandler(file)}
                 value={editorValue} 
                 onChange={(value) => handleChange(value)} 

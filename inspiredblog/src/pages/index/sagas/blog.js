@@ -1,7 +1,5 @@
 import { takeLatest, call, put, select } from 'redux-saga/effects';
 import axios from 'axios';
-import { push, replace } from 'react-router-redux';
-import { Redirect } from 'react-router-dom';
 
 const host = process.env.NODE_ENV === "production"?'':'http://localhost:5000';
 function* createBlog(action){
@@ -47,8 +45,10 @@ function* fetchBlogDetail(action){
             Authorization: 'Bearer ' + localStorage.getItem('token')
         } :null
     } 
+    let history = action.payload.history;
     try {
-        const result = yield axios.get(host + `/api/blogs/blogDetail/${action.payload}`, header);
+        yield put({type: 'fetch_blogDetail_success', payload: null}); // clear existing blog
+        const result = yield axios.get(host + `/api/blogs/blogDetail/${action.payload.id}`, header);
         yield put({
             type: 'fetch_blogDetail_success',
             payload: result.data.blog || null
@@ -56,14 +56,11 @@ function* fetchBlogDetail(action){
     }
     catch(err){
         if (err.response.data.message =='jwt expired.'){
-            alert('Authentication expired, please relogin.');
-            yield put(replace('/blogs/login'));
-            // Redirect('/blogs/login');
-            return;
+            // alert('Authentication expired, please relogin.');
+            return history.push('/blogs/login');
         }
         alert('Failed to fetch blog detail, please try again later.');
-        console.log(err.response);
-        yield put(replace('/blogs/login'));
+        return history.push('/blogs/');
     }
 }
 function* saveEdit(action){
@@ -93,10 +90,40 @@ function* saveEdit(action){
         alert(err.response.data.message);
     }
 }
+function* deleteBlog(action){
+    let header = {
+        headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('token')
+        }
+    } 
+    let history = action.value;
+    try {
+        let blog = yield select(state => state.blog.blogDetail);
+        const data = {
+            blogId: blog.blog_id,
+        }
+        const result = yield axios.post(host + `/api/blogs/deleteBlog`, data, header);
+        history.push('/blogs/')
+    }
+    catch(err){
+        console.log(err);
+        if (err.response){
+            if (err.response.data.message =='Token expired' || err.response.data.message =='Invalid token'){
+                alert('Authentication expired, please relogin.');
+                return history.push('/blogs/login');
+            }
+            else if (err.response.data.message == 'Not authorized'){
+                return alert('You are not authorized to do this.');
+            }
+        }
+        alert('Failed to delete this post, please try again later.');
+    }
+}
 
 export function* watchBlogs(){
     yield takeLatest('SAVE_BLOG', createBlog);
     yield takeLatest('FETCH_BLOGS', fetchBlogs);
     yield takeLatest('FETCH_BLOG_DETAIL', fetchBlogDetail);
     yield takeLatest('SAVE_EDIT', saveEdit);
+    yield takeLatest('DELETE_BLOG', deleteBlog);
 }

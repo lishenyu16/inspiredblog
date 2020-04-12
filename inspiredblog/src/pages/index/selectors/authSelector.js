@@ -4,7 +4,7 @@ export const checkAuthState = () =>{
     const expirationTime = localStorage.getItem('expirationTime');
     const currentDate = new Date();
     if(localStorage.getItem('token')){
-        if (currentDate >= expirationTime){
+        if (currentDate >= new Date(expirationTime)){
             localStorage.removeItem('username');
             localStorage.removeItem('email');
             localStorage.removeItem('isAdmin');
