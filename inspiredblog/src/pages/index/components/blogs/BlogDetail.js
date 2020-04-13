@@ -84,13 +84,13 @@ const useStyles = makeStyles(theme => ({
         }
     },
     buttons:{
-        width:'90%', 
+        width:'100%', 
         display:'flex',
         justifyContent:'space-around', 
         marginTop:'20px',
-        '@media(max-width:500px)':{
-            width:'70%'
-        }
+        // '@media(max-width:500px)':{
+        //     width:'70%'
+        // }
     },
     saveButton:{
         padding: '6px 30px',
@@ -276,7 +276,7 @@ const BlogDetail = (props) => {
             {props.blog.isEditing?
             // Editing block``````````````````````````````````
             <React.Fragment>
-                <FormControl variant="outlined" style={{margin: '10px 0', width: '20%'}}>
+                <FormControl variant="outlined" style={{margin: '10px 0', width: '38%'}}>
                     <InputLabel id="category-label" classes={{outlined: classes.outlinedLabel}}>Category</InputLabel>
                     <Select
                         labelId="category-label"
@@ -299,7 +299,7 @@ const BlogDetail = (props) => {
                     variant='outlined'
                     value={title}
                     onChange={(e)=>setTitle(e.target.value)}
-                    style={{width:'90%'}}
+                    style={{width:'100%'}}
                     placeholder='Enter title here'
                     InputProps={{
                         classes:{
@@ -308,7 +308,7 @@ const BlogDetail = (props) => {
                     }}
                 />
                 <Editor 
-                    style={{width:'90%'}}
+                    style={{width:'100%'}}
                     height={'500px'}
                     addImg = {(file) => uploadHandler(file)}
                     value={editorValue} 

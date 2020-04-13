@@ -58,6 +58,9 @@ const useStyles = makeStyles(theme => ({
         '&:hover': {
             textDecoration:'underline'
         },
+        '@media(max-width:500px)':{
+            fontSize:'17px',
+        }
     },
     publishedDate: {
         fontSize:'12px', 
