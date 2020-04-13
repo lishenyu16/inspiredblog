@@ -180,12 +180,12 @@ const DialogTitle = withStyles(styles)(props => {
                         <CloseIcon />
                     </IconButton>
                 ) : null}
-                <div style={{fontSize:'25px'}} className='belloBold'>{children}</div>
+                <div style={{fontSize:'25px'}} className='sansSemiBold'>{children}</div>
             </div>
             <div style={{width: 'fit-content', display: 'flex', alignItems:'center'}}>
                 <Button variant="contained" color='primary' fullWidth onClick={onSave}
                     classes={{root:classes.buttonRoot, containedPrimary: classes.containedPrimary}}>
-                    <span className='belloBold'>Save</span>
+                    <span className='sansSemiBold'>Save</span>
                 </Button>
             </div>
         </MuiDialogTitle>
@@ -232,7 +232,7 @@ const Profile = (props) => {
         <div className={classes.outerDiv}>
             <Dialog onClose={handleClose} maxWidth='sm' fullWidth  open={open}>
                 <DialogTitle id="customized-dialog-title" onClose={handleClose} onSave={()=>props.updateProfile(username,bio)}>
-                    <span className='belloBold'>Edit profile</span>
+                    <span className='sansSemiBold'>Edit profile</span>
                 </DialogTitle>
                 <DialogContent dividers>
                     <Typography gutterBottom>
@@ -279,7 +279,7 @@ const Profile = (props) => {
             <div className={classes.topNav}>
                 <span class="material-icons" style={{color: 'rgb(29,161,242)', margin: '0 15px', cursor:'pointer'}} onClick={()=>history.goBack()}>
                     keyboard_backspace
-                </span><span className='belloBold'>{props.profile.username}</span> 
+                </span><span className='sansSemiBold'>{props.profile.username}</span> 
             </div>
             <div className={classes.header}>
             </div>
@@ -291,19 +291,19 @@ const Profile = (props) => {
                     <div className={classes.edit}>
                         <Button variant="outlined" color="primary" fullWidth onClick={handleClickOpen}
                             classes={{root:classes.buttonRoot, outlinedPrimary: classes.outlinedPrimary}}>
-                            <span className='belloBold'>Edit profile</span>
+                            <span className='sansSemiBold'>Edit profile</span>
                         </Button>
                     </div>:
                     <div className={classes.edit}>
                         <Button variant="outlined" color="primary" fullWidth 
                             classes={{root:classes.buttonRoot, outlinedPrimary: classes.outlinedPrimary}}>
-                            <span className='belloBold'>Follow</span>
+                            <span className='sansSemiBold'>Follow</span>
                         </Button>
                     </div>
                 }   
             </div>
             <div className={classes.thirdBanner}>
-                <div style={{fontSize: '25px'}} className='belloBold'>{props.profile.username}</div>
+                <div style={{fontSize: '25px'}} className='sansSemiBold'>{props.profile.username}</div>
                 {props.profile.email?<div className={classes.email}>{props.profile.email}</div>:''}
                 {props.profile.publicInfo?<div className={classes.publicInfo}>{props.profile.publicInfo}</div>:''}
                 <div className={classes.dateJoined}>
@@ -321,7 +321,7 @@ const Profile = (props) => {
             <div style={{width:'100%', padding: '5% 10% 0'}}>
                 {props.profile.myBlogs.map(b=>
                     <div className={classes.blogEntry} key={b.blog_id} onClick={()=>history.push(`/blogs/blog-detail/${b.blog_id}`)}>
-                        <span className='belloBold' style={{fontSize:'20px'}}>{b.blog_title}</span> - published on <span style={{color: 'rgb(101,119,134)'}}>{format(new Date(b.created_on), 'MM/dd/yyyy')}</span>
+                        <span className='sansSemiBold' style={{fontSize:'20px'}}>{b.blog_title}</span> - published on <span style={{color: 'rgb(101,119,134)'}}>{format(new Date(b.created_on), 'MM/dd/yyyy')}</span>
                     </div>)
                 }
             </div>:''}

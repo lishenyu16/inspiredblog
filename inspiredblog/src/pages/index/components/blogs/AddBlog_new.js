@@ -9,27 +9,27 @@ import Button from '@material-ui/core/Button';
 import Editor from 'for-editor-herb'
 import axios from 'axios';
 import { checkAuthState } from '../../selectors/authSelector';
+import Select from '@material-ui/core/Select';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem'; 
+import FormControl from '@material-ui/core/FormControl';
 
 const useStyles = makeStyles(theme => ({
     outerDiv: {
         display:'flex', 
         width:'100%', 
         flexDirection:'column', 
-        alignItems:'center',
+        alignItems:'flex-start',
         padding:'50px',
         '@media(max-width: 600px)':{
             padding: '20px 0'
         }
     },
-    quill: {
-        width: '80%',
-        height:'300px'
-    },
     muiInput: {
-        padding: '6px'
+        padding: '12px 6px'
     },
     buttons:{
-        width:'50%', 
+        width:'90%', 
         display:'flex',
         justifyContent:'space-around', 
         marginTop:'20px',
@@ -41,6 +41,12 @@ const useStyles = makeStyles(theme => ({
         padding: '6px 30px',
         fontSize:'15px',
         textTransform:'none',
+    },
+    outlinedLabel: {
+        transform: 'translate(14px, 14px) scale(1)',
+    },
+    outlinedSelect: {
+        padding: '10px',
     }
 }));
 
@@ -50,7 +56,7 @@ const AddBlog = (props) => {
 
     const [editorValue, setEditorValue] = useState('');
     const [title, setTitle] = useState('');
-    const [imageUrl, setImageUrl] = useState('');
+    const [category, setCategory] = useState('');
     useEffect(()=>{
         if (props.auth.redirectPath){
             props.clearRedirectPath();
@@ -59,6 +65,9 @@ const AddBlog = (props) => {
     const handleChange = (value)=>{
         setEditorValue(value);
     }
+    const handleChangeCategory = (event) => {
+        setCategory(event.target.value);
+    };
     const uploadHandler = (file) => {
         vm.current.$img2Url(file.name, 'file_url');
         console.log('file name: ' + file.name);
@@ -82,8 +91,14 @@ const AddBlog = (props) => {
         })
     }
     const save = ()=>{
-        props.saveTemp(title,editorValue); // save to reducer tempr
-        props.saveBlog(title,editorValue,history); // send to server
+        props.saveTemp(title,editorValue,category); // save to reducer tempr
+        if (checkAuthState()) {
+            props.saveBlog(title,editorValue,category,history); // send to server
+        }
+        else {
+            props.saveRedirectPath('/blogs/add-blog');
+            history.push('/blogs/login');
+        }
     }
 
     const toolbar = {
@@ -109,8 +124,38 @@ const AddBlog = (props) => {
         subfield: true,
         // toc: true   
     }
+    const options = [
+        {id: 1, description: 'javascript'},
+        {id: 2, description: 'php'},
+        {id: 3, description: 'node '},
+        {id: 4, description: 'react'},
+        {id: 5, description: 'vue'},
+        {id: 6, description: 'database'},
+        {id: 7, description: 'algorithms'},
+        {id: 8, description: 'network'},
+        {id: 9, description: 'system'},
+        {id: 10, description: 'other' }
+    ]
     return (
         <div className={classes.outerDiv}>
+            <FormControl variant="outlined" style={{margin: '10px 0', width: '20%'}}>
+                <InputLabel id="category-label" classes={{outlined: classes.outlinedLabel}}>Category</InputLabel>
+                <Select
+                    labelId="category-label"
+                    id="category"
+                    value={category}
+                    onChange={handleChangeCategory}
+                    label="Category"
+                    classes={{outlined: classes.outlinedSelect}}
+                >
+                    <MenuItem value={0}>
+                        <em>None</em>
+                    </MenuItem>
+                    {options.map(op =>(
+                        <MenuItem value={op.id}>{op.description}</MenuItem>
+                    ))}
+                </Select>
+            </FormControl>
             <TextField 
                 id="blog_title" 
                 variant='outlined'
@@ -152,13 +197,10 @@ const mapStateToProps = (state) => {
         // isLoggedIn: checkAuthState()
     }
 }
-// const mapStateToProps = state => ({
-//     products: getCartProducts(state)
-// })
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        saveTemp: (title,value) => dispatch({type: 'save_temp_blog', payload: [title,value]}),
+        saveTemp: (title,value,category) => dispatch({type: 'save_temp_blog', payload: [title,value,category]}),
         saveBlog: (title,value,history) => dispatch({type: 'SAVE_BLOG', payload: [title,value,history]}),
         clearRedirectPath: () => dispatch({type:'redirect', url: null})
     }

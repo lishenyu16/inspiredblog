@@ -10,7 +10,8 @@ function* createBlog(action){
     } 
     const data = {
         blogTitle: action.payload[0],
-        blogContent: action.payload[1]
+        blogContent: action.payload[1],
+        blogCategory: action.payload[2],
     }
     let history = action.payload[2];
     axios.post(host + '/api/blogs/addBlog', data, header)
@@ -75,6 +76,7 @@ function* saveEdit(action){
             blogId: blog.blog_id,
             blogTitle: action.payload.blogTitle,
             blogContent: action.payload.blogContent,
+            blogCategory: action.payload.category,
         }
         const result = yield axios.post(host + `/api/blogs/editBlog`, data, header);
         yield put({

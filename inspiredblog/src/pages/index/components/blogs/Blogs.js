@@ -40,7 +40,8 @@ const useStyles = makeStyles(theme => ({
         },
         '@media(max-width:500px)':{
             fontSize:'12px',
-            padding:'4px 12px'
+            padding:'4px 12px',
+            top:'3%',
         }
     },
     divider: {
@@ -50,12 +51,13 @@ const useStyles = makeStyles(theme => ({
         marginBottom:'50px'
     },
     title: {
+        maxWidth: '80%',
         textTransform: 'capitalize', 
         fontSize:'25px',
         cursor:'pointer',
         '&:hover': {
             textDecoration:'underline'
-         },
+        },
     },
     publishedDate: {
         fontSize:'12px', 
@@ -95,7 +97,7 @@ const Blogs = (props) => {
             <div className={classes.addBlog} style={{cursor:'pointer'}} onClick={clickAdd}>Post a blog</div>
             {props.blogs.publicBlogs.length>0?props.blogs.publicBlogs.map(ele=>
                 <div className={classes.item} key={ele.blog_id}>
-                    <div className={`${classes.title} belloBold`} onClick={()=>history.push(`/blogs/blog-detail/${ele.blog_id}`)}>{ele.blog_title}</div>
+                    <div className={`${classes.title} sansSemiBold`} onClick={()=>history.push(`/blogs/blog-detail/${ele.blog_id}`)}>{ele.blog_title}</div>
                     <div className={classes.publishedDate}>
                         Published on {format(new Date(ele.created_on), 'MM-dd-yyyy')} By  
                         <Link to={`/blogs/profile/${ele.user_id}`} style={{textDecoration:'none'}}>{' '+ele.username}</Link>

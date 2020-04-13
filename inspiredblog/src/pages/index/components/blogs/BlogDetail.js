@@ -14,15 +14,18 @@ import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Fade from '@material-ui/core/Fade';
 import { checkAuthState } from '../../selectors/authSelector';
+import Select from '@material-ui/core/Select';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormControl from '@material-ui/core/FormControl';
 
 const useStyles = makeStyles(theme => ({
     detail: {
-        // paddingTop:'20%',
+        padding:'50px 30px',
         width:'100%',
         minHeight:'100vh',
         display:'flex',
         flexDirection:'column',
-        alignItems:'center',
+        alignItems:'flex-start',
         position:'relative',
         // '@media(max-width:500px)':{
         //     paddingTop:'10%'
@@ -32,19 +35,23 @@ const useStyles = makeStyles(theme => ({
         textTransform: 'capitalize', 
         fontSize:'25px',
         marginTop:'20%',
+        textAlign: 'center',
         // '&:hover': {
         //     textDecoration:'underline'
         //  },
     },
     publishedDate: {
         fontSize:'12px', 
-        margin:'10px 0', 
+        margin:'10px auto', 
         color:'lightgray'
     },
     editBlog: {
         position:'absolute',
         right:'3%',
         top:'5%',
+        '@media(max-width:500px)':{
+            top: '1%'
+        }
     },
     arrowBack: {
         position:'absolute',
@@ -55,11 +62,19 @@ const useStyles = makeStyles(theme => ({
         },
         '@media(max-width:500px)':{
             fontSize:'12px',
-            padding:'4px 12px'
+            padding:'4px 12px',
+            top: '1%'
+        }
+    },
+    blogContent: {
+        width:'85%', 
+        margin: '0 auto',
+        '@media(max-width:500px)':{
+            width:'100%', 
         }
     },
     muiInput: {
-        padding: '6px'
+        padding: '12px 6px'
     },
     editor:{
         width:'80%',
@@ -68,7 +83,7 @@ const useStyles = makeStyles(theme => ({
         }
     },
     buttons:{
-        width:'50%', 
+        width:'90%', 
         display:'flex',
         justifyContent:'space-around', 
         marginTop:'20px',
@@ -94,6 +109,12 @@ const useStyles = makeStyles(theme => ({
         padding: '16px 11px',
         minWidth: '0'
     },
+    outlinedLabel: {
+        transform: 'translate(14px, 14px) scale(1)',
+    },
+    outlinedSelect: {
+        padding: '10px',
+    }
 }));
 
 const BlogDetail = (props) => {
@@ -102,6 +123,7 @@ const BlogDetail = (props) => {
     const [editorValue, setEditorValue] = useState('');
     const [anchorEl, setAnchorEl] = useState(null);
     const [title, setTitle] = useState('');
+    const [category, setCategory] = useState('');
     useEffect(()=>{
         props.fetchBlogDetail(props.match.params.blog_id, history);
     },[]);
@@ -109,12 +131,16 @@ const BlogDetail = (props) => {
         if (props.blog.isEditing && props.auth.redirectPath){
             setTitle(props.blog.blogTempSave[0]);
             setEditorValue(props.blog.blogTempSave[1]);
+            setCategory(props.blog.blogTempSave[2]);
             props.saveRedirectPath(null);
         }
-    }, [])
+    }, []);
     const handleChange = (value)=>{
         setEditorValue(value);
     }
+    const handleChangeCategory = (event) => {
+        setCategory(event.target.value);
+    };
     const handleClick = event => {
         setAnchorEl(event.currentTarget);
     };
@@ -146,9 +172,9 @@ const BlogDetail = (props) => {
         })
     }
     const save = ()=>{
-        props.saveTemp(title,editorValue); // save to reducer tempr
+        props.saveTemp(title,editorValue, category); // save to reducer tempr
         if (checkAuthState()) {
-            props.saveEdit(title,editorValue); // send to server
+            props.saveEdit(title,editorValue,category); // send to server
         }
         else {
             props.saveRedirectPath('/blogDetail/'+props.blog.blogDetail.blog_id);
@@ -162,6 +188,7 @@ const BlogDetail = (props) => {
             props.setIsEditing();
             setTitle(props.blog.blogDetail.blog_title);
             setEditorValue(props.blog.blogDetail.blog_content);
+            setCategory(props.blog.blogDetail.category_id);
         }
         else {
             props.saveRedirectPath('/blogs/blogDetail/'+props.blog.blogDetail.blog_id);
@@ -204,6 +231,18 @@ const BlogDetail = (props) => {
         subfield: true,
         // toc: true   
     }
+    const options = [
+        {id: 1, description: 'javascript'},
+        {id: 2, description: 'php'},
+        {id: 3, description: 'node '},
+        {id: 4, description: 'react'},
+        {id: 5, description: 'vue'},
+        {id: 6, description: 'database'},
+        {id: 7, description: 'algorithms'},
+        {id: 8, description: 'network'},
+        {id: 9, description: 'system'},
+        {id: 10, description: 'other' }
+    ]
     return(
         <div className={classes.detail}>
             <Menu
@@ -227,12 +266,30 @@ const BlogDetail = (props) => {
             {props.blog.isEditing?
             // Editing block``````````````````````````````````
             <React.Fragment>
+                <FormControl variant="outlined" style={{margin: '10px 0', width: '20%'}}>
+                    <InputLabel id="category-label" classes={{outlined: classes.outlinedLabel}}>Category</InputLabel>
+                    <Select
+                        labelId="category-label"
+                        id="category"
+                        value={category}
+                        onChange={handleChangeCategory}
+                        label="Category"
+                        classes={{outlined: classes.outlinedSelect}}
+                    >
+                        <MenuItem value={0}>
+                            <em>None</em>
+                        </MenuItem>
+                        {options.map(op =>(
+                            <MenuItem value={op.id}>{op.description}</MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
                 <TextField 
                     id="blog_title" 
                     variant='outlined'
                     value={title}
                     onChange={(e)=>setTitle(e.target.value)}
-                    style={{width:'90%',marginTop:'10%'}}
+                    style={{width:'90%'}}
                     placeholder='Enter title here'
                     InputProps={{
                         classes:{
@@ -280,7 +337,7 @@ const BlogDetail = (props) => {
                     Published on {format(new Date(props.blog.blogDetail.created_on), 'MM-dd-yyyy')} By 
                     <Link to={`/blogs/profile/${props.blog.blogDetail.user_id}`} style={{textDecoration:'none'}}>{' '+props.blog.blogDetail.username}</Link>
                 </div>
-                <div style={{width:'85%'}}>
+                <div className={classes.blogContent}>
                     <ReactMarkdown 
                         source={props.blog.blogDetail.blog_content}
                         escapeHtml={false}>
@@ -303,7 +360,7 @@ const mapDispatchToProps = (dispatch) => {
     return {
         setIsEditing: () => dispatch({type: 'set_isEditing'}),
         fetchBlogDetail: (id, history)=>dispatch({type:'FETCH_BLOG_DETAIL', payload:{id, history}}),
-        saveEdit: (title, editorValue) => dispatch({type:'SAVE_EDIT', payload: {blogTitle: title, blogContent: editorValue}}),
+        saveEdit: (title, editorValue,category) => dispatch({type:'SAVE_EDIT', payload: {blogTitle: title, blogContent: editorValue,category}}),
         saveTemp: (title,value) => dispatch({type: 'save_temp_blog', payload: [title,value]}),
         saveRedirectPath: (url) => dispatch({type: 'redirect', url: url}),
         deleteBlog: (history) => dispatch({type: 'DELETE_BLOG', value: history})

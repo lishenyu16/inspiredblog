@@ -1,38 +1,26 @@
 @font-face {
-    font-family: 'BellotaLight';
+    font-family: 'SansRegular';
     font-style: normal;
     font-weight: normal;
-    src: url('../../../public/fonts/Bellota-Light.ttf')
+    src: url('../../../public/fonts/OpenSans-Regular.ttf')
       format('truetype');
 }
 @font-face {
-    font-family: 'BellotaRegular';
+    font-family: 'SansBold';
     font-style: normal;
     font-weight: normal;
-    src: url('../../../public/fonts/Bellota-Regular.ttf')
+    src: url('../../../public/fonts/OpenSans-Bold.ttf')
       format('truetype');
 }
 @font-face {
-    font-family: 'BellotaBold';
+    font-family: 'SansSemiBold';
     font-style: normal;
     font-weight: normal;
-    src: url('../../../public/fonts/Bellota-Bold.ttf')
+    src: url('../../../public/fonts/OpenSans-SemiBold.ttf')
       format('truetype');
 }
-@font-face {
-    font-family: 'BellotaItalic';
-    font-style: normal;
-    font-weight: normal;
-    src: url('../../../public/fonts/Bellota-Italic.ttf')
-      format('truetype');
-}
-@font-face {
-    font-family: 'BellotaLightItalic';
-    font-style: normal;
-    font-weight: normal;
-    src: url('../../../public/fonts/Bellota-LightItalic.ttf')
-      format('truetype');
-}
+
+
 
 html, body {
     height: 100%;
@@ -50,9 +38,25 @@ a,
 button,
 input,
 div {
-    font-family: 'BellotaRegular';
+    font-family: 'SansRegular';
 }
 
-.belloBold {
-    font-family: 'BellotaBold';
+.sansRegular {
+    font-family: 'SansRegular';
+}
+.sansBold {
+    font-family: 'SansBold';
+}
+.sansSemiBold {
+    font-family: 'SansSemiBold';
+}
+
+b,
+em,
+strong {
+    font-family: 'SansBold';
+}
+
+code {
+    background-color: #fefbec;
 }
