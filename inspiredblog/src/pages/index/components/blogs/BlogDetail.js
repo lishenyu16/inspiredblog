@@ -17,6 +17,7 @@ import { checkAuthState } from '../../selectors/authSelector';
 import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
+const Hljs = require('highlight.js');
 
 const useStyles = makeStyles(theme => ({
     detail: {
@@ -34,7 +35,7 @@ const useStyles = makeStyles(theme => ({
     title: {
         textTransform: 'capitalize', 
         fontSize:'25px',
-        marginTop:'20%',
+        margin:'20% auto 0',
         textAlign: 'center',
         // '&:hover': {
         //     textDecoration:'underline'
@@ -135,6 +136,15 @@ const BlogDetail = (props) => {
             props.saveRedirectPath(null);
         }
     }, []);
+    useEffect(()=>{
+        Hljs.registerLanguage('css', require('highlight.js/lib/languages/css'))
+        Hljs.registerLanguage('json', require('highlight.js/lib/languages/json'))
+        Hljs.registerLanguage('less', require('highlight.js/lib/languages/less'))
+        Hljs.registerLanguage('scss', require('highlight.js/lib/languages/scss'))
+        Hljs.registerLanguage('javascript', require('highlight.js/lib/languages/javascript'))
+        Hljs.registerLanguage('typescript', require('highlight.js/lib/languages/typescript'))
+        Hljs.registerLanguage('go', require('highlight.js/lib/languages/go'))
+    },[]);
     const handleChange = (value)=>{
         setEditorValue(value);
     }
@@ -220,7 +230,7 @@ const BlogDetail = (props) => {
         quote: true,
         link: true,
         inlinecode: true,
-        // code: true,
+        code: true,
         collapse: true,
         // katex: true,
         preview: false,
@@ -305,6 +315,7 @@ const BlogDetail = (props) => {
                     onChange={(value) => handleChange(value)} 
                     language={'en'}
                     toolbar={toolbar}
+                    highlight={Hljs.highlightAuto}
                 />
                 <div className={classes.buttons}>
                     <Button className={classes.saveButton} variant="contained" onClick={()=>save()}>

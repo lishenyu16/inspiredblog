@@ -13,17 +13,14 @@ function* createBlog(action){
         blogContent: action.payload[1],
         blogCategory: action.payload[2],
     }
-    let history = action.payload[2];
+    let history = action.payload[3];
     axios.post(host + '/api/blogs/addBlog', data, header)
-    .then(async (res)=>{
-        // await put({
-        //     type: 'create_blog_success'
-        // })
-        await history.push('/blogs/public-blogs');
+    .then((res)=>{
+        history.push('/blogs/public-blogs');
     })
     .catch(err=>{
         alert('Failed to create blog, please try again later.');
-        console.log(err.response);
+        console.log(err);
     })
 }
 

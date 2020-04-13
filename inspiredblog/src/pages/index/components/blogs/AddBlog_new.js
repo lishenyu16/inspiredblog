@@ -13,6 +13,7 @@ import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem'; 
 import FormControl from '@material-ui/core/FormControl';
+const Hljs = require('highlight.js');
 
 const useStyles = makeStyles(theme => ({
     outerDiv: {
@@ -61,7 +62,16 @@ const AddBlog = (props) => {
         if (props.auth.redirectPath){
             props.clearRedirectPath();
         }
-    }, [])
+    }, []);
+    useEffect(()=>{
+        Hljs.registerLanguage('css', require('highlight.js/lib/languages/css'))
+        Hljs.registerLanguage('json', require('highlight.js/lib/languages/json'))
+        Hljs.registerLanguage('less', require('highlight.js/lib/languages/less'))
+        Hljs.registerLanguage('scss', require('highlight.js/lib/languages/scss'))
+        Hljs.registerLanguage('javascript', require('highlight.js/lib/languages/javascript'))
+        Hljs.registerLanguage('typescript', require('highlight.js/lib/languages/typescript'))
+        Hljs.registerLanguage('go', require('highlight.js/lib/languages/go'))
+    },[])
     const handleChange = (value)=>{
         setEditorValue(value);
     }
@@ -113,7 +123,7 @@ const AddBlog = (props) => {
         quote: true,
         link: true,
         inlinecode: true,
-        // code: true,
+        code: true,
         collapse: true,
         // katex: true,
         preview: false,
@@ -178,6 +188,7 @@ const AddBlog = (props) => {
                 placeholder={'Start editing...'}
                 language={'en'}
                 toolbar={toolbar}
+                highlight={Hljs.highlightAuto}
             />
             <div className={classes.buttons}>
                 <Button className={classes.saveButton} variant="contained" onClick={()=>save()}>
