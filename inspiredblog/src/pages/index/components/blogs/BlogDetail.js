@@ -57,14 +57,14 @@ const useStyles = makeStyles(theme => ({
     arrowBack: {
         position:'absolute',
         left:'3%',
-        top:'5%',
+        top:'50px',
         '&:hover': {
             transform: 'scale(1.3)',
         },
         '@media(max-width:500px)':{
             fontSize:'12px',
             padding:'4px 12px',
-            top: '1%'
+            top: '20px'
         }
     },
     blogContent: {

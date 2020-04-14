@@ -15,6 +15,7 @@ import BlogDetail from './components/blogs/BlogDetail';
 import AddBlog from './components/blogs/AddBlog_new';
 // import AddBlog from './components/blogs/AddBlog';
 import Category from './components/Category';
+import SpecificCategory from './components/categories/SpecificCategory';
 import NotFound from './components/NotFound';
 import { makeStyles } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -219,7 +220,8 @@ const App = (props) => {
     <Switch>         
         <Route path='/home' component = {Home}></Route>
         <Route path='/blogs/add-blog' component = {AddBlog}></Route>
-        <Route path='/blogs/categories' component = {Category}></Route>
+        <Route path='/blogs/categories' exact component = {Category}></Route>
+        <Route path='/blogs/categories/:category' component = {SpecificCategory}></Route>
         <Route path='/blogs/login' component = {SignIn}></Route>
         <Route path='/blogs/signup' component = {SignUp}></Route>
         <Route path='/blogs/forgot-password' component = {ForgotPassword}></Route>

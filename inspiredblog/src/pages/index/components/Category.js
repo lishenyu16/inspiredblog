@@ -26,33 +26,49 @@ const useStyles = makeStyles(theme => ({
         }
     },
     list: {
-        width: '100%'
+        width: '100%',
+        fontSize: '20px',
+    },
+    listItem: {
+        width: 'fit-content',
+        margin: '7px 0',
+        cursor: 'pointer',
+        '&:hover': {
+            transform: 'scale(1.2)',
+        },
+        
     }
 }));
+
+const icons = {
+    1: <i class="fab fa-js-square" style={{width: '30px', textAlign: 'center'}}></i>,
+    2: <i class="fab fa-php" style={{width: '30px', textAlign: 'center'}}></i>,
+    3: <i class="fab fa-node" style={{width: '30px', textAlign: 'center'}}></i>,
+    4: <i class="fab fa-react" style={{width: '30px', textAlign: 'center'}}></i>,
+    5: <i class="fab fa-vuejs" style={{width: '30px', textAlign: 'center'}}></i>,
+    6: <i class="fas fa-database" style={{width: '30px', textAlign: 'center'}}></i>,
+    7: <i class="fas fa-calculator" style={{width: '30px', textAlign: 'center'}}></i>,
+    8: <i class="fas fa-network-wired" style={{width: '30px', textAlign: 'center'}}></i>,
+    9: <i class="fab fa-linux" style={{width: '30px', textAlign: 'center'}}></i>,
+    10: <i class="fas fa-star-half-alt" style={{width: '30px', textAlign: 'center'}}></i>,
+}
 const Category = (props) => {
     const classes = useStyles();
     let history = useHistory();
-    const [editorValue, setEditorValue] = useState('');
+    // const [editorValue, setEditorValue] = useState('');
     useEffect(()=>{
-        
+        props.fetchCategories();
     },[]);
     return (
         <div className={classes.outerDiv}>
             <div className={`${classes.title} sansBold`}>Category</div>
             <div className={classes.subtitle}>10 categories in total currently</div>
             <div className={classes.list}>
-                <ul>
-                    <li>javascript</li>
-                    <li>php</li>
-                    <li>node</li>
-                    <li>react</li>
-                    <li>vue</li>
-                    <li>database</li>
-                    <li>algorithms</li>
-                    <li>network</li>
-                    <li>system</li>
-                    <li>other</li>
-                </ul>
+                {props.blog.categories.map(ele=>
+                    <div className={classes.listItem} onClick={()=>history.push(`/blogs/categories/${ele.description}`)}>
+                        {icons[ele.category_id]} {ele.description} <span style={{color: 'lightgray'}}>({ele.count})</span>
+                    </div>)
+                }
             </div>
         </div>
     )
@@ -67,12 +83,7 @@ const mapStateToProps = (state) => {
 }
 const mapDispatchToProps = (dispatch) => {
     return {
-        setIsEditing: () => dispatch({type: 'set_isEditing'}),
-        fetchBlogDetail: (id, history)=>dispatch({type:'FETCH_BLOG_DETAIL', payload:{id, history}}),
-        saveEdit: (title, editorValue,category) => dispatch({type:'SAVE_EDIT', payload: {blogTitle: title, blogContent: editorValue,category}}),
-        saveTemp: (title,value) => dispatch({type: 'save_temp_blog', payload: [title,value]}),
-        saveRedirectPath: (url) => dispatch({type: 'redirect', url: url}),
-        deleteBlog: (history) => dispatch({type: 'DELETE_BLOG', value: history})
+        fetchCategories: () => dispatch({type: 'FETCH_CATEGORIES'}),
     }
 }
 

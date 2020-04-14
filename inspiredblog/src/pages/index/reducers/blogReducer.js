@@ -4,6 +4,8 @@ const initialState = {
     imageUrls: [],
     blogDetail: null,
     isEditing: false,
+    categories: [],
+    categoryBlogs: [],
 }
 
 const blogReducer = (state=initialState, action) => {
@@ -27,6 +29,16 @@ const blogReducer = (state=initialState, action) => {
             return {
                 ...state,
                 blogDetail: action.payload
+            }
+        case ('fetch_categories_success'):
+            return {
+                ...state,
+                categories: action.payload
+            }
+        case ('fetch_category_blogs_success'):
+            return {
+                ...state,
+                categoryBlogs: action.payload
             }
         default: 
             console.log('coming to default reducer.')

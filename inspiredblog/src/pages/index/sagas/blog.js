@@ -119,10 +119,44 @@ function* deleteBlog(action){
     }
 }
 
+function* fetchCategories(action){
+    try {
+        const result = yield axios.get(host + `/api/blogs/categories`);
+        yield put({
+            type: 'fetch_categories_success',
+            payload: result.data.data,
+        })
+    }
+    catch(err){
+        console.log(err);
+        if (err.response){
+            return alert(err.response.data.message);
+        }
+    }
+}
+function* fetchSingleCategory(action){
+    try {
+        let name = action.name;
+        const result = yield axios.get(host + `/api/blogs/categories/${name}`);
+        yield put({
+            type: 'fetch_category_blogs_success',
+            payload: result.data.data,
+        })
+    }
+    catch(err){
+        console.log(err);
+        if (err.response){
+            return alert(err.response.data.message);
+        }
+    }
+}
+
 export function* watchBlogs(){
     yield takeLatest('SAVE_BLOG', createBlog);
     yield takeLatest('FETCH_BLOGS', fetchBlogs);
     yield takeLatest('FETCH_BLOG_DETAIL', fetchBlogDetail);
     yield takeLatest('SAVE_EDIT', saveEdit);
     yield takeLatest('DELETE_BLOG', deleteBlog);
+    yield takeLatest('FETCH_CATEGORIES', fetchCategories);
+    yield takeLatest('FETCH_SINGLE_CATEGORY', fetchSingleCategory);
 }
