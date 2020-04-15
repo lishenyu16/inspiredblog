@@ -6,10 +6,12 @@ import './styles/App.css';
 import * as serviceWorker from './serviceWorker';
 import {Provider} from 'react-redux';
 import store from './store';
-  
+import Favicon from 'react-favicon';
+import profile from './img/logo.png';
 ReactDOM.render(
     <Provider store={store}> 
         <BrowserRouter>
+            <Favicon url={profile} />
             <App />
         </BrowserRouter>
     </Provider>, 

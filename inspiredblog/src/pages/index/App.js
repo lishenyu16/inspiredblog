@@ -32,11 +32,15 @@ import HomeIcon from '@material-ui/icons/Home';
 import BookIcon from '@material-ui/icons/Book';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import profile from './img/profile.png';
+import brand from './img/brand.png';
 import DescriptionIcon from '@material-ui/icons/Description';
 import Particles from 'react-particles-js';
 import { checkAuthState } from './selectors/authSelector';
 import Footer from './Footer';
 import ResetPassword from './components/auth/ResetPassword';
+import SearchIcon from '@material-ui/icons/Search';
+import MenuBookIcon from '@material-ui/icons/MenuBook';
+import LocalOfferIcon from '@material-ui/icons/LocalOffer';
 
 const useStyles = makeStyles({
     list: {
@@ -179,7 +183,7 @@ const App = (props) => {
                     <ListItemText primary={'Home'} />
                 </ListItem>
                 <ListItem button onClick={()=>history.push('/blogs/public-blogs')}>
-                    <ListItemIcon><BookIcon /></ListItemIcon>
+                    <ListItemIcon><MenuBookIcon /></ListItemIcon>
                     <ListItemText primary={'Blogs'} />
                 </ListItem>
                 {/* <ListItem button onClick={()=>history.push('/sites')}>
@@ -190,6 +194,14 @@ const App = (props) => {
                     <ListItemIcon><ClassIcon /></ListItemIcon>
                     <ListItemText primary={'Categories'} />
                 </ListItem>
+                {/* <ListItem button onClick={()=>history.push('/blogs/tags')}>
+                    <ListItemIcon><LocalOfferIcon /></ListItemIcon>
+                    <ListItemText primary={'Tags'} />
+                </ListItem> */}
+                {/* <ListItem button onClick={()=>history.push('/blogs/categories')}>
+                    <ListItemIcon><SearchIcon /></ListItemIcon>
+                    <ListItemText primary={'Search'} />
+                </ListItem> */}
                 <ListItem button onClick={()=>history.push(`/blogs/profile/${localStorage.getItem('userId')}`)}>
                     <ListItemIcon><AccountBoxIcon /></ListItemIcon>
                     <ListItemText primary={'Your Profile'} />
@@ -280,15 +292,16 @@ const App = (props) => {
                 />
                 <div className={classes.leftSectionDiv}>
                     <div className={classes.desktopHeader}>
-                        Inspired Blogs
+                        <img src={brand} style={{maxWidth: '-webkit-fill-available'}}></img>
+                        {/* Inspired Blogs */}
                     </div>
                     <div className={classes.desktopLinks}>
                         <div className={classes.link}>
-                            <i class="material-icons" style={{marginRight:'5px',fontSize:'15px'}}>home</i>
+                            <i class="material-icons" style={{marginRight:'5px',fontSize:'17px'}}>home</i>
                             <Link to='/' style={{textDecoration:'none'}}>Home</Link>
                         </div>
                         <div className={classes.link}>
-                            <DescriptionIcon style={{marginRight:'5px', fontSize:'15px'}} />
+                            <DescriptionIcon style={{marginRight:'5px', fontSize:'17px'}} />
                             <Link to='/blogs/public-blogs' style={{textDecoration:'none'}}>Blogs</Link>
                         </div>
                         {/* <div className={classes.link}>
@@ -296,11 +309,19 @@ const App = (props) => {
                             <Link to='/about' style={{textDecoration:'none'}}>About Me</Link>
                         </div> */}
                         <div className={classes.link}>
-                            <i class="material-icons" style={{marginRight:'5px',fontSize:'15px'}}>class</i>
+                            <i class="material-icons" style={{marginRight:'5px',fontSize:'17px'}}>class</i>
                             <Link to='/blogs/categories' style={{textDecoration:'none'}}>Categories</Link>
                         </div>
+                        {/* <div className={classes.link}>
+                            <i class="fas fa-tags" style={{margin:'0 5px 0 1px',fontSize:'13px'}}></i>
+                            <Link to='/blogs/tags' style={{textDecoration:'none'}}>Tags</Link>
+                        </div> */}
+                        {/* <div className={classes.link}>
+                            <i class="fas fa-search" style={{marginRight:'5px',fontSize:'15px'}}></i>
+                            <Link to='/blogs/categories' style={{textDecoration:'none'}}>Search</Link>
+                        </div> */}
                         <div className={classes.link} style={{display: checkAuthState()?'':'none'}}>
-                            <span class="material-icons" style={{marginRight:'5px',fontSize:'15px'}}>
+                            <span class="material-icons" style={{marginRight:'5px',fontSize:'17px'}}>
                                 account_box
                             </span>
                             <Link to={`/blogs/profile/${localStorage.getItem('userId')}`} style={{textDecoration:'none'}}>Your Profile</Link>

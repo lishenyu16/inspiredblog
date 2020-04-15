@@ -4,7 +4,6 @@ const {CleanWebpackPlugin} =require("clean-webpack-plugin");
 const ProgressBarPlugin = require("progress-bar-webpack-plugin");
 const getEntry = require('./src/config/getEntry');
 const createHtml =require("./src/config/createHtml");// html配置
-
 const htmlArr = createHtml('./src/pages');
 console.log('entry:', getEntry('./src/pages'));
 module.exports = {
@@ -53,29 +52,17 @@ module.exports = {
           limit: 8192,
         },
       },
-      // {
-      //   test: /\.(png|jpe?g|gif)$/i,
-      //   use: [
-      //     {
-      //       loader: 'file-loader',
-      //       options: {
-      //         name: '[path][name].[ext]'
-      //       },
-      //     },
-      //   ],
-      // },
     ]
   },
   resolve:{
 		alias:{
 			src:path.resolve(__dirname,"src/"),
-			// component:path.resolve(__dirname,"src/component/"),
-			// store:path.resolve(__dirname,"src/store/"),
 		}
 	},
   plugins: [  
     new CleanWebpackPlugin(),
     new ProgressBarPlugin(),
+    // new ManifestPlugin(),
     ...htmlArr,
     // new HtmlWebpackPlugin({
     //   // hash: true,

@@ -25,12 +25,18 @@
 html, body {
     height: 100%;
 }
+body {
+    /* color: initial !important;
+    font-size: initial !important;
+    font-family: "none" !important;
+    font-weight: initial !important;
+    line-height: initial !important;
+    letter-spacing: initial !important; */
+    background-color: #f5f7f9 !important;
+    margin: 0 !important;
+}
 * {
     box-sizing: border-box;
-}
-body {
-    background-color: #f5f7f9;
-    margin: 0 !important;
 }
 
 span,

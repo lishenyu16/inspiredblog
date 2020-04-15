@@ -102,9 +102,15 @@ const Blogs = (props) => {
                 <div className={classes.item} key={ele.blog_id}>
                     <div className={`${classes.title} sansSemiBold`} onClick={()=>history.push(`/blogs/blog-detail/${ele.blog_id}`)}>{ele.blog_title}</div>
                     <div className={classes.publishedDate}>
-                        Published on {format(new Date(ele.created_on), 'MM-dd-yyyy')} By  
-                        <Link to={`/blogs/profile/${ele.user_id}`} style={{textDecoration:'none'}}>{' '+ele.username}</Link>
+                        <span onClick={()=>history.push(`/blogs/categories/${ele.description}`)} style={{marginRight: '10px', cursor: 'pointer'}}>
+                            <i class="far fa-folder"></i> {' ' + ele.description}
+                        </span> 
+                        <span style={{marginRight: '10px'}}>{format(new Date(ele.created_on), 'MM/dd/yyyy')}</span>
+                        By <Link to={`/blogs/profile/${ele.user_id}`} style={{textDecoration:'none'}}>{' '+ele.username}</Link>
                     </div>
+                    {/* <div>
+                        <i class="far fa-folder"></i> {ele.category_id}
+                    </div> */}
                     <div>
                         <Button className={classes.readEntire} onClick={()=>history.push(`/blogs/blog-detail/${ele.blog_id}`)}>
                             Read the entire article..

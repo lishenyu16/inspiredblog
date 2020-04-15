@@ -26,6 +26,7 @@ function createHtml(page_path){
 				collapseWhitespace: true,
 				preserveLineBreaks: true
 			},
+			// favicon: "./src/pages/logo.png"
 		}));
 	});
 	return htmlArr;
