@@ -105,7 +105,13 @@ const useStyles = makeStyles({
         display:'flex',
         flexDirection:'column',
         alignItems:'center',
-        marginRight:'2%'
+        marginRight:'2%',
+        '@media(max-width: 1000px)': {
+            width: '22%'
+        },
+        '@media(max-width: 800px)': {
+            width: '25%'
+        }
     },
     rightSectionDiv: {
         width:'50%',
@@ -114,7 +120,13 @@ const useStyles = makeStyles({
         justifyContent:'center',
         backgroundColor:'white',
         position:'relative',
-        paddingBottom:'2.5rem'
+        paddingBottom:'2.5rem',
+        '@media(max-width: 1000px)': {
+            width: '60%'
+        },
+        '@media(max-width: 800px)': {
+            width: '65%'
+        }
     },
     mobileHeader: {
         width: '100%',

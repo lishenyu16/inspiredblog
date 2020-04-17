@@ -23,7 +23,8 @@ const useStyles = makeStyles(theme => ({
         alignItems:'flex-start',
         padding:'50px',
         '@media(max-width: 600px)':{
-            padding: '20px 0'
+            padding: '20px 0',
+            alignItems:'center',
         }
     },
     muiInput: {
@@ -48,6 +49,21 @@ const useStyles = makeStyles(theme => ({
     },
     outlinedSelect: {
         padding: '10px',
+    },
+    formControlRoot: {
+        width: '20%',
+        '@media(max-width:1200px)':{
+            width:'25%'
+        },
+        '@media(max-width:1000px)':{
+            width:'30%'
+        },
+        '@media(max-width:800px)':{
+            width:'35%'
+        },
+        '@media(max-width:600px)':{
+            width:'30%'
+        }
     }
 }));
 
@@ -103,7 +119,12 @@ const AddBlog = (props) => {
     const save = ()=>{
         props.saveTemp(title,editorValue,category); // save to reducer tempr
         if (checkAuthState()) {
-            props.saveBlog(title,editorValue,category,history); // send to server
+            if (title && category){
+                props.saveBlog(title,editorValue,category,history); // send to server
+            }
+            else {
+                return alert('Title and category can not be empty!');
+            }
         }
         else {
             props.saveRedirectPath('/blogs/add-blog');
@@ -116,23 +137,31 @@ const AddBlog = (props) => {
         h2: true,
         h3: true,
         h4: true,
+        h5: true,
+        h6: true,
         img: true,
         list: true,
-        para: true,       // parapraph
+        para: {
+          paragraph: true,            // control the whole part if you don't want to display
+          italic: true,
+          bold: true,
+          bolditalic: true,
+          delline: true,
+          underline: true,
+          keytext: true,
+          superscript: true,
+          subscript: true,
+          marktag: true
+        },
         table: true,
         quote: true,
         link: true,
         inlinecode: true,
         code: true,
         collapse: true,
-        // katex: true,
-        preview: false,
+        preview: true,
         expand: true,
-        // undo: true,
-        // redo: true,
-        // save: true,
         subfield: true,
-        // toc: true   
     }
     const options = [
         {id: 1, description: 'javascript'},
@@ -148,7 +177,7 @@ const AddBlog = (props) => {
     ]
     return (
         <div className={classes.outerDiv}>
-            <FormControl variant="outlined" style={{margin: '10px 0', width: '20%'}}>
+            <FormControl variant="outlined" style={{margin: '10px 0'}} classes={{root: classes.formControlRoot}}>
                 <InputLabel id="category-label" classes={{outlined: classes.outlinedLabel}}>Category</InputLabel>
                 <Select
                     labelId="category-label"
@@ -212,7 +241,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         saveTemp: (title,value,category) => dispatch({type: 'save_temp_blog', payload: [title,value,category]}),
-        saveBlog: (title,value,history) => dispatch({type: 'SAVE_BLOG', payload: [title,value,history]}),
+        saveBlog: (title,value,category,history) => dispatch({type: 'SAVE_BLOG', payload: [title,value,category,history]}),
         clearRedirectPath: () => dispatch({type:'redirect', url: null})
     }
 }

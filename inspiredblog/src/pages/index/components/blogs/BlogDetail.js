@@ -49,9 +49,14 @@ const useStyles = makeStyles(theme => ({
     editBlog: {
         position:'absolute',
         right:'3%',
-        top:'5%',
+        top:'50px',
         '@media(max-width:500px)':{
             top: '1%'
+        },
+        '@media(max-width:500px)':{
+            fontSize:'12px',
+            padding:'4px 12px',
+            top: '20px'
         }
     },
     arrowBack: {
@@ -223,23 +228,31 @@ const BlogDetail = (props) => {
         h2: true,
         h3: true,
         h4: true,
+        h5: true,
+        h6: true,
         img: true,
         list: true,
-        para: true,       // parapraph
+        para: {
+          paragraph: true,            // control the whole part if you don't want to display
+          italic: true,
+          bold: true,
+          bolditalic: true,
+          delline: true,
+          underline: true,
+          keytext: true,
+          superscript: true,
+          subscript: true,
+          marktag: true
+        },
         table: true,
         quote: true,
         link: true,
         inlinecode: true,
         code: true,
         collapse: true,
-        // katex: true,
-        preview: false,
+        preview: true,
         expand: true,
-        // undo: true,
-        // redo: true,
-        // save: true,
         subfield: true,
-        // toc: true   
     }
     const options = [
         {id: 1, description: 'javascript'},

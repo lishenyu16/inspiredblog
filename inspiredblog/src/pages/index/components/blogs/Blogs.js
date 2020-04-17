@@ -10,7 +10,7 @@ import { checkAuthState } from '../../selectors/authSelector';
 
 const useStyles = makeStyles(theme => ({
     blogsDiv: {
-        paddingTop:'20%',
+        paddingTop:'25%',
         width:'100%',
         height:'min-content',
         display:'flex',
@@ -27,7 +27,7 @@ const useStyles = makeStyles(theme => ({
     addBlog: {
         position:'absolute',
         left:'3%',
-        top:'5%',
+        top:'3%',
         border:'1px solid black',
         borderRadius:'5px',
         padding:'5px 15px',
@@ -38,7 +38,7 @@ const useStyles = makeStyles(theme => ({
             background: 'cadetblue',
             color: 'white',
         },
-        '@media(max-width:500px)':{
+        '@media(max-width:600px)':{
             fontSize:'12px',
             padding:'4px 12px',
             top:'3%',
@@ -55,6 +55,7 @@ const useStyles = makeStyles(theme => ({
         textTransform: 'capitalize', 
         fontSize:'25px',
         cursor:'pointer',
+        textAlign: 'center',
         '&:hover': {
             textDecoration:'underline'
         },
