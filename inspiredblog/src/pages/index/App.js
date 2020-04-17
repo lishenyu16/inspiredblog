@@ -67,7 +67,7 @@ const useStyles = makeStyles({
         width:'100%', 
         backgroundColor:'black',
         color:'white',
-        height:'100px',
+        height:'fit-content',
         fontFamily:'cursive',
         display:'flex',
         justifyContent:'center',

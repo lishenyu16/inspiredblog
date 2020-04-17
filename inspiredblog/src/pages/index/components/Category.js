@@ -10,7 +10,7 @@ const useStyles = makeStyles(theme => ({
         display:'flex',
         flexDirection:'column',
         alignItems:'center',
-        padding: '30px 20px'
+        padding: '15% 20px 30px'
     },
     title: {
         fontSize: '25px',
