@@ -179,7 +179,7 @@ const BlogDetail = (props) => {
         .then((res)=>{
             // setImageUrl(res.data.imageUrl);
             // let str = editorValue + '![alt]('+imageUrl+')';
-            let str = editorValue + '<div style="text-align: center"><img style="max-width:50%" src="'+res.data.imageUrl+'"/></div>';
+            let str = editorValue + '<div style="text-align: center; width:100%"><img style="max-width:100%" src="'+res.data.imageUrl+'"/></div>';
             setEditorValue(str);
         })
         .catch(err=>{
@@ -204,6 +204,16 @@ const BlogDetail = (props) => {
             setTitle(props.blog.blogDetail.blog_title);
             setEditorValue(props.blog.blogDetail.blog_content);
             setCategory(props.blog.blogDetail.category_id);
+        }
+        else {
+            props.saveRedirectPath('/blogs/blogDetail/'+props.blog.blogDetail.blog_id);
+            history.push('/blogs/login');
+        }
+    }
+    const clickMarkPrivate = () => {
+        if (checkAuthState()) {
+            props.switchPrivateBlog();
+            setAnchorEl(null);
         }
         else {
             props.saveRedirectPath('/blogs/blogDetail/'+props.blog.blogDetail.blog_id);
@@ -282,7 +292,7 @@ const BlogDetail = (props) => {
                 <MenuItem onClick={clickDelete}>
                     <i class="fas fa-trash-alt" style={{marginRight: '10px'}}></i> Delete
                 </MenuItem>
-                <MenuItem onClick={handleClose}>
+                <MenuItem onClick={clickMarkPrivate}>
                     <i class="fas fa-lock" style={{marginRight: '10px'}}></i> Mark as private
                 </MenuItem>
             </Menu>
@@ -387,7 +397,8 @@ const mapDispatchToProps = (dispatch) => {
         saveEdit: (title, editorValue,category) => dispatch({type:'SAVE_EDIT', payload: {blogTitle: title, blogContent: editorValue,category}}),
         saveTemp: (title,value) => dispatch({type: 'save_temp_blog', payload: [title,value]}),
         saveRedirectPath: (url) => dispatch({type: 'redirect', url: url}),
-        deleteBlog: (history) => dispatch({type: 'DELETE_BLOG', value: history})
+        deleteBlog: (history) => dispatch({type: 'DELETE_BLOG', value: history}),
+        switchPrivateBlog: () => dispatch({type: 'SWITCH_PRIVATE'}),
     }
 }
 

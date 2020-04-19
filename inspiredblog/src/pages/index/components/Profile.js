@@ -320,7 +320,7 @@ const Profile = (props) => {
             {props.profile.showing=='posts'?
             <div style={{width:'100%', padding: '5% 10% 0'}}>
                 {props.profile.myBlogs.map(b=>
-                    <div className={classes.blogEntry} key={b.blog_id} onClick={()=>history.push(`/blogs/blog-detail/${b.blog_id}`)}>
+                    <div className={classes.blogEntry} key={b.blog_id} onClick={()=>history.push(`/blogs/blog-detail/${b.blog_id}`)} style={{backgroundColor: b.is_private?'lightyellow':'inherit'}}>
                         <span className='sansSemiBold' style={{fontSize:'20px'}}>{b.blog_title}</span> - published on <span style={{color: 'rgb(101,119,134)'}}>{format(new Date(b.created_on), 'MM/dd/yyyy')}</span>
                     </div>)
                 }

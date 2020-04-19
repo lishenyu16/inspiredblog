@@ -151,6 +151,33 @@ function* fetchSingleCategory(action){
     }
 }
 
+function* switchPrivate(){
+    let header = {
+        headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('token')
+        }
+    } 
+    try {
+        let blog = yield select(state => state.blog.blogDetail);
+        const data = {
+            blogId: blog.blog_id,
+        }
+        const result = yield axios.post(host + `/api/blogs/switchPrivate`, data, header);
+    }
+    catch(err){
+        console.log(err);
+        if (err.response){
+            if (err.response.data.message =='Token expired' || err.response.data.message =='Invalid token'){
+                alert('Authentication expired, please relogin.');
+                return history.push('/blogs/login');
+            }
+            else if (err.response.data.message == 'Not authorized'){
+                return alert('You are not authorized to do this.');
+            }
+        }
+        alert('Failed to to do this, please try again later.');
+    }
+} 
 export function* watchBlogs(){
     yield takeLatest('SAVE_BLOG', createBlog);
     yield takeLatest('FETCH_BLOGS', fetchBlogs);
@@ -159,4 +186,5 @@ export function* watchBlogs(){
     yield takeLatest('DELETE_BLOG', deleteBlog);
     yield takeLatest('FETCH_CATEGORIES', fetchCategories);
     yield takeLatest('FETCH_SINGLE_CATEGORY', fetchSingleCategory);
+    yield takeLatest('SWITCH_PRIVATE', switchPrivate);
 }
