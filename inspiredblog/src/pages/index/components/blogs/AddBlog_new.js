@@ -109,7 +109,7 @@ const AddBlog = (props) => {
         axios.post('http://localhost:5000/api/s3/uploadImage', formData, header)
         .then((res)=>{
             // let str = editorValue + '![alt]('+imageUrl+')';
-            let str = editorValue + '<div style="text-align: center"><img style="max-width:50%" src="'+res.data.imageUrl+'"/></div>';
+            let str = editorValue + '<div style="text-align: center"><img style="max-width:100%" src="'+res.data.imageUrl+'"/></div>';
             setEditorValue(str);
         })
         .catch(err=>{

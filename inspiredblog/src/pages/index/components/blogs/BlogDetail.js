@@ -2,10 +2,12 @@ import React, { Component, useEffect, useState  } from 'react';
 import {Redirect, useHistory, Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
-import ReactMarkdown from 'react-markdown'
+// import ReactMarkdown from 'react-markdown';
+// import Markdown from 'markdown-to-jsx';
+import marked from 'marked';
 import Button from '@material-ui/core/Button';
 import format from 'date-fns/format';
-import CodeBlock from './CodeBlock';
+// import CodeBlock from './CodeBlock';
 import TextField from '@material-ui/core/TextField';
 // import Editor from 'for-editor';
 import Editor from 'for-editor-herb';
@@ -18,6 +20,7 @@ import Select from '@material-ui/core/Select';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 const Hljs = require('highlight.js');
+import DOMPurify from 'dompurify';
 
 const useStyles = makeStyles(theme => ({
     detail: {
@@ -276,6 +279,17 @@ const BlogDetail = (props) => {
         {id: 9, description: 'system'},
         {id: 10, description: 'other' }
     ]
+    // const rawMarkup = (contents) => {
+    //     // https://medium.com/@arpith/handling-markdown-in-react-24b275cddf39
+    //     // let rawMarkup = marked(contents, {sanitize: true});
+    //     let rawMarkup = marked(contents, {renderer, sanitize: true});
+    //     return { __html: rawMarkup };
+    // }
+    function Markdown({ content, unsafe = false }) {
+        let html = marked(content);
+        html = unsafe ? html : DOMPurify.sanitize(html);
+        return <div dangerouslySetInnerHTML={{ __html: html }} />;
+    }
     return(
         <div className={classes.detail}>
             <Menu
@@ -372,11 +386,7 @@ const BlogDetail = (props) => {
                     <Link to={`/blogs/profile/${props.blog.blogDetail.user_id}`} style={{textDecoration:'none'}}>{' '+props.blog.blogDetail.username}</Link>
                 </div>
                 <div className={classes.blogContent}>
-                    <ReactMarkdown 
-                        source={props.blog.blogDetail.blog_content}
-                        escapeHtml={false}>
-                        renderers={{code: CodeBlock}}
-                    </ReactMarkdown>
+                    <Markdown content={props.blog.blogDetail.blog_content} />
                 </div>
             </React.Fragment>:''}
         </div>

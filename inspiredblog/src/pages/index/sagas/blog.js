@@ -53,10 +53,11 @@ function* fetchBlogDetail(action){
         })
     }
     catch(err){
-        if (err.response.data.message =='jwt expired.'){
+        if (err.response && err.response.data.message =='jwt expired.'){
             // alert('Authentication expired, please relogin.');
             return history.push('/blogs/login');
         }
+        console.log(err);
         alert('Failed to fetch blog detail, please try again later.');
         return history.push('/blogs/');
     }
