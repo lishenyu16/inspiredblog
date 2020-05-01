@@ -6,6 +6,7 @@ import { makeStyles } from '@material-ui/core/styles';
 // import Markdown from 'markdown-to-jsx';
 import marked from 'marked';
 import Button from '@material-ui/core/Button';
+import Avatar from '@material-ui/core/Avatar';
 import format from 'date-fns/format';
 // import CodeBlock from './CodeBlock';
 import TextField from '@material-ui/core/TextField';
@@ -21,6 +22,9 @@ import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 const Hljs = require('highlight.js');
 import DOMPurify from 'dompurify';
+import Cookies from 'universal-cookie';
+const cookies = new Cookies();
+import profileImage from '../../img/profile.png'
 
 const useStyles = makeStyles(theme => ({
     detail: {
@@ -31,48 +35,57 @@ const useStyles = makeStyles(theme => ({
         flexDirection:'column',
         alignItems:'flex-start',
         position:'relative',
-        // '@media(max-width:500px)':{
-        //     paddingTop:'10%'
-        // }
+        '@media(max-width:600px)':{
+            padding:'30px',
+        }
     },
-    title: {
-        textTransform: 'capitalize', 
-        fontSize:'25px',
-        margin:'20% auto 0',
-        textAlign: 'center',
-        // '&:hover': {
-        //     textDecoration:'underline'
-        //  },
-    },
-    publishedDate: {
-        fontSize:'12px', 
-        margin:'10px auto', 
-        color:'lightgray'
-    },
-    editBlog: {
-        position:'absolute',
-        right:'3%',
-        top:'50px',
-        '@media(max-width:500px)':{
-            top: '1%'
-        },
-        '@media(max-width:500px)':{
+    actions: {
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginTop:'30px',
+        '@media(max-width:600px)':{
             fontSize:'12px',
             padding:'4px 12px',
             top: '20px'
         }
     },
+    followBtn: {
+        textTransform: 'none',
+        padding: '6px 11px',
+        minWidth: '0'
+    },
+    editBlog: {
+    },
     arrowBack: {
-        position:'absolute',
-        left:'3%',
-        top:'50px',
         '&:hover': {
             transform: 'scale(1.3)',
         },
-        '@media(max-width:500px)':{
-            fontSize:'12px',
-            padding:'4px 12px',
-            top: '20px'
+    },
+    titleTop:{
+        width: '85%',
+        margin: '10% auto 0',
+        display: 'flex',
+        alignItems: 'center',
+        '@media(max-width:600px)':{
+            width: '100%',
+        }
+    },
+    midInfo: {
+        width: '-webkit-fill-available', 
+        display: 'flex', 
+        flexDirection: 'column', 
+        marginLeft: '15px'
+    },
+    title: {
+        textTransform: 'capitalize', 
+        fontSize:'30px',
+        margin:'5% auto 0',
+        textAlign: 'center',
+        width: '85%',
+        '@media(max-width:600px)':{
+            fontSize:'24px',
         }
     },
     blogContent: {
@@ -87,7 +100,7 @@ const useStyles = makeStyles(theme => ({
     },
     editor:{
         width:'80%',
-        '@media(max-width:500px)':{
+        '@media(max-width:600px)':{
             width:'90%',
         }
     },
@@ -123,6 +136,10 @@ const useStyles = makeStyles(theme => ({
     },
     outlinedSelect: {
         padding: '10px',
+    },
+    smallAvatar: {
+        width: '40px',
+        height: '40px'
     }
 }));
 
@@ -134,7 +151,20 @@ const BlogDetail = (props) => {
     const [title, setTitle] = useState('');
     const [category, setCategory] = useState('');
     useEffect(()=>{
-        props.fetchBlogDetail(props.match.params.blog_id, history);
+        let views = cookies.get('viewsHistory');
+        let increaseCount = false;
+        if(views){
+            let viewsArr = views.split(',');
+            if (!viewsArr.includes(props.match.params.blog_id.toLocaleString())){
+                increaseCount = true;
+                cookies.set('viewsHistory', views+`${props.match.params.blog_id},`, {maxAge: 1000*60*60});
+            }
+        }
+        else {
+            increaseCount = true;
+            cookies.set('viewsHistory', `${props.match.params.blog_id},`, {maxAge: 1000*60*60});
+        }
+        props.fetchBlogDetail(props.match.params.blog_id,increaseCount, history);
     },[]);
     useEffect(()=>{
         if (props.blog.isEditing && props.auth.redirectPath){
@@ -366,25 +396,39 @@ const BlogDetail = (props) => {
             // detail block ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
             props.blog.blogDetail?
             <React.Fragment>
-                <div className={classes.arrowBack} style={{cursor:'pointer'}} onClick={()=>history.goBack()}>
-                    <span class="material-icons" style={{color: 'rgba(29,161,242,1.00)'}}>
-                        arrow_back_ios
-                    </span>
+                <div className={classes.actions}>
+                    <div className={classes.arrowBack} style={{cursor:'pointer'}} onClick={()=>history.goBack()}>
+                        <span class="material-icons" style={{color: 'rgba(29,161,242,1.00)'}}>
+                            arrow_back_ios
+                        </span>
+                    </div>
+                    <div className={classes.editBlog} style={{cursor:'pointer', display:!checkAuthState()?'none':localStorage.getItem('userId')==props.blog.blogDetail.user_id?'':'none'}} onClick={handleClick}>
+                        <Button variant="outlined" color="primary" fullWidth
+                            classes={{root:classes.buttonRoot, outlinedPrimary: classes.outlinedPrimary}}
+                        >
+                            <i class="fa fa-circle-o" aria-hidden="true" style={{fontSize:'5px', color: 'rgb(29,161,242)'}}></i>
+                            <i class="fa fa-circle-o" aria-hidden="true" style={{fontSize:'5px', color: 'rgb(29,161,242)'}}></i>
+                            <i class="fa fa-circle-o" aria-hidden="true" style={{fontSize:'5px', color: 'rgb(29,161,242)'}}></i>
+                        </Button>
+                    </div>
                 </div>
-                <div className={classes.editBlog} style={{cursor:'pointer', display:!checkAuthState()?'none':localStorage.getItem('userId')==props.blog.blogDetail.user_id?'':'none'}} onClick={handleClick}>
-                    <Button variant="outlined" color="primary" fullWidth
-                        classes={{root:classes.buttonRoot, outlinedPrimary: classes.outlinedPrimary}}
-                    >
-                        <i class="fa fa-circle-o" aria-hidden="true" style={{fontSize:'5px', color: 'rgb(29,161,242)'}}></i>
-                        <i class="fa fa-circle-o" aria-hidden="true" style={{fontSize:'5px', color: 'rgb(29,161,242)'}}></i>
-                        <i class="fa fa-circle-o" aria-hidden="true" style={{fontSize:'5px', color: 'rgb(29,161,242)'}}></i>
-                    </Button>
+                <div className={classes.titleTop}>
+                    <div>
+                        <Avatar alt="avatar" src={profileImage} className={classes.smallAvatar} />
+                    </div>
+                    <div className={classes.midInfo}>
+                        <div>
+                            <Link to={`/blogs/profile/${props.blog.blogDetail.user_id}`}  className={'sansBold'} style={{textDecoration:'none'}}>{' '+props.blog.blogDetail.username}</Link>
+                        </div>
+                        <div style={{color: '#657786', fontSize: '13px'}}>
+                            {format(new Date(props.blog.blogDetail.created_on), 'MMM dd, yyyy')}
+                        </div>
+                    </div>
+                    <div>
+                        <Button variant="outlined" color="primary" classes={{root:classes.followBtn, outlinedPrimary: classes.outlinedPrimary}}>Follow</Button>
+                    </div>
                 </div>
-                <div className={classes.title}>{props.blog.blogDetail.blog_title}</div>
-                <div className={classes.publishedDate}>
-                    Published on {format(new Date(props.blog.blogDetail.created_on), 'MM-dd-yyyy')} By 
-                    <Link to={`/blogs/profile/${props.blog.blogDetail.user_id}`} style={{textDecoration:'none'}}>{' '+props.blog.blogDetail.username}</Link>
-                </div>
+                <div className={`${classes.title} sansBold`}>{props.blog.blogDetail.blog_title}</div>
                 <div className={classes.blogContent}>
                     <Markdown content={props.blog.blogDetail.blog_content} />
                 </div>
@@ -403,7 +447,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         setIsEditing: () => dispatch({type: 'set_isEditing'}),
-        fetchBlogDetail: (id, history)=>dispatch({type:'FETCH_BLOG_DETAIL', payload:{id, history}}),
+        fetchBlogDetail: (id,increaseCount, history)=>dispatch({type:'FETCH_BLOG_DETAIL', payload:{id,increaseCount, history}}),
         saveEdit: (title, editorValue,category) => dispatch({type:'SAVE_EDIT', payload: {blogTitle: title, blogContent: editorValue,category}}),
         saveTemp: (title,value) => dispatch({type: 'save_temp_blog', payload: [title,value]}),
         saveRedirectPath: (url) => dispatch({type: 'redirect', url: url}),

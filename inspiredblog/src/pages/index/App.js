@@ -264,7 +264,8 @@ const App = (props) => {
 
 	return (
 		<React.Fragment>
-			<div className={classes.desktop}>
+			{window.innerWidth>600?
+            <div className={classes.desktop}>
                 <Particles 
                     className={classes.particles}
                     params={{
@@ -360,7 +361,7 @@ const App = (props) => {
                     {router}
                     <Footer />
                 </div>
-            </div>
+            </div>:
 			<div className={classes.mobile}>
 				<Drawer open={state.left} onClose={toggleDrawer('left', false)}>
 					{sideList('left')}
@@ -380,7 +381,7 @@ const App = (props) => {
                     {router}
                     <Footer />
                 </div>
-			</div>
+			</div>}
 		</React.Fragment>
 	)
 }

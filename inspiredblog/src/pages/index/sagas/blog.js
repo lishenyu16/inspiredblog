@@ -46,7 +46,7 @@ function* fetchBlogDetail(action){
     let history = action.payload.history;
     try {
         yield put({type: 'fetch_blogDetail_success', payload: null}); // clear existing blog
-        const result = yield axios.get(host + `/api/blogs/blogDetail/${action.payload.id}`, header);
+        const result = yield axios.get(host + `/api/blogs/blogDetail/${action.payload.id}/${action.payload.increaseCount}`, header);
         yield put({
             type: 'fetch_blogDetail_success',
             payload: result.data.blog || null
