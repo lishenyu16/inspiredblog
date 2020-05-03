@@ -168,6 +168,8 @@ const App = (props) => {
     const [state, setState] = React.useState({
         left: false,
     });
+    const [mql, setMql] = React.useState(window.matchMedia(`(max-width: 600px)`));
+    const [mobile, setMobile] = React.useState(false);
     useEffect(()=>{
         props.checkAuthState();
     },[])
@@ -175,6 +177,14 @@ const App = (props) => {
         props.trackUser();
     },[])
 
+    useEffect(()=>{ // similar to componentWillMount. when it's unmounted, run the returned function
+        // refer to this: https://zhuanlan.zhihu.com/p/21650585
+        mql.addListener(mediaQueryChanged);
+        return () =>{
+            setMql(mql);
+            setMobile(mql.matches);
+        }
+    },[])
     let history = useHistory();
     const toggleDrawer = (side, open) => event => {
         if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
@@ -262,9 +272,13 @@ const App = (props) => {
         <Route path='*' component = {NotFound}></Route>
     </Switch>)
 
+    const mediaQueryChanged = ()=> {
+        setMobile(mql.matches);
+    }
+
 	return (
 		<React.Fragment>
-			{window.innerWidth>600?
+			{!mobile?
             <div className={classes.desktop}>
                 <Particles 
                     className={classes.particles}

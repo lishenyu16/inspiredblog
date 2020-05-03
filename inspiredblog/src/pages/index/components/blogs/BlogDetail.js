@@ -48,7 +48,7 @@ const useStyles = makeStyles(theme => ({
         '@media(max-width:600px)':{
             fontSize:'12px',
             padding:'4px 12px',
-            top: '20px'
+            marginTop: '0px'
         }
     },
     followBtn: {
@@ -91,6 +91,7 @@ const useStyles = makeStyles(theme => ({
     blogContent: {
         width:'85%', 
         margin: '0 auto',
+        paddingTop:'25px',
         '@media(max-width:500px)':{
             width:'100%', 
         }
@@ -157,7 +158,7 @@ const BlogDetail = (props) => {
             let viewsArr = views.split(',');
             if (!viewsArr.includes(props.match.params.blog_id.toLocaleString())){
                 increaseCount = true;
-                cookies.set('viewsHistory', views+`${props.match.params.blog_id},`, {maxAge: 1000*60*60});
+                cookies.set('viewsHistory', views+`${props.match.params.blog_id},`, {maxAge: 1000*60*60*24});
             }
         }
         else {
@@ -421,7 +422,7 @@ const BlogDetail = (props) => {
                             <Link to={`/blogs/profile/${props.blog.blogDetail.user_id}`}  className={'sansBold'} style={{textDecoration:'none'}}>{' '+props.blog.blogDetail.username}</Link>
                         </div>
                         <div style={{color: '#657786', fontSize: '13px'}}>
-                            {format(new Date(props.blog.blogDetail.created_on), 'MMM dd, yyyy')}
+                            {format(new Date(props.blog.blogDetail.created_on), 'MMM dd, yyyy')}<span style={{marginLeft: '10px'}}>{props.blog.blogDetail.views} views</span>
                         </div>
                     </div>
                     <div>
