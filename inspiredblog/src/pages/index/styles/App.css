@@ -21,17 +21,38 @@
 }
 
 
+/*手机端的标准字体大小为16px*/
+html {
+    font-size: 16px;
+}
+@media only screen and (min-width : 320px) {
+}
+/*当屏幕宽度大于480像素时，将采用以下字体大小为标准大小，下同*/
+/* @media only screen and (min-width : 480px) {
+    html {
+        font-size: 18px;
+    }
+} */
+/* @media only screen and (min-width : 768px) {
+    html {
+        font-size: 18px;
+    }
+} */
+/* @media only screen and (min-width : 992px) {
+    html {
+        font-size: 20px;
+    }
+} */
+@media only screen and (min-width : 1600px) {
+    html {
+        font-size: 18px;
+    }
+}
 
 html, body {
     height: 100%;
 }
 body {
-    /* color: initial !important;
-    font-size: initial !important;
-    font-family: "none" !important;
-    font-weight: initial !important;
-    line-height: initial !important;
-    letter-spacing: initial !important; */
     background-color: #f5f7f9 !important;
     margin: 0 !important;
 }
@@ -65,4 +86,8 @@ strong {
 
 code {
     background-color: #fefbec;
+}
+
+ol {
+    padding-inline-start: 15px;
 }

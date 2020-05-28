@@ -89,6 +89,7 @@ const useStyles = makeStyles(theme => ({
         }
     },
     blogContent: {
+        fontSize: '0.875rem',
         width:'85%', 
         margin: '0 auto',
         paddingTop:'25px',

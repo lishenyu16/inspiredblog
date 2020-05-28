@@ -51,11 +51,8 @@ const useStyles = makeStyles(theme => ({
         padding: '10px',
     },
     formControlRoot: {
-        width: '20%',
+        width: '25%',
         '@media(max-width:1200px)':{
-            width:'25%'
-        },
-        '@media(max-width:1000px)':{
             width:'30%'
         },
         '@media(max-width:800px)':{

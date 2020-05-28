@@ -42,7 +42,10 @@ const useStyles = makeStyles(theme => ({
             fontSize:'12px',
             padding:'4px 12px',
             top:'3%',
-        }
+        },
+        '@media(max-width:400px)':{
+            top:'2%',
+        },
     },
     divider: {
         width:'50%',

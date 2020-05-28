@@ -1,11 +1,14 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const isDev = process.env.NODE_ENV === 'development';
 const path = require('path');
 const {CleanWebpackPlugin} =require("clean-webpack-plugin");
 const ProgressBarPlugin = require("progress-bar-webpack-plugin");
 const getEntry = require('./src/config/getEntry');
 const createHtml =require("./src/config/createHtml");// html配置
 const htmlArr = createHtml('./src/pages');
-console.log('entry:', getEntry('./src/pages'));
+
+// https://juejin.im/post/5cfe4b13f265da1bb13f26a8 掘金webpack配置详解
+
 module.exports = {
   // entry: { 
   //   'index/index': './src/pages/index/index.js',
@@ -14,7 +17,7 @@ module.exports = {
   entry: getEntry('./src/pages'),
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: '[name].bundle.js',
+    filename: '[name].[hash:6].js',
     publicPath: '/'
   },
   devServer: {
@@ -23,7 +26,7 @@ module.exports = {
       '/api':'http://localhost:5000',
     }
   },
-  // devtool: 'cheap-module-eval-source-map',
+  devtool: isDev?'cheap-module-eval-source-map':'source-map',
   module: {
     rules: [
       {
@@ -33,14 +36,16 @@ module.exports = {
           loader: "babel-loader"
         }
       },
-      {
-        test: /\.html$/,
-        use: [
-          {
-            loader: "html-loader"
-          }
-        ]
-      },
+      // important! below loader should not be used, or ejs syntax in html will not work
+      //https://stackoverflow.com/questions/45223299/unable-to-inject-data-into-template-with-html-webpack-plugin
+      // {
+      //   test: /\.html$/,
+      //   use: [
+      //     {
+      //       loader: "html-loader"
+      //     }
+      //   ]
+      // },
       {
         test: /\.css$/i,
         use: ['style-loader', 'css-loader'],
