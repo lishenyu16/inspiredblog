@@ -163,26 +163,32 @@ const useStyles = makeStyles({
     }
 });
 
+const mql = window.matchMedia(`(max-width: 800px)`);
+
 const App = (props) => {
 	const classes = useStyles();
     const [state, setState] = React.useState({
         left: false,
     });
-    const [mql, setMql] = React.useState(window.matchMedia(`(max-width: 600px)`));
-    const [mobile, setMobile] = React.useState(false);
+    const [mobile, setMobile] = React.useState(mql.matches);
+    // const [mql, setMql] = React.useState(mql.matches); 
     useEffect(()=>{
+        console.log('gets here: 1,', mql.matches);
         props.checkAuthState();
     },[])
     useEffect(()=>{
         props.trackUser();
     },[])
-
+    const mediaQueryChanged = ()=> {
+        setMobile(mql.matches);
+    }
     useEffect(()=>{ // similar to componentWillMount. when it's unmounted, run the returned function
         // refer to this: https://zhuanlan.zhihu.com/p/21650585
+        console.log('gets here:', mql.matches);
         mql.addListener(mediaQueryChanged);
         return () =>{
-            setMql(mql);
-            setMobile(mql.matches);
+            // setMql(mq);
+            setMobile(mq.matches);
         }
     },[])
     let history = useHistory();
@@ -272,9 +278,7 @@ const App = (props) => {
         <Route path='*' component = {NotFound}></Route>
     </Switch>)
 
-    const mediaQueryChanged = ()=> {
-        setMobile(mql.matches);
-    }
+
 
 	return (
 		<React.Fragment>
