@@ -1,0 +1,93 @@
+@font-face {
+    font-family: 'SansRegular';
+    font-style: normal;
+    font-weight: normal;
+    src: url('../../../public/fonts/OpenSans-Regular.ttf')
+      format('truetype');
+}
+@font-face {
+    font-family: 'SansBold';
+    font-style: normal;
+    font-weight: normal;
+    src: url('../../../public/fonts/OpenSans-Bold.ttf')
+      format('truetype');
+}
+@font-face {
+    font-family: 'SansSemiBold';
+    font-style: normal;
+    font-weight: normal;
+    src: url('../../../public/fonts/OpenSans-SemiBold.ttf')
+      format('truetype');
+}
+
+
+/*手机端的标准字体大小为16px*/
+html {
+    font-size: 16px;
+}
+@media only screen and (min-width : 320px) {
+}
+/*当屏幕宽度大于480像素时，将采用以下字体大小为标准大小，下同*/
+/* @media only screen and (min-width : 480px) {
+    html {
+        font-size: 18px;
+    }
+} */
+/* @media only screen and (min-width : 768px) {
+    html {
+        font-size: 18px;
+    }
+} */
+/* @media only screen and (min-width : 992px) {
+    html {
+        font-size: 20px;
+    }
+} */
+@media only screen and (min-width : 1600px) {
+    html {
+        font-size: 18px;
+    }
+}
+
+html, body {
+    height: 100%;
+}
+body {
+    background-color: #f5f7f9 !important;
+    margin: 0 !important;
+}
+* {
+    box-sizing: border-box;
+}
+
+span,
+a,
+button,
+input,
+div {
+    font-family: 'SansRegular';
+}
+
+.sansRegular {
+    font-family: 'SansRegular';
+}
+.sansBold {
+    font-family: 'SansBold';
+}
+.sansSemiBold {
+    font-family: 'SansSemiBold';
+}
+
+b,
+em,
+strong {
+    font-family: 'SansBold';
+}
+
+code {
+    background-color: #fefbec;
+}
+
+ol {
+    padding-inline-start: 15px;
+}

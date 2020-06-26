@@ -172,10 +172,9 @@ const App = (props) => {
     });
     const [mobile, setMobile] = React.useState(mql.matches);
     // const [mql, setMql] = React.useState(mql.matches); 
-    useEffect(()=>{
-        console.log('gets here: 1,', mql.matches);
-        props.checkAuthState();
-    },[])
+    // useEffect(()=>{
+    //     props.checkAuthState();
+    // },[])
     useEffect(()=>{
         props.trackUser();
     },[])
@@ -184,7 +183,6 @@ const App = (props) => {
     }
     useEffect(()=>{ // similar to componentWillMount. when it's unmounted, run the returned function
         // refer to this: https://zhuanlan.zhihu.com/p/21650585
-        console.log('gets here:', mql.matches);
         mql.addListener(mediaQueryChanged);
         return () =>{
             // setMql(mq);
@@ -414,7 +412,7 @@ const mapDispatchToProps = (dispatch)=>{
     return {
         onSignIn: (email,password)=> dispatch({type: 'SIGN_IN', data: {email, password}}),
         onLogout: (history) => dispatch({type: 'logout', data: history}),
-        checkAuthState: () => dispatch({type: 'checkAuthState'}),
+        // checkAuthState: () => dispatch({type: 'checkAuthState'}),
         trackUser: () => dispatch({type: 'TRACK_USER'}),
         // onSignUp :()=> dispatch({type: 'SIGN_UP'}),
     }

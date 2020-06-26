@@ -14,10 +14,10 @@ function createHtml(page_path){
 			infoData = {};
 		}
 		htmlArr.push(new HtmlWebpackPlugin({
-			title:infoData.title ? infoData.title : "webpack,react多页面架构",
+			title:infoData.title ? infoData.title : "Inspirations",
 			meta:{
-				keywords: infoData.keywords ? infoData.keywords : "webpack，react，github",
-				description:infoData.description ? infoData.description : "这是一个webpack，react多页面架构"
+				keywords: infoData.keywords ? infoData.keywords : "blogs",
+				description:infoData.description ? infoData.description : "inspired blogs"
 			},
 			chunks:[`${item}/${item}`], //引入的js: myStory/myStory.bundle.js
 			template: "./src/pages/index.html",
