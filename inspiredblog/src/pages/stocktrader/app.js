@@ -9,13 +9,17 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import appleStockImage from './img/apple_stock.png';
+import Footer from '../index/Footer';
 
 const useStyles = makeStyles({
     main: {
         display:'flex',
         justifyContent:'center',
         width:'100%',
-        flexWrap: 'wrap'
+        flexWrap: 'wrap',
+        position: 'relative',
+        paddingBottom: '40px', // for bottom footer.
     },
     title: {
         flexGrow: 1
@@ -69,6 +73,7 @@ const useStyles = makeStyles({
         maxWidth: '1024px',
         padding: '100px 60px',
         width: '100%',
+        display: 'flex'
     },
     header_left: {
         maxWidth: '45%',
@@ -93,7 +98,11 @@ const useStyles = makeStyles({
         display: 'flex',
         flexDirection:'column',
         alignItems: 'start'
-    }
+    },
+    header_right: {
+        maxWidth: '45%',
+    },
+
 })
 const App = (props) => {
     const classes = useStyles();
@@ -135,10 +144,18 @@ const App = (props) => {
                             </div>
                         </div>
                         <div className={classes.header_right}>
-
+                            <img src={appleStockImage} style={{maxWidth: '100%'}}></img>
                         </div>
                     </div>
                 </div>
+                <div style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
+                    <img  
+                        src="https://cdn.robinhood.com/assets/robinhood/brand/e46bb5ae43b4085ee9a2e2d576047a37-1x.png" 
+                        srcset="https://cdn.robinhood.com/assets/robinhood/brand/e46bb5ae43b4085ee9a2e2d576047a37-1x.png, https://cdn.robinhood.com/assets/robinhood/brand/f399a1d9bf69ffa75c65e2d4aed8473b-2x.png 2x, https://cdn.robinhood.com/assets/robinhood/brand/b8c0239a85297be0e892b14387b9193d-3x.png 3x" 
+                        role="presentation" draggable="false">
+                    </img>
+                </div>
+                <Footer />
             </div>
             }
         </React.Fragment>

@@ -9,6 +9,7 @@ import Verification from './components/auth/Verification';
 import EmailConfirmed from './components/auth/EmailConfirmed';
 import ForgotPassword from './components/auth/ForgotPassword';
 import Profile from './components/Profile';
+import Sites from './components/Sites';
 import {connect} from 'react-redux';
 import Blogs from './components/blogs/Blogs';
 import BlogDetail from './components/blogs/BlogDetail';
@@ -212,10 +213,10 @@ const App = (props) => {
                     <ListItemIcon><MenuBookIcon /></ListItemIcon>
                     <ListItemText primary={'Blogs'} />
                 </ListItem>
-                {/* <ListItem button onClick={()=>history.push('/sites')}>
+                <ListItem button onClick={()=>history.push('/sites')}>
                     <ListItemIcon><ClassIcon /></ListItemIcon>
                     <ListItemText primary={'Sites'} />
-                </ListItem> */}
+                </ListItem>
                 <ListItem button onClick={()=>history.push('/blogs/categories')}>
                     <ListItemIcon><ClassIcon /></ListItemIcon>
                     <ListItemText primary={'Categories'} />
@@ -258,6 +259,7 @@ const App = (props) => {
     <Switch>         
         <Route path='/home' component = {Home}></Route>
         <Route path='/blogs/add-blog' component = {AddBlog}></Route>
+        <Route path='/blogs/sites' exact component = {Sites}></Route>
         <Route path='/blogs/categories' exact component = {Category}></Route>
         <Route path='/blogs/categories/:category' component = {SpecificCategory}></Route>
         <Route path='/blogs/login' component = {SignIn}></Route>
@@ -333,10 +335,10 @@ const App = (props) => {
                             <DescriptionIcon style={{marginRight:'5px', fontSize:'17px'}} />
                             <Link to='/blogs/public-blogs' style={{textDecoration:'none'}}>Blogs</Link>
                         </div>
-                        {/* <div className={classes.link}>
-                            <i class="material-icons" style={{marginRight:'5px',fontSize:'15px'}}>person</i>
-                            <Link to='/about' style={{textDecoration:'none'}}>About Me</Link>
-                        </div> */}
+                        <div className={classes.link}>
+                            <i class="material-icons" style={{marginRight:'5px',fontSize:'17px'}}>class</i>
+                            <Link to='/blogs/sites' style={{textDecoration:'none'}}>Sites</Link>
+                        </div>
                         <div className={classes.link}>
                             <i class="material-icons" style={{marginRight:'5px',fontSize:'17px'}}>class</i>
                             <Link to='/blogs/categories' style={{textDecoration:'none'}}>Categories</Link>
