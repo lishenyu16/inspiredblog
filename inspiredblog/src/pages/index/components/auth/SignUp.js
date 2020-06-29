@@ -1,4 +1,4 @@
-import React, { Component, userEffect, useState } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import {Redirect, useHistory} from 'react-router-dom';
 import {connect} from 'react-redux';
 import Avatar from '@material-ui/core/Avatar';

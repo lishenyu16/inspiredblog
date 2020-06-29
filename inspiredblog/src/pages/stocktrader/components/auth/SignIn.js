@@ -3,7 +3,6 @@ import {Redirect, useHistory} from 'react-router-dom';
 import {connect} from 'react-redux';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -14,7 +13,6 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import {checkAuthState} from '../../selectors/authSelector';
-import isEmail from 'validator/lib/isEmail';
   
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -35,8 +33,11 @@ const useStyles = makeStyles(theme => ({
 const SignIn = (props) => {
     const classes = useStyles();
     let history = useHistory();
-    const [email, setEmail] = useState(null);
+    const [username, setUsername] = useState(null);
     const [password, setPassword] = useState(null);
+    useEffect(()=>{
+        props.clearErrors();
+    },[])
 
     let redirect = null;
     if(props.isLoggedIn){
@@ -44,21 +45,18 @@ const SignIn = (props) => {
             redirect = <Redirect to={props.auth.redirectPath} />
         }
         else {
-            redirect = <Redirect to="/" />;   
+            redirect = <Redirect to="/stocktrader/myhome" />;   
         }
     }
     const clickOnSignIn = () => {
-        if (email==null || email.trim().length==0){
-            props.showErrors(true,false,null,'Please enter your email');
+        if (!username || username.trim().length==0){
+            props.showErrors(true,false,null,'Please enter your username');
         }
-        else if (!isEmail(email)){
-            props.showErrors(true,false,null,'Email is invalid');
-        }
-        else if (password==null || password.trim().length < 6){
+        else if (!password || password.trim().length < 6){
             props.showErrors(false,true,'Password must contain at least 6 characters',null);
         }
         else {
-            props.onSignIn(email, password);
+            props.onSignIn(username, password);
         }
     }
     return (
@@ -74,19 +72,19 @@ const SignIn = (props) => {
                 </Typography>
                 <div style={{width:'100%', margin: '30px 0'}}>
                     <TextField
-                        error={props.auth.wrongEmail}
+                        // error={props.auth.wrongEmail}
                         variant="outlined"
                         margin="normal"
                         required
                         fullWidth
-                        id="email"
-                        label="Email Address"
-                        name="email"
-                        helperText={props.auth.emailMessage}
-                        autoComplete="email"
+                        id="username"
+                        label="Username"
+                        name="username"
+                        // helperText={props.auth.emailMessage}
+                        autoComplete="username"
                         autoFocus
                         onChange={(e)=>{
-                            setEmail(e.target.value);
+                            setUsername(e.target.value);
                             props.clearErrors();
                         }}
                     />
@@ -123,13 +121,13 @@ const SignIn = (props) => {
                         Sign In
                     </Button>
                     <Grid container>
-                        <Grid item xs>
+                        {/* <Grid item xs>
                             <Link variant="body2" onClick={()=>history.push('/blogs/forgot-password')}>
                                 Forgot password?
                             </Link>
-                        </Grid>
+                        </Grid> */}
                         <Grid item>
-                            <Link  variant="body2" onClick={()=>history.push('/blogs/signup')}>
+                            <Link  variant="body2" onClick={()=>history.push('/stocktrader/signup')}>
                                 {"Don't have an account? Sign Up"}
                             </Link>
                         </Grid>

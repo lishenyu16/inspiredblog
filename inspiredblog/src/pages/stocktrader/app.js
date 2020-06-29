@@ -5,12 +5,13 @@ import { makeStyles } from '@material-ui/core/styles';
 import { checkAuthState } from './selectors/authSelector';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import appleStockImage from './img/apple_stock.png';
-import Footer from '../index/Footer';
+import Footer from './Footer';
+import SignIn from './components/auth/SignIn';
+import SignUp from './components/auth/SignUp';
+import Home from './components/Home';
 
 const useStyles = makeStyles({
     main: {
@@ -20,6 +21,7 @@ const useStyles = makeStyles({
         flexWrap: 'wrap',
         position: 'relative',
         paddingBottom: '40px', // for bottom footer.
+        minHeight: '100vh',
     },
     title: {
         flexGrow: 1
@@ -64,100 +66,64 @@ const useStyles = makeStyles({
             borderBottomStyle: 'solid',
         }
     },
-    header: {
-        width: '100%',
-        backgroundColor:'rgba(195,245,60,1)',
-    },
-    headerContainer: {
-        margin: '0 auto',
-        maxWidth: '1024px',
-        padding: '100px 60px',
-        width: '100%',
-        display: 'flex'
-    },
-    header_left: {
-        maxWidth: '45%',
-    },
-    header_left_top: {
-        fontSize: '60px',
-        lineHeight: '72px',
-        letterSpacing: '-2.4px',
-        color: 'rgb(4,13,20)',
-        marginBottom: '18px',
-        whiteSpace: 'pre-line'
-    },
-    header_left_mid: {
-        marginTop: '24px',
-        fontSize: '24px',
-        lineHeight: '32px',
-        letterSpacing: '-0.24px',
-        color: '#040d14',
-    },
-    header_left_button: {
-        marginTop: '40px',
-        display: 'flex',
-        flexDirection:'column',
-        alignItems: 'start'
-    },
-    header_right: {
-        maxWidth: '45%',
-    },
-
 })
 const App = (props) => {
     const classes = useStyles();
+    const history = useHistory();
+    const router = (                    
+        <Switch>         
+            <Route exact path='/stocktrader/login' component = {SignIn}></Route>
+            <Route exact path='/stocktrader/signup' component = {SignUp}></Route>
+            <Route exact path='/stocktrader/myhome' component = {Home}></Route>
+            <Route exact path='/stocktrader' component = {Home}></Route>
+            <Route path='/stocktrader/*' component = {Home}></Route>
+            <Route path='*' component = {Home}></Route>
+        </Switch>)
     return (
         <React.Fragment>
             {checkAuthState()?
-            <div className={classes.main}>
-                Authenticated
-            </div>:
-            <div className={classes.main}>
-                <AppBar classes={{colorPrimary: classes.primary, positionFixed: classes.positionFixed}}>
-                    <Toolbar>
-                        <IconButton edge="start">
-                            <MenuIcon />
-                        </IconButton>
-                        <div className={classes.link}>
-                            Learn
-                        </div>
-                        <div className={`${classes.title} ${classes.link}`}>
-                            Support
-                        </div>
-                        <Button classes={{root: classes.signInButton}}>
-                            <span className={'sansBold'}>Sign In</span>
-						</Button>
-                        <Button classes={{root: classes.signUpButton}}>
-                            <span className={'sansBold'}>Sign Up</span>
-						</Button>
-                    </Toolbar>
-                </AppBar>
-                <div className={classes.header}>
-                    <div className={classes.headerContainer}>
-                        <div className={classes.header_left}>
-                            <div className={classes.header_left_top}>Investing for Everyone</div>
-                            <div className={classes.header_left_mid}>Reacthood, a pioneer of commission-free investing, gives you more ways to make your money work harder.</div>
-                            <div className={classes.header_left_button}>
-                                <Button classes={{root: classes.signUpButton}} style={{marginLeft: '0', backgroundColor: '#000000', color: 'white'}}>
-                                    <span className={'sansBold'}>Sign Up</span>
-						        </Button>
-                            </div>
-                        </div>
-                        <div className={classes.header_right}>
-                            <img src={appleStockImage} style={{maxWidth: '100%'}}></img>
-                        </div>
+            <AppBar classes={{colorPrimary: classes.primary, positionFixed: classes.positionFixed}}>
+                <Toolbar>
+                    <IconButton edge="start">
+                        <MenuIcon />
+                    </IconButton>
+                    <div className={classes.link}>
+                        Learn
                     </div>
-                </div>
-                <div style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
-                    <img  
-                        src="https://cdn.robinhood.com/assets/robinhood/brand/e46bb5ae43b4085ee9a2e2d576047a37-1x.png" 
-                        srcset="https://cdn.robinhood.com/assets/robinhood/brand/e46bb5ae43b4085ee9a2e2d576047a37-1x.png, https://cdn.robinhood.com/assets/robinhood/brand/f399a1d9bf69ffa75c65e2d4aed8473b-2x.png 2x, https://cdn.robinhood.com/assets/robinhood/brand/b8c0239a85297be0e892b14387b9193d-3x.png 3x" 
-                        role="presentation" draggable="false">
-                    </img>
-                </div>
+                    <div className={`${classes.title} ${classes.link}`}>
+                        Support
+                    </div>
+                    <Button classes={{root: classes.signInButton}} onClick = {()=>history.push('/stocktrader/login')}>
+                        <span className={'sansBold'}>Sign In</span>
+                    </Button>
+                    <Button classes={{root: classes.signUpButton}} onClick = {()=>history.push('/stocktrader/signup')}>
+                        <span className={'sansBold'}>Sign Up</span>
+                    </Button>
+                </Toolbar>
+            </AppBar>:
+            <AppBar classes={{colorPrimary: classes.primary, positionFixed: classes.positionFixed}}>
+                <Toolbar>
+                    <IconButton edge="start">
+                        <MenuIcon />
+                    </IconButton>
+                    <div className={classes.link}>
+                        Learn
+                    </div>
+                    <div className={`${classes.title} ${classes.link}`}>
+                        Support
+                    </div>
+                    <Button classes={{root: classes.signInButton}} onClick = {()=>history.push('/stocktrader/login')}>
+                        <span className={'sansBold'}>Sign In</span>
+                    </Button>
+                    <Button classes={{root: classes.signUpButton}} onClick = {()=>history.push('/stocktrader/signup')}>
+                        <span className={'sansBold'}>Sign Up</span>
+                    </Button>
+                </Toolbar>
+            </AppBar>}
+            <div className={classes.main}>
+                {router}
                 <Footer />
             </div>
-            }
         </React.Fragment>
     )
 }
@@ -170,8 +136,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        onSignIn: (email,password)=> dispatch({type: 'SIGN_IN', data: {email, password}}),
-        onLogout: (history) => dispatch({type: 'logout', data: history}),
+        // onSignIn: (email,password)=> dispatch({type: 'SIGN_IN', data: {email, password}}),
+        // onLogout: (history) => dispatch({type: 'logout', data: history}),
     }
 }
 export default connect(mapStateToProps,mapDispatchToProps)(App);
