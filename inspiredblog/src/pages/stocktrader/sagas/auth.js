@@ -8,18 +8,41 @@ function* signinSaga(action) {
         username: action.data.username,
         password: action.data.password,
     }
-    let history = action.data.history;
     try {   
         const res = yield axios.post(host + '/api/stocktrader/auth/signIn', authData);
-        if (res.data.success) {
-            yield history.push('/stocktrader/')
+        if (res.status == 200){
+            if (res.data.success) {
+                localStorage.setItem('stock_username',res.data.username);
+                localStorage.setItem('stock_token',res.data.stock_token);
+                localStorage.setItem('stock_userId',res.data.userId);
+                localStorage.setItem('stock_expirationTime', new Date( new Date().getTime() + res.data.expirationHours*60 *60*1000));
+                yield put({
+                    type: 'signin_success',
+                    payload: {
+                        userId: res.data.userId,
+                        username: res.data.username,
+                    }
+                })
+            }
+            else {
+                yield put({
+                    type: 'signin_fail',
+                    payload: {
+                        wrongUsername: res.data.message == 'Username not found.'?true:false,
+                        wrongPassword: res.data.message == 'Incorrect password.'?true:false,
+                        usernameMessage: res.data.message == 'Username not found.'?'Username not found.':null,
+                        passwordMessage: res.data.message == 'Incorrect password.'?'Incorrect password.':null,
+                    }
+                })
+            }
         }
         else {
-
+            alert('Something wrong happened to the server, plz try again later.');
         }
     }
     catch(err){
-
+        console.log('err here: ', err);
+        alert(err);
     }
 }
 

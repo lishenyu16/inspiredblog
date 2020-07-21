@@ -8,10 +8,15 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import Paper from '@material-ui/core/Paper';
+import InputBase from '@material-ui/core/InputBase';
+import SearchIcon from '@material-ui/icons/Search';
 import Footer from './Footer';
 import SignIn from './components/auth/SignIn';
 import SignUp from './components/auth/SignUp';
-import Home from './components/Home';
+import Portfolio from './components/Portfolio';
+import Market from './components/Market';
+import Stock from './components/Stock';
 
 const useStyles = makeStyles({
     main: {
@@ -22,9 +27,6 @@ const useStyles = makeStyles({
         position: 'relative',
         paddingBottom: '40px', // for bottom footer.
         minHeight: '100vh',
-    },
-    title: {
-        flexGrow: 1
     },
     link: {
         paddingLeft:'20px',
@@ -66,6 +68,22 @@ const useStyles = makeStyles({
             borderBottomStyle: 'solid',
         }
     },
+    // below css is for search box:
+    root: {
+        flexGrow: 1,
+        padding: '2px 4px',
+        display: 'flex',
+        alignItems: 'center',
+        width: 400,
+        margin: '0 10%',
+    },
+    input: {
+        marginLeft: '10px',
+        flex: 1,
+    },
+    iconButton: {
+        padding: 10,
+    },
 })
 const App = (props) => {
     const classes = useStyles();
@@ -74,10 +92,10 @@ const App = (props) => {
         <Switch>         
             <Route exact path='/stocktrader/login' component = {SignIn}></Route>
             <Route exact path='/stocktrader/signup' component = {SignUp}></Route>
-            <Route exact path='/stocktrader/myhome' component = {Home}></Route>
-            <Route exact path='/stocktrader' component = {Home}></Route>
-            <Route path='/stocktrader/*' component = {Home}></Route>
-            <Route path='*' component = {Home}></Route>
+            <Route exact path='/stocktrader/portfolio' component = {Portfolio}></Route>
+            <Route exact path='/stocktrader/market' component = {Market}></Route>
+            <Route exact path='/stocktrader/stocks/:stock_symbol' component = {Stock}></Route>
+            <Route path='*' component = {Portfolio}></Route>
         </Switch>)
     return (
         <React.Fragment>
@@ -90,14 +108,29 @@ const App = (props) => {
                     <div className={classes.link}>
                         Learn
                     </div>
-                    <div className={`${classes.title} ${classes.link}`}>
-                        Support
-                    </div>
-                    <Button classes={{root: classes.signInButton}} onClick = {()=>history.push('/stocktrader/login')}>
-                        <span className={'sansBold'}>Sign In</span>
+                    <Paper component="form" className={classes.root}>
+                        <InputBase
+                            className={classes.input}
+                            placeholder="Search"
+                            // inputProps={{ 'aria-label': 'search google maps' }}
+                        />
+                        <IconButton type="submit" className={classes.iconButton} aria-label="search">
+                            <SearchIcon />
+                        </IconButton>
+                    </Paper>
+                    <iframe 
+                        frameborder="no" border="0" marginwidth="0" marginheight="0" 
+                        width='298' height='52' 
+                        src="//music.163.com/outchain/player?type=2&id=532606500&auto=1&height=32">                   
+                    </iframe>
+                    <Button classes={{root: classes.signInButton}} onClick = {()=>history.push('/stocktrader/market')}>
+                        <span className={'sansBold'}>Market</span>
                     </Button>
-                    <Button classes={{root: classes.signUpButton}} onClick = {()=>history.push('/stocktrader/signup')}>
-                        <span className={'sansBold'}>Sign Up</span>
+                    <Button classes={{root: classes.signInButton}} onClick = {()=>history.push('/stocktrader/portfolio')}>
+                        <span className={'sansBold'}>Portfolio</span>
+                    </Button>
+                    <Button classes={{root: classes.signInButton}} onClick = {()=>history.push('/stocktrader/account')}>
+                        <span className={'sansBold'}>Account</span>
                     </Button>
                 </Toolbar>
             </AppBar>:
@@ -112,6 +145,12 @@ const App = (props) => {
                     <div className={`${classes.title} ${classes.link}`}>
                         Support
                     </div>
+                    <iframe 
+                        frameborder="no" 
+                        border="0" marginwidth="0" marginheight="0" 
+                        width='330' height='86' 
+                        src="//music.163.com/outchain/player?type=2&id=532606500&auto=1&height=66">    
+                    </iframe>
                     <Button classes={{root: classes.signInButton}} onClick = {()=>history.push('/stocktrader/login')}>
                         <span className={'sansBold'}>Sign In</span>
                     </Button>

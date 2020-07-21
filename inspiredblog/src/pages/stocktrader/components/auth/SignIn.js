@@ -41,12 +41,7 @@ const SignIn = (props) => {
 
     let redirect = null;
     if(props.isLoggedIn){
-        if (props.auth.redirectPath){
-            redirect = <Redirect to={props.auth.redirectPath} />
-        }
-        else {
-            redirect = <Redirect to="/stocktrader/myhome" />;   
-        }
+        redirect = <Redirect to="/stocktrader" />;   
     }
     const clickOnSignIn = () => {
         if (!username || username.trim().length==0){
@@ -72,7 +67,7 @@ const SignIn = (props) => {
                 </Typography>
                 <div style={{width:'100%', margin: '30px 0'}}>
                     <TextField
-                        // error={props.auth.wrongEmail}
+                        error={props.auth.wrongUsername}
                         variant="outlined"
                         margin="normal"
                         required
@@ -80,7 +75,7 @@ const SignIn = (props) => {
                         id="username"
                         label="Username"
                         name="username"
-                        // helperText={props.auth.emailMessage}
+                        helperText={props.auth.usernameMessage}
                         autoComplete="username"
                         autoFocus
                         onChange={(e)=>{
@@ -121,11 +116,6 @@ const SignIn = (props) => {
                         Sign In
                     </Button>
                     <Grid container>
-                        {/* <Grid item xs>
-                            <Link variant="body2" onClick={()=>history.push('/blogs/forgot-password')}>
-                                Forgot password?
-                            </Link>
-                        </Grid> */}
                         <Grid item>
                             <Link  variant="body2" onClick={()=>history.push('/stocktrader/signup')}>
                                 {"Don't have an account? Sign Up"}
@@ -146,10 +136,11 @@ const mapStateToProps = (state)=>{
 }
 const mapDispatchToProps = (dispatch)=>{
     return {
-        onSignIn : (email,password)=> dispatch({type: 'SIGN_IN', data: {email, password}}),
-        showErrors: (wrongEmail,wrongPassword,passwordMessage,emailMessage) => dispatch({type: 'signin_fail', value: {wrongEmail,wrongPassword,passwordMessage,emailMessage}}),
+        onSignIn : (username,password)=> dispatch({type: 'SIGN_IN', data: {username, password}}),
+        showErrors: (wrongUsername,wrongPassword,passwordMessage,usernameMessage) => 
+                    dispatch({type: 'signin_fail', value: {wrongUsername,wrongPassword,passwordMessage,usernameMessage}}),
         clearErrors: ()=> dispatch({type: 'clear_errors'}),
         // onSignUp :()=> dispatch({type: 'SIGN_UP'}),
     }
 }
-export default connect(mapStateToProps,mapDispatchToProps)(SignIn)
+export default connect(mapStateToProps,mapDispatchToProps)(SignIn);

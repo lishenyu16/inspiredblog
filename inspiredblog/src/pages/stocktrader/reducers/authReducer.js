@@ -20,6 +20,10 @@ const authReducer = (state=initialState,action) => {
         case ('signin_fail'):
             return {
                 ...state,
+                wrongUsername: action.payload.wrongUsername,
+                wrongPassword: action.payload.wrongPassword,
+                usernameMessage: action.payload.usernameMessage,
+                passwordMessage: action.payload.passwordMessage,
             }
         case ('signup_success'):
             return {
