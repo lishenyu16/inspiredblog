@@ -111,7 +111,7 @@ const App = (props) => {
                     <Paper component="form" className={classes.root}>
                         <InputBase
                             className={classes.input}
-                            placeholder="Search"
+                            placeholder="Search Quote"
                             // inputProps={{ 'aria-label': 'search google maps' }}
                         />
                         <IconButton type="submit" className={classes.iconButton} aria-label="search">

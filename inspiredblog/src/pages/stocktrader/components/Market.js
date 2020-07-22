@@ -4,139 +4,103 @@ import { Switch, Route, Redirect, Link ,useHistory} from 'react-router-dom';
 import {connect} from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import { checkAuthState } from '../selectors/authSelector';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
 import appleStockImage from '../img/apple_stock.png';
-import SignIn from './auth/SignIn';
-import Footer from '../Footer';
+import axios from 'axios';
 
 const useStyles = makeStyles({
-    main: {
-        display:'flex',
-        justifyContent:'center',
-        width:'100%',
-        flexWrap: 'wrap',
-        position: 'relative',
-        paddingBottom: '40px', // for bottom footer.
-    },
-    title: {
-        flexGrow: 1
-    },
-    link: {
-        paddingLeft:'20px',
-        display:'flex',
-        justifyContent:'flex-start',
-        '&:hover': {
-            color: 'rgb(0,180,5)'
-        }
-    },
-    primary: {
-        color: 'inherit',
-        backgroundColor: 'inherit'
-    },
-    positionFixed: {
-        position: 'inherit'
-    },
-    signInButton: {
-        textTransform: 'none',
-        '&:hover': {
-            color: 'rgb(0,180,5)',
-            backgroundColor: 'inherit'
-        }
-    },
-    signUpButton: {
-        textTransform: 'none',
-        minWidth: '144px',
-        padding: '0 16px',
-        borderRadius: '24px',
-        backgroundColor: 'rgba(0,200,5,1)',
-        height: '48px',
-        display: 'inline-flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginLeft: '30px',
-        '&:hover': {
-            backgroundColor: 'rgb(0,180,5)',
-            backgroundBottomColor: '#000000',
-            borderBottomWidth: '1px',
-            borderBottomStyle: 'solid',
-        }
-    },
-    header: {
+    mainDiv: {
         width: '100%',
-        backgroundColor:'rgba(195,245,60,1)',
+        padding: '5% 0'
     },
-    headerContainer: {
-        margin: '0 auto',
-        maxWidth: '1024px',
-        padding: '100px 60px',
-        width: '100%',
-        display: 'flex'
-    },
-    header_left: {
-        maxWidth: '45%',
-    },
-    header_left_top: {
-        fontSize: '60px',
-        lineHeight: '72px',
-        letterSpacing: '-2.4px',
-        color: 'rgb(4,13,20)',
-        marginBottom: '18px',
-        whiteSpace: 'pre-line'
-    },
-    header_left_mid: {
-        marginTop: '24px',
-        fontSize: '24px',
-        lineHeight: '32px',
-        letterSpacing: '-0.24px',
-        color: '#040d14',
-    },
-    header_left_button: {
-        marginTop: '40px',
+    stock_boxes: {
+        width: '50%',
         display: 'flex',
-        flexDirection:'column',
-        alignItems: 'start'
+        flexWrap: 'wrap',
+        justifyContent: 'space-evenly',
+        margin: '0 auto',
+        '@media(max-width:1600px)':{
+            width:'55%'
+        },
+        '@media(max-width:1400px)':{
+            width:'63%'
+        },
+        '@media(max-width:1200px)':{
+            width:'70%'
+        },
+        '@media(max-width:900px)':{
+            width:'90%'
+        },
     },
-    header_right: {
-        maxWidth: '45%',
-    },
-
+    stock_box: {
+        width: '185px',
+        height: '184px',
+        padding: '22px 23px',
+        display: 'flex',
+        flexDirection: 'column',
+        border: '1px solid black',
+        justifyContent: 'space-between',
+        margin: '5px 5px',
+        cursor: 'pointer',
+        '&:hover': {
+            backgroundColor: '#e7e7e7'
+        }
+    }
 })
-const Home = (props) => {
+const host = process.env.NODE_ENV === "production"?'':'http://localhost:5000';
+let header = {
+    headers: localStorage.getItem('stock_token')? {
+        Authorization: 'Bearer ' + localStorage.getItem('stock_token')
+    } :null
+} 
+
+const Market = (props) => {
     const classes = useStyles();
     const history = useHistory();
-
+    const [marketStocks, setMarketStocks] = useState(null);
+    useEffect(()=>{
+        console.log('it is the using effect 1')
+        async function fetchData() {
+            const result = await axios.get(host + `/api/stocktrader/quotes/fetch_market_quotes`, header);
+            setMarketStocks(result.data.data);
+        }
+        fetchData();
+    },[]);
+    useEffect(() => {
+        console.log('it is the using effect 2')
+        if (marketStocks&&marketStocks['FB'].quote.isUSMarketOpen){
+            setInterval(() => {
+                console.log('This will run every 10 seconds!');
+                async function fetchData() {
+                    const result = await axios.get(host + `/api/stocktrader/quotes/fetch_market_quotes`, header);
+                    setMarketStocks(result.data.data);
+                }
+                fetchData();
+            }, 10000);
+        }
+      }, [marketStocks]);
     return (
-        <React.Fragment>
-            <div className={classes.header}>
-                <div className={classes.headerContainer}>
-                    <div className={classes.header_left}>
-                        <div className={classes.header_left_top}>Investing for Everyone</div>
-                        <div className={classes.header_left_mid}>Reacthood, a pioneer of commission-free investing, gives you more ways to make your money work harder.</div>
-                        <div className={classes.header_left_button}>
-                            <Button classes={{root: classes.signUpButton}} style={{marginLeft: '0', backgroundColor: '#000000', color: 'white'}}>
-                                <span className={'sansBold'}>Sign Up</span>
-                            </Button>
+        <div className={classes.mainDiv}>
+            <div className={classes.stock_boxes}>
+                {marketStocks&&Object.keys(marketStocks).length>0?
+                    Object.keys(marketStocks).map(item=>
+                    <div key={item} className={classes.stock_box}>
+                        <div>
+                            <span style={{fontSize:'13px'}}>{marketStocks[item].quote.companyName}</span>
                         </div>
-                    </div>
-                    <div className={classes.header_right}>
-                        <img src={appleStockImage} style={{maxWidth: '100%'}}></img>
-                    </div>
-                </div>
+                        <div style={{marginBottom:'10px'}}>
+                            <span style={{fontSize:'13px'}}>{marketStocks[item].quote.symbol}</span>
+                        </div>
+                        <div style={{color: marketStocks[item].quote.changePercent>0?'#00C805':'#FF5000'}}>
+                            <span style={{fontSize:'24px'}}>US${marketStocks[item].quote.latestPrice}</span>
+                        </div>
+                        <div style={{color: marketStocks[item].quote.changePercent>0?'#00C805':'#FF5000'}}>
+                            <span style={{fontSize:'13px'}}>{(marketStocks[item].quote.changePercent*100).toFixed(3)+'%'}</span>
+                        </div>
+                    </div>):''
+                }
             </div>
-            <div style={{width: '100%', display: 'flex', justifyContent: 'center'}}>
-                <img  
-                    src="https://cdn.robinhood.com/assets/robinhood/brand/e46bb5ae43b4085ee9a2e2d576047a37-1x.png" 
-                    srcset="https://cdn.robinhood.com/assets/robinhood/brand/e46bb5ae43b4085ee9a2e2d576047a37-1x.png, https://cdn.robinhood.com/assets/robinhood/brand/f399a1d9bf69ffa75c65e2d4aed8473b-2x.png 2x, https://cdn.robinhood.com/assets/robinhood/brand/b8c0239a85297be0e892b14387b9193d-3x.png 3x" 
-                    role="presentation" draggable="false">
-                </img>
-            </div>
-            {/* <Footer /> */}
-        </React.Fragment>
+        </div>
     )
 }
 
@@ -152,4 +116,4 @@ const mapDispatchToProps = (dispatch) => {
         onLogout: (history) => dispatch({type: 'logout', data: history}),
     }
 }
-export default connect(mapStateToProps,mapDispatchToProps)(Home);
+export default connect(mapStateToProps,mapDispatchToProps)(Market);
