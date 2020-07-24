@@ -5,7 +5,6 @@ import {connect} from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import { checkAuthState } from '../selectors/authSelector';
 import Button from '@material-ui/core/Button';
-import appleStockImage from '../img/apple_stock.png';
 import axios from 'axios';
 
 const useStyles = makeStyles({
@@ -38,7 +37,7 @@ const useStyles = makeStyles({
         padding: '22px 23px',
         display: 'flex',
         flexDirection: 'column',
-        border: '1px solid black',
+        border: '1px solid #b8c1ca',
         justifyContent: 'space-between',
         margin: '5px 5px',
         cursor: 'pointer',
@@ -59,7 +58,6 @@ const Market = (props) => {
     const history = useHistory();
     const [marketStocks, setMarketStocks] = useState(null);
     useEffect(()=>{
-        console.log('it is the using effect 1')
         async function fetchData() {
             const result = await axios.get(host + `/api/stocktrader/quotes/fetch_market_quotes`, header);
             setMarketStocks(result.data.data);
@@ -67,15 +65,20 @@ const Market = (props) => {
         fetchData();
     },[]);
     useEffect(() => {
-        console.log('it is the using effect 2')
-        if (marketStocks&&marketStocks['FB'].quote.isUSMarketOpen){
-            setInterval(() => {
-                console.log('This will run every 10 seconds!');
+        //this hook will run after the state has been filled with datas.
+        if (marketStocks&&marketStocks['BA'].quote.isUSMarketOpen){
+            setTimeout(() => {
                 async function fetchData() {
                     const result = await axios.get(host + `/api/stocktrader/quotes/fetch_market_quotes`, header);
                     setMarketStocks(result.data.data);
                 }
-                fetchData();
+                try {
+                    fetchData();
+                }
+                catch(err){
+                    console.log(err);
+                    fetchData();
+                }
             }, 10000);
         }
       }, [marketStocks]);

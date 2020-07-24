@@ -5,7 +5,8 @@ import {connect} from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import { checkAuthState } from '../selectors/authSelector';
 import Button from '@material-ui/core/Button';
-import appleStockImage from '../img/apple_stock.png';
+import mrnaStockImage from '../img/mrna.png';
+
 const useStyles = makeStyles({
     main: {
         display:'flex',
@@ -67,7 +68,8 @@ const useStyles = makeStyles({
         maxWidth: '1024px',
         padding: '100px 60px',
         width: '100%',
-        display: 'flex'
+        display: 'flex',
+        justifyContent: 'space-between',
     },
     header_left: {
         maxWidth: '45%',
@@ -98,7 +100,8 @@ const useStyles = makeStyles({
     },
 
 })
-const Home = (props) => {
+
+const Portfolio = (props) => {
     const classes = useStyles();
     const history = useHistory();
 
@@ -116,7 +119,7 @@ const Home = (props) => {
                         </div>
                     </div>
                     <div className={classes.header_right}>
-                        <img src={appleStockImage} style={{maxWidth: '100%'}}></img>
+                        <img src={mrnaStockImage} style={{maxWidth: '100%'}}></img>
                     </div>
                 </div>
             </div>
@@ -144,4 +147,4 @@ const mapDispatchToProps = (dispatch) => {
         onLogout: (history) => dispatch({type: 'logout', data: history}),
     }
 }
-export default connect(mapStateToProps,mapDispatchToProps)(Home);
+export default connect(mapStateToProps,mapDispatchToProps)(Portfolio);
