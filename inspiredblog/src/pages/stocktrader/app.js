@@ -17,6 +17,11 @@ import SignUp from './components/auth/SignUp';
 import Portfolio from './components/Portfolio';
 import Market from './components/Market';
 import Stock from './components/Stock';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import Divider from '@material-ui/core/Divider';
 
 const useStyles = makeStyles({
     main: {
@@ -84,10 +89,30 @@ const useStyles = makeStyles({
     iconButton: {
         padding: 10,
     },
+    account_clickaway: {
+        position: 'relative',
+    },
+    clickaway_dropdown: {
+        position: 'absolute',
+        top: 38,
+        right: 0,
+        // left: 0,
+        zIndex: 1,
+        border: '1px solid lightgray',
+        // padding: '5px',
+        backgroundColor: 'lightgray',
+    },
+    account_list: {
+        width: '100%',
+        // maxWidth: 360,
+        backgroundColor: 'transparent',
+
+    }
 })
 const App = (props) => {
     const classes = useStyles();
     const history = useHistory();
+    const [openAccount, setOpenAccount] = useState(false);
     const router = (                    
         <Switch>         
             <Route exact path='/stocktrader/login' component = {SignIn}></Route>
@@ -96,7 +121,16 @@ const App = (props) => {
             <Route exact path='/stocktrader/market' component = {Market}></Route>
             <Route exact path='/stocktrader/stocks/:stock_symbol' component = {Stock}></Route>
             <Route path='*' component = {Portfolio}></Route>
-        </Switch>)
+        </Switch>
+    )
+    const handleClick = () => {
+        setOpenAccount((prev) => !prev);
+    };
+    
+    const handleClickAway = () => {
+        setOpenAccount(false);
+    };
+
     return (
         <React.Fragment>
             {checkAuthState()?
@@ -129,9 +163,39 @@ const App = (props) => {
                     <Button classes={{root: classes.signInButton}} onClick = {()=>history.push('/stocktrader/portfolio')}>
                         <span className={'sansBold'}>Portfolio</span>
                     </Button>
-                    <Button classes={{root: classes.signInButton}} onClick = {()=>history.push('/stocktrader/account')}>
-                        <span className={'sansBold'}>Account</span>
-                    </Button>
+
+                    <ClickAwayListener onClickAway={handleClickAway}>
+                        <div className={classes.account_clickaway}>
+                            <Button classes={{root: classes.signInButton}} onClick = {()=>handleClick()}>
+                                <span className={'sansBold'}>Account</span>
+                            </Button>
+                            {openAccount ? (
+                            <div className={classes.clickaway_dropdown}>
+                                <List className={classes.account_list} aria-label="folders">
+                                    <ListItem>
+                                        <div style={{width: 'max-content',display:'flex',flexDirection:'column'}}>
+                                            <div style={{marginBottom: '10px', fontSize:'15px'}}>username</div>
+                                            <div style={{display:'flex'}}>
+                                                <div style={{display:'flex',flexDirection:'column', marginRight: '15px'}}>
+                                                    <div style={{fontSize:'15px'}}>US$35,235</div>
+                                                    <div style={{fontSize:'13px'}}>Portfolio Value</div>
+                                                </div>
+                                                <div style={{display:'flex',flexDirection:'column', marginRight: '15px'}}>
+                                                    <div style={{fontSize:'15px'}}>US$11,235</div>
+                                                    <div style={{fontSize:'13px'}}>Buying Power</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </ListItem>
+                                    <Divider />
+                                    <ListItem button onClick={()=>props.onLogout(history)}>
+                                        <ListItemText primary="Log Out" style={{width: 'max-content'}} />
+                                    </ListItem>
+                                </List>
+                            </div>
+                            ) : null}
+                        </div>
+                    </ClickAwayListener>
                 </Toolbar>
             </AppBar>:
             <AppBar classes={{colorPrimary: classes.primary, positionFixed: classes.positionFixed}}>
@@ -139,17 +203,13 @@ const App = (props) => {
                     <IconButton edge="start">
                         <MenuIcon />
                     </IconButton>
-                    <div className={classes.link}>
+                    <div className={`${classes.title} ${classes.link}`} style={{flexGrow: '1'}}>
                         Learn
                     </div>
-                    <div className={`${classes.title} ${classes.link}`}>
-                        Support
-                    </div>
                     <iframe 
-                        frameborder="no" 
-                        border="0" marginwidth="0" marginheight="0" 
-                        width='330' height='86' 
-                        src="//music.163.com/outchain/player?type=2&id=532606500&auto=1&height=66">    
+                        frameborder="no" border="0" marginwidth="0" marginheight="0" 
+                        width='298' height='52' 
+                        src="//music.163.com/outchain/player?type=2&id=532606500&auto=1&height=32">                   
                     </iframe>
                     <Button classes={{root: classes.signInButton}} onClick = {()=>history.push('/stocktrader/login')}>
                         <span className={'sansBold'}>Sign In</span>
@@ -176,7 +236,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return {
         // onSignIn: (email,password)=> dispatch({type: 'SIGN_IN', data: {email, password}}),
-        // onLogout: (history) => dispatch({type: 'logout', data: history}),
+        onLogout: (history) => dispatch({type: 'logout', data: history}),
     }
 }
 export default connect(mapStateToProps,mapDispatchToProps)(App);
