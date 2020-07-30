@@ -49,18 +49,18 @@ const useStyles = makeStyles({
     },
     mobile: {
         position:'relative',
-        '@media (min-width:601px)': {
-            display: 'none'
-        },
+        // '@media (min-width:601px)': {
+        //     display: 'none'
+        // },
     },
     desktop: {
         display:'flex',
         justifyContent:'center',
         width:'100%',
         // backgroundColor:'#f5f7f9',
-        '@media (max-width: 600px)': {
-            display: 'none'
-        },
+        // '@media (max-width: 600px)': {
+        //     display: 'none'
+        // },
         // height:'100%',
         position:'relative'
     },
@@ -277,8 +277,6 @@ const App = (props) => {
         <Route exact path='/' component = {Home}></Route>
         <Route path='*' component = {NotFound}></Route>
     </Switch>)
-
-
 
 	return (
 		<React.Fragment>

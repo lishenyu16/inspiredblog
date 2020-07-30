@@ -41,7 +41,7 @@ const SignIn = (props) => {
 
     let redirect = null;
     if(props.isLoggedIn){
-        redirect = <Redirect to="/stocktrader" />;   
+        redirect = <Redirect to="/stocktrader/portfolio" />;   
     }
     const clickOnSignIn = () => {
         if (!username || username.trim().length==0){

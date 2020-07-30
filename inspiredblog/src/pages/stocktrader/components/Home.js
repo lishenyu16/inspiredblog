@@ -63,10 +63,19 @@ const useStyles = makeStyles({
         width: '100%',
         backgroundColor:'rgba(195,245,60,1)',
     },
+    header_desc: {
+        margin: '0 auto',
+        maxWidth: '1024px',
+        padding: '30px 60px 20px',
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'space-between',
+        color: 'gray'
+    },
     headerContainer: {
         margin: '0 auto',
         maxWidth: '1024px',
-        padding: '100px 60px',
+        padding: '10px 60px',
         width: '100%',
         display: 'flex',
         justifyContent: 'space-between',
@@ -104,14 +113,14 @@ const useStyles = makeStyles({
 const Portfolio = (props) => {
     const classes = useStyles();
     const history = useHistory();
-    useEffect(()=>{
-        // fetch user's buying power and portfolio value, stocks, etc
-        
-    },[])
 
     return (
         <>
             <div className={classes.header}>
+                <div className={classes.header_desc}>
+                    This is an app that helps users practice trading stocks online with real-time datas from iex cloud. Each registered user will be given 10,000 virtual bucks to trade
+                    stocks. When you think you are ready to surf the real market, then gratulations!
+                </div>
                 <div className={classes.headerContainer}>
                     <div className={classes.header_left}>
                         <div className={classes.header_left_top}>Investing for Everyone</div>

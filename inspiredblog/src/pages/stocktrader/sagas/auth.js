@@ -1,4 +1,4 @@
-import {takeLatest, put} from 'redux-saga/effects';
+import {takeLatest, put,select} from 'redux-saga/effects';
 import axios from 'axios';
 
 const host = process.env.NODE_ENV === 'production'?'':'http://localhost:5000';
@@ -10,6 +10,7 @@ function* signinSaga(action) {
     }
     try {   
         const res = yield axios.post(host + '/api/stocktrader/auth/signIn', authData);
+        // const id = yield select(state => state.id);
         if (res.status == 200){
             if (res.data.success) {
                 localStorage.setItem('stock_username',res.data.username);

@@ -14,6 +14,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import Footer from './Footer';
 import SignIn from './components/auth/SignIn';
 import SignUp from './components/auth/SignUp';
+import Home from './components/Home';
 import Portfolio from './components/Portfolio';
 import Market from './components/Market';
 import Stock from './components/Stock';
@@ -120,7 +121,8 @@ const App = (props) => {
             <Route exact path='/stocktrader/portfolio' component = {Portfolio}></Route>
             <Route exact path='/stocktrader/market' component = {Market}></Route>
             <Route exact path='/stocktrader/stocks/:stock_symbol' component = {Stock}></Route>
-            <Route path='*' component = {Portfolio}></Route>
+            {/* <Route exact path='/stocktrader' component = {Home}></Route> */}
+            <Route path='*' component = {Home}></Route>
         </Switch>
     )
     const handleClick = () => {
@@ -174,7 +176,7 @@ const App = (props) => {
                                 <List className={classes.account_list} aria-label="folders">
                                     <ListItem>
                                         <div style={{width: 'max-content',display:'flex',flexDirection:'column'}}>
-                                            <div style={{marginBottom: '10px', fontSize:'15px'}}>username</div>
+                            <div style={{marginBottom: '10px', fontSize:'15px'}}>{localStorage.getItem('stock_username')}</div>
                                             <div style={{display:'flex'}}>
                                                 <div style={{display:'flex',flexDirection:'column', marginRight: '15px'}}>
                                                     <div style={{fontSize:'15px'}}>US$35,235</div>
