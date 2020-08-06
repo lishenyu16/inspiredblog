@@ -87,7 +87,7 @@ const Market = (props) => {
             <div className={classes.stock_boxes}>
                 {marketStocks&&Object.keys(marketStocks).length>0?
                     Object.keys(marketStocks).map(item=>
-                    <div key={item} className={classes.stock_box}>
+                    <div key={item} className={classes.stock_box} onClick={()=>props.history.push(`/stocktrader/stocks/${marketStocks[item].quote.symbol}`)}>
                         <div>
                             <span style={{fontSize:'13px'}}>{marketStocks[item].quote.companyName}</span>
                         </div>

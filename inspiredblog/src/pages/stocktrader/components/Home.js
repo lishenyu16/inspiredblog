@@ -6,6 +6,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { checkAuthState } from '../selectors/authSelector';
 import Button from '@material-ui/core/Button';
 import mrnaStockImage from '../img/mrna.png';
+import Chart from 'chart.js';
 
 const useStyles = makeStyles({
     main: {

@@ -84,5 +84,7 @@ module.exports = {
     //     filename: 'myStory.html' 
     // })
   ],
-
+  externals: {
+    moment: 'moment'
+  }
 };

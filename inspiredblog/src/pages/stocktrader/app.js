@@ -17,7 +17,7 @@ import SignUp from './components/auth/SignUp';
 import Home from './components/Home';
 import Portfolio from './components/Portfolio';
 import Market from './components/Market';
-import Stock from './components/Stock';
+import StockDetail from './components/StockDetail';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -120,7 +120,7 @@ const App = (props) => {
             <Route exact path='/stocktrader/signup' component = {SignUp}></Route>
             <Route exact path='/stocktrader/portfolio' component = {Portfolio}></Route>
             <Route exact path='/stocktrader/market' component = {Market}></Route>
-            <Route exact path='/stocktrader/stocks/:stock_symbol' component = {Stock}></Route>
+            <Route exact path='/stocktrader/stocks/:stock_symbol' component = {StockDetail}></Route>
             {/* <Route exact path='/stocktrader' component = {Home}></Route> */}
             <Route path='*' component = {Home}></Route>
         </Switch>

@@ -213,7 +213,7 @@ const App = (props) => {
                     <ListItemIcon><MenuBookIcon /></ListItemIcon>
                     <ListItemText primary={'Blogs'} />
                 </ListItem>
-                <ListItem button onClick={()=>history.push('/sites')}>
+                <ListItem button onClick={()=>history.push('/blogs/sites')}>
                     <ListItemIcon><ClassIcon /></ListItemIcon>
                     <ListItemText primary={'Sites'} />
                 </ListItem>
@@ -248,7 +248,7 @@ const App = (props) => {
           </List>
           <Divider />
           <List>
-                <ListItem button onClick={()=>history.push('/myStory')}>
+                <ListItem button onClick={()=>history.push('/blogs/myStory')}>
                     <ListItemIcon><MailIcon /></ListItemIcon>
                     <ListItemText primary={'Mail'} />
                 </ListItem>
