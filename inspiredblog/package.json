@@ -39,7 +39,7 @@
     "@material-ui/icons": "^4.9.1",
     "axios": "^0.19.2",
     "chart.js": "^2.9.3",
-    "dompurify": "^2.0.10",
+    "dompurify": "^2.0.17",
     "for-editor-herb": "^2.3.6",
     "highlight.js": "^9.18.1",
     "marked": "^1.0.0",
